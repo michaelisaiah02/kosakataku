@@ -35,4 +35,7 @@ return [
         ],
     ],
 
+    'google' => [
+        'application_credentials' => storage_path('app/skripsi-410917.json'),
+    ],
 ];

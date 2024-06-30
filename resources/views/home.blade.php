@@ -37,6 +37,9 @@
             <h2 class="text-center">=</h2>
             <h2 class="text-center" id="translatedWord"></h2>
         </div>
+        <div class="row my-3">
+            <audio id="spelledWord" src="" controls></audio>
+        </div>
         <div class="row">
             <button class="btn btn-info d-flex justify-content-center" id="spellingBtn">
                 <div class="icon my-auto">

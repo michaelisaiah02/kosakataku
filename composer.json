@@ -8,6 +8,7 @@
         "php": "^8.2",
         "deeplcom/deepl-php": "^1.8",
         "google/cloud-speech": "^1.18",
+        "google/cloud-text-to-speech": "^1.8",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5"

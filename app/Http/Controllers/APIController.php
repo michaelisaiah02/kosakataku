@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
+use Google\Cloud\Speech\V1\RecognitionAudio;
+use Google\Cloud\Speech\V1\SpeechClient;
 
 class APIController extends Controller
 {
@@ -47,26 +50,99 @@ class APIController extends Controller
         return response()->json($result->text);
     }
 
-    public function speechToText($language = 'en', $audio)
+    public function textToSpeech($word)
     {
-        $speechClient = new \Google\Cloud\Speech\V1\SpeechClient();
+        $client = new TextToSpeechClient([
+            'credentials' => config('services.google.application_credentials'),
+        ]);
 
-        $recognitionConfig = new RecognitionConfig();
-        $recognitionConfig->setEncoding(AudioEncoding::FLAC);
-        $recognitionConfig->setSampleRateHertz(44100);
-        $recognitionConfig->setLanguageCode('en-US');
-        $config = new StreamingRecognitionConfig();
-        $config->setConfig($recognitionConfig);
+        $inputWord = (new \Google\Cloud\TextToSpeech\V1\SynthesisInput())
+            ->setText($word);
 
-        $audioResource = fopen('path/to/audio.flac', 'r');
+        $voice = (new \Google\Cloud\TextToSpeech\V1\VoiceSelectionParams())
+            ->setLanguageCode('en-US')
+            ->setSsmlGender(\Google\Cloud\TextToSpeech\V1\SsmlVoiceGender::NEUTRAL);
 
-        $responses = $speechClient->recognizeAudioStream($config, $audioResource);
-        dd($responses);
-        foreach ($responses as $element) {
-            // doSomethingWith($element);
+        $audioConfig = (new \Google\Cloud\TextToSpeech\V1\AudioConfig())
+            ->setAudioEncoding(\Google\Cloud\TextToSpeech\V1\AudioEncoding::MP3);
+
+        $response = $client->synthesizeSpeech($inputWord, $voice, $audioConfig);
+
+        $audioContent = $response->getAudioContent();
+
+        $randomIdFile = uniqid();
+        $newFilePath = 'public/' . $randomIdFile . '.mp3';
+        if (isset($_COOKIE['previous_file_path'])) {
+            $previousFilePath = $_COOKIE['previous_file_path'];
+            if (Storage::exists($previousFilePath)) {
+                Storage::delete($previousFilePath);
+            }
+            // Hapus cookie lama
+            setcookie('previous_file_path', '', time() - 3600);
         }
 
-        $speechClient->close();
+        Storage::put($newFilePath, $audioContent);
+
+        // Simpan file path baru ke dalam cookie
+        setcookie('previous_file_path', $newFilePath, time() + 10800, "/"); // Cookie berlaku selama 30 hari
+
+        $url = Storage::url($newFilePath);
+
+        return response()->json(['audio_url' => $url]);
+    }
+
+    public function speechToText(Request $request)
+    {
+        $request->validate([
+            'audio' => 'required|file|mimetypes:audio/webm',
+            'language' => 'required|string',
+        ]);
+
+        $audioFile = $request->file('audio');
+
+        // Memeriksa MIME type secara manual
+        // if ($audioFile->getMimeType() !== 'audio/webm') {
+        //     return response()->json(['error' => 'Invalid audio file type. Only WEBM files are accepted. MimeTypes: ' . $audioFile->getMimeType()], 422);
+        // }
+
+        // Logging informasi file
+        error_log('File name: ' . $audioFile->getClientOriginalName());
+        error_log('File mime type: ' . $audioFile->getMimeType());
+        error_log('File size: ' . $audioFile->getSize());
+
+        $audioContent = file_get_contents($audioFile->getPathname());
+
+        $client = new SpeechClient([
+            'credentials' => config('services.google.application_credentials'),
+        ]);
+
+        $audio = (new RecognitionAudio())
+            ->setContent($audioContent);
+
+        $config = (new RecognitionConfig())
+            ->setEncoding(RecognitionConfig\AudioEncoding::WEBM_OPUS) // Pastikan menggunakan encoding yang sesuai
+            ->setSampleRateHertz(16000)
+            ->setLanguageCode($request->language);
+
+        try {
+            $response = $client->recognize($config, $audio);
+
+            $transcriptions = [];
+            foreach ($response->getResults() as $result) {
+                $alternatives = $result->getAlternatives();
+                foreach ($alternatives as $alternative) {
+                    $transcriptions[] = $alternative->getTranscript();
+                }
+            }
+
+            // Tutup klien untuk menghindari kebocoran sumber daya
+            $client->close();
+
+            return response()->json(['transcriptions' => $transcriptions]);
+        } catch (\Exception $e) {
+            error_log('Error during speech recognition: ' . $e->getMessage());
+            return response()->json(['error' => 'Speech recognition failed.'], 500);
+        }
     }
 
     public function exampleSentences($word)

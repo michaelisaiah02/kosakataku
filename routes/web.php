@@ -13,6 +13,8 @@ Route::get('/home', function () {
 Route::post('/random-word', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
 Route::post('/translate/{language}/{word}', [APIController::class, 'translate'])->name('translate');
 Route::post('/example-sentences/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
+Route::post('/speech-to-text', [APIController::class, 'speechToText'])->name('speechToText');
+Route::post('/text-to-speech/{word}', [APIController::class, 'textToSpeech'])->name('textToSpeech');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
