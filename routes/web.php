@@ -12,7 +12,7 @@ Route::get('/home', function () {
 });
 Route::get('/latihan', function () {
     return view('latihan');
-});
+})->name('latihan');
 Route::post('/random-word/{language}/{kategori}', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
 Route::post('/translate/{word}', [APIController::class, 'translate'])->name('translate');
 Route::post('/example-sentences/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
