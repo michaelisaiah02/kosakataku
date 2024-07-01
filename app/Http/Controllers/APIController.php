@@ -106,8 +106,9 @@ class APIController extends Controller
         $ffmpeg = FFMpeg::create();
         $audio = $ffmpeg->open($audioFile->getPathname());
         $wavPath = storage_path('app/public/' . uniqid() . '.wav');
-
-        $audio->save(new Wav(), $wavPath);
+        $format = new Wav();
+        $format->setAudioChannels(1);
+        $audio->save($format, $wavPath);
 
         // Baca konten file wav
         $audioContent = file_get_contents($wavPath);
