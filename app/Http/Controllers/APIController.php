@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use FFMpeg\FFMpeg;
+use FFMpeg\Format\Audio\Wav;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
-use Google\Cloud\Speech\V1\RecognitionConfig;
-use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V1\RecognitionAudio;
+use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 
 class APIController extends Controller
 {
@@ -41,12 +43,12 @@ class APIController extends Controller
         }
     }
 
-    public function translate($language = 'id', $word)
+    public function translate($word)
     {
         $authKey = env("AUTH_KEY_DEEPL", null);
         $translator = new \DeepL\Translator($authKey);
 
-        $result = $translator->translateText($word, null, $language);
+        $result = $translator->translateText($word, null, "id");
         return response()->json($result->text);
     }
 
@@ -94,24 +96,23 @@ class APIController extends Controller
     public function speechToText(Request $request)
     {
         $request->validate([
-            'audio' => 'required|file|mimetypes:audio/webm',
+            'audio' => 'required|file|mimetypes:video/webm',
             'language' => 'required|string',
         ]);
 
         $audioFile = $request->file('audio');
 
-        // Memeriksa MIME type secara manual
-        // if ($audioFile->getMimeType() !== 'audio/webm') {
-        //     return response()->json(['error' => 'Invalid audio file type. Only WEBM files are accepted. MimeTypes: ' . $audioFile->getMimeType()], 422);
-        // }
+        // Konversi file audio dari webm ke wav
+        $ffmpeg = FFMpeg::create();
+        $audio = $ffmpeg->open($audioFile->getPathname());
+        $wavPath = storage_path('app/public/' . uniqid() . '.wav');
 
-        // Logging informasi file
-        error_log('File name: ' . $audioFile->getClientOriginalName());
-        error_log('File mime type: ' . $audioFile->getMimeType());
-        error_log('File size: ' . $audioFile->getSize());
+        $audio->save(new Wav(), $wavPath);
 
-        $audioContent = file_get_contents($audioFile->getPathname());
+        // Baca konten file wav
+        $audioContent = file_get_contents($wavPath);
 
+        // Inisiasi client Google Speech-to-Text
         $client = new SpeechClient([
             'credentials' => config('services.google.application_credentials'),
         ]);
@@ -120,28 +121,30 @@ class APIController extends Controller
             ->setContent($audioContent);
 
         $config = (new RecognitionConfig())
-            ->setEncoding(RecognitionConfig\AudioEncoding::WEBM_OPUS) // Pastikan menggunakan encoding yang sesuai
-            ->setSampleRateHertz(16000)
+            ->setSampleRateHertz(48000)
             ->setLanguageCode($request->language);
 
         try {
             $response = $client->recognize($config, $audio);
 
-            $transcriptions = [];
+            $transcription = [];
             foreach ($response->getResults() as $result) {
                 $alternatives = $result->getAlternatives();
                 foreach ($alternatives as $alternative) {
-                    $transcriptions[] = $alternative->getTranscript();
+                    $transcription[] = $alternative->getTranscript();
                 }
             }
 
             // Tutup klien untuk menghindari kebocoran sumber daya
             $client->close();
 
-            return response()->json(['transcriptions' => $transcriptions]);
+            // Hapus file wav setelah diproses
+            unlink($wavPath);
+
+            return response()->json(['transcription' => $transcription]);
         } catch (\Exception $e) {
             error_log('Error during speech recognition: ' . $e->getMessage());
-            return response()->json(['error' => 'Speech recognition failed.'], 500);
+            return response()->json(['error' => 'Speech recognition failed. Note:' . $e->getMessage()], 500);
         }
     }
 

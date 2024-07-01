@@ -37,8 +37,7 @@
             <h2 class="text-center">=</h2>
             <h2 class="text-center" id="translatedWord"></h2>
         </div>
-        <div class="row my-3">
-            <audio id="spelledWord" src="" controls></audio>
+        <div class="row my-3" id="spelledWord">
         </div>
         <div class="row">
             <button class="btn btn-info d-flex justify-content-center" id="spellingBtn">
@@ -50,8 +49,8 @@
             </button>
         </div>
         <div class="row">
-            <h3 id="resultWord"></h3>
-            <h3 id="example"></h3>
+            <h3 id="resultWord" class="text-center my-3"></h3>
+            <h3 id="example" class="text-center"></h3>
         </div>
     </div>
     @vite(['resources/js/app.js'])
