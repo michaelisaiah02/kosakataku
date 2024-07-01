@@ -10,7 +10,10 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 });
-Route::post('/random-word', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
+Route::get('/latihan', function () {
+    return view('latihan');
+});
+Route::post('/random-word/{language}/{kategori}', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
 Route::post('/translate/{word}', [APIController::class, 'translate'])->name('translate');
 Route::post('/example-sentences/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
 Route::post('/speech-to-text', [APIController::class, 'speechToText'])->name('speechToText');

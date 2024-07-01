@@ -37,23 +37,38 @@
             <h2 class="text-center">=</h2>
             <h2 class="text-center" id="translatedWord"></h2>
         </div>
-        <div class="row my-3" id="spelledWord">
+        <div class="row my-3" id="correctSpellingAudio">
         </div>
-        <div class="row">
-            <button class="btn btn-info d-flex justify-content-center" id="spellingBtn">
-                <div class="icon my-auto">
-                    <img src="{{ asset('img/bars.svg') }}" alt="bars" id="recIcon"
-                        style="display: none; height: 40px;" />
+        <div class="row" id="spellingSection">
+            <button class="btn btn-info d-flex justify-content-center my-3" id="spellingBtn">
+                <div id="offMic">
+                    <p class="mt-3 ms-2">Mulai ucapkan</p>
                 </div>
-                <p class="mt-3 ms-2">Mulai ucapkan</p>
+                <div id="onMic">
+                    <div class="icon my-auto">
+                        <img src="{{ asset('img/bars.svg') }}" alt="bars" id="recIcon"
+                            style="display: block; height: 40px;" />
+                    </div>
+                    <p class="mt-3 ms-2">Mendengarkan... tekan tombol ini jika sudah selesai</p>
+                </div>
             </button>
         </div>
         <div class="row">
-            <h3 id="resultWord" class="text-center my-3"></h3>
+            <h3 id="spelledWord" class="text-center my-3"></h3>
             <h3 id="example" class="text-center"></h3>
+        </div>
+        <div class="row" id="nextSection">
+            <button class="btn btn-info d-flex justify-content-center" id="nextBtn">
+                <p class="mt-3 ms-2">Lanjut</p>
+                <div class="icon my-auto">
+                    <img src="{{ asset('img/arrow-right.svg') }}" alt="arrow-right"
+                        style="display: block; height: 20px;" />
+                </div>
+            </button>
         </div>
     </div>
     @vite(['resources/js/app.js'])
+    @vite(['resources/js/latihan.js'])
 </body>
 
 </html>

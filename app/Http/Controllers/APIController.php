@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use FFMpeg\FFMpeg;
+use GuzzleHttp\Client;
 use FFMpeg\Format\Audio\Wav;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,35 +15,74 @@ use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 
 class APIController extends Controller
 {
-    public function generateRandomWord()
+    function generateRandomWord($language, $category)
     {
-        $curl = curl_init();
+        $client = new Client();
+        $prompt = "Generate 30 kata acak dari bahasa '$language' dalam kategori '$category'. Contoh kategori -> hewan: gajah, marmut, kucing, anjing. Buah: apel, pepaya, mangga, jeruk. Buat dalam format array";
+        $apiKey = env("API_KEY_OPENAI");
+        try {
+            $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type' => 'application/json'
+                ],
+                'json' => [
+                    'model' => 'gpt-3.5-turbo',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'You are a random word generator.'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $prompt
+                        ]
+                    ],
+                    'max_tokens' => 256,
+                    'temperature' => 0.7
+                ]
+            ]);
 
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://wordsapiv1.p.rapidapi.com/words/?random=true",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => [
-                "x-rapidapi-host: wordsapiv1.p.rapidapi.com",
-                "x-rapidapi-key: d2ecf1000cmshe67379045cd9679p1b9e0djsn5ed8bb668b83"
-            ],
-        ]);
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-
-        curl_close($curl);
-
-        if ($err) {
-            return response()->json(['error' => $err]);
-        } else {
-            return response()->json($response);
+            $data = json_decode($response->getBody(), true);
+            if (isset($data['choices'][0]['message']['content'])) {
+                return response()->json(json_decode($data['choices'][0]['message']['content']));
+            } else {
+                return "Tidak ada kata yang dihasilkan.";
+            }
+        } catch (Exception $e) {
+            return "Terjadi kesalahan: " . $e->getMessage();
         }
     }
+
+    // public function generateRandomWord()
+    // {
+    //     $curl = curl_init();
+
+    //     curl_setopt_array($curl, [
+    //         CURLOPT_URL => "https://wordsapiv1.p.rapidapi.com/words/?random=true",
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => "",
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 30,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => "GET",
+    //         CURLOPT_HTTPHEADER => [
+    //             "x-rapidapi-host: wordsapiv1.p.rapidapi.com",
+    //             "x-rapidapi-key: d2ecf1000cmshe67379045cd9679p1b9e0djsn5ed8bb668b83"
+    //         ],
+    //     ]);
+
+    //     $response = curl_exec($curl);
+    //     $err = curl_error($curl);
+
+    //     curl_close($curl);
+
+    //     if ($err) {
+    //         return response()->json(['error' => $err]);
+    //     } else {
+    //         return response()->json($response);
+    //     }
+    // }
 
     public function translate($word)
     {
@@ -72,21 +113,21 @@ class APIController extends Controller
 
         $audioContent = $response->getAudioContent();
 
-        $randomIdFile = uniqid();
-        $newFilePath = 'public/' . $randomIdFile . '.mp3';
-        if (isset($_COOKIE['previous_file_path'])) {
-            $previousFilePath = $_COOKIE['previous_file_path'];
-            if (Storage::exists($previousFilePath)) {
-                Storage::delete($previousFilePath);
+        $directory = 'public/';
+        $files = Storage::files($directory);
+        foreach ($files as $file) {
+            if (strpos($file, '.mp3') !== false) {
+                Storage::delete($file);
             }
-            // Hapus cookie lama
-            setcookie('previous_file_path', '', time() - 3600);
+            if (strpos($file, '.wav') !== false) {
+                Storage::delete($file);
+            }
         }
 
-        Storage::put($newFilePath, $audioContent);
+        $randomIdFile = uniqid();
+        $newFilePath = $directory . $randomIdFile . '.mp3';
 
-        // Simpan file path baru ke dalam cookie
-        setcookie('previous_file_path', $newFilePath, time() + 10800, "/"); // Cookie berlaku selama 30 hari
+        Storage::put($newFilePath, $audioContent);
 
         $url = Storage::url($newFilePath);
 
