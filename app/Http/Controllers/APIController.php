@@ -54,46 +54,20 @@ class APIController extends Controller
         }
     }
 
-    // public function generateRandomWord()
-    // {
-    //     $curl = curl_init();
-
-    //     curl_setopt_array($curl, [
-    //         CURLOPT_URL => "https://wordsapiv1.p.rapidapi.com/words/?random=true",
-    //         CURLOPT_RETURNTRANSFER => true,
-    //         CURLOPT_ENCODING => "",
-    //         CURLOPT_MAXREDIRS => 10,
-    //         CURLOPT_TIMEOUT => 30,
-    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    //         CURLOPT_CUSTOMREQUEST => "GET",
-    //         CURLOPT_HTTPHEADER => [
-    //             "x-rapidapi-host: wordsapiv1.p.rapidapi.com",
-    //             "x-rapidapi-key: d2ecf1000cmshe67379045cd9679p1b9e0djsn5ed8bb668b83"
-    //         ],
-    //     ]);
-
-    //     $response = curl_exec($curl);
-    //     $err = curl_error($curl);
-
-    //     curl_close($curl);
-
-    //     if ($err) {
-    //         return response()->json(['error' => $err]);
-    //     } else {
-    //         return response()->json($response);
-    //     }
-    // }
-
-    public function translate($word)
+    public function translate($json, $language_code, $word)
     {
         $authKey = env("AUTH_KEY_DEEPL", null);
         $translator = new \DeepL\Translator($authKey);
 
-        $result = $translator->translateText($word, null, "id");
-        return response()->json($result->text);
+        $result = $translator->translateText($word, null, $language_code);
+        if ($json) {
+            return response()->json($result->text);
+        } else {
+            return $result->text;
+        }
     }
 
-    public function textToSpeech($word)
+    public function textToSpeech($language_code, $word)
     {
         $client = new TextToSpeechClient([
             'credentials' => config('services.google.application_credentials'),
@@ -103,7 +77,7 @@ class APIController extends Controller
             ->setText($word);
 
         $voice = (new \Google\Cloud\TextToSpeech\V1\VoiceSelectionParams())
-            ->setLanguageCode('en-US')
+            ->setLanguageCode($language_code)
             ->setSsmlGender(\Google\Cloud\TextToSpeech\V1\SsmlVoiceGender::NEUTRAL);
 
         $audioConfig = (new \Google\Cloud\TextToSpeech\V1\AudioConfig())
@@ -138,7 +112,7 @@ class APIController extends Controller
     {
         $request->validate([
             'audio' => 'required|file|mimetypes:video/webm',
-            'language' => 'required|string',
+            'language_code' => 'required|string',
         ]);
 
         $audioFile = $request->file('audio');
@@ -164,7 +138,7 @@ class APIController extends Controller
 
         $config = (new RecognitionConfig())
             ->setSampleRateHertz(48000)
-            ->setLanguageCode($request->language);
+            ->setLanguageCode($request->language_code);
 
         try {
             $response = $client->recognize($config, $audio);
@@ -184,18 +158,23 @@ class APIController extends Controller
             unlink($wavPath);
 
             return response()->json(['transcription' => $transcription]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             error_log('Error during speech recognition: ' . $e->getMessage());
             return response()->json(['error' => 'Speech recognition failed. Note:' . $e->getMessage()], 500);
         }
     }
 
-    public function exampleSentences($word)
+    public function exampleSentences($language_code, $word)
     {
+        if ($language_code !== 'EN-US') {
+            $english_word = $this->translate(false, "EN-US", $word);
+        } else {
+            $english_word = $word;
+        }
         $curl = curl_init();
 
         curl_setopt_array($curl, [
-            CURLOPT_URL => "https://wordsapiv1.p.rapidapi.com/words/$word/examples",
+            CURLOPT_URL => "https://wordsapiv1.p.rapidapi.com/words/$english_word/examples",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -210,9 +189,19 @@ class APIController extends Controller
 
         $response = curl_exec($curl);
         $err = curl_error($curl);
-
+        $response = json_decode($response);
+        if (count($response->examples) > 0) {
+            $randomIndex = rand(0, count($response->examples) - 1);
+            $example = $response->examples[$randomIndex];
+        } else {
+            $example = null;
+        }
+        $response = json_encode($example);
         curl_close($curl);
 
+        if ($language_code !== 'EN-US') {
+            $response = $this->translate(false, $language_code, $response);
+        }
         if ($err) {
             echo "cURL Error #:" . $err;
         } else {

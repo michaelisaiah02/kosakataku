@@ -3,34 +3,32 @@ $(document).ready(function () {
     let wordsArray = [];
     let currentIndex = 0;
 
-    function displayWord(word) {
+    function displayWord(language, word) {
         $("#randomWord").html(word);
         textToSpeech(word);
-        translate(word).then((response) => {
+        translate(true, word).then((response) => {
             $("#translatedWord").html(response);
         });
-        exampleSentences(word).then((response) => {
-            const example =
-                response.examples[
-                    Math.floor(Math.random() * response.examples.length)
-                ] || null;
-            $("#example").html(example);
+        exampleSentences(language_code, word).then((response) => {
+            if (response !== null) {
+                $("#example").html(response.examples);
+            }
         });
         lastWord = word;
         $("#spellingSection").show();
         $("#nextSection").hide();
     }
 
-    function nextWord() {
+    function nextWord(language, category) {
         if (currentIndex < wordsArray.length) {
-            displayWord(wordsArray[currentIndex]);
+            displayWord(language, wordsArray[currentIndex]);
             currentIndex++;
         } else {
-            generateRandomWord();
+            generateRandomWord(language, category);
         }
     }
 
-    function generateRandomWord(language = "inggris", category) {
+    function generateRandomWord(language, category) {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
@@ -39,10 +37,8 @@ $(document).ready(function () {
                     `/random-word/${language}/${category}`,
                 success: function (response) {
                     wordsArray = response;
-                    console.log(wordsArray);
-                    console.log(response);
                     currentIndex = 0;
-                    nextWord();
+                    nextWord(language, category);
                     resolve(response);
                 },
                 error: function (xhr, status, error) {
@@ -53,13 +49,15 @@ $(document).ready(function () {
         });
     }
 
-    function translate(word) {
+    function translate(json = true, word, language_code = "id") {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
                 url:
                     window.location.origin +
-                    `/translate/${encodeURIComponent(word)}`,
+                    `/translate/${json}/${language_code}/${encodeURIComponent(
+                        word
+                    )}`,
                 success: function (response) {
                     resolve(response);
                 },
@@ -71,12 +69,13 @@ $(document).ready(function () {
         });
     }
 
-    function textToSpeech(word) {
+    function textToSpeech(word, language_code = "id") {
+        console.log(language_code, word);
         $.ajax({
             type: "post",
             url:
                 window.location.origin +
-                `/text-to-speech/${encodeURIComponent(word)}`,
+                `/text-to-speech/${language_code}/${encodeURIComponent(word)}`,
             success: function (response) {
                 const audioUrl = response.audio_url;
                 var audioContainer = $("#correctSpellingAudio");
@@ -100,7 +99,8 @@ $(document).ready(function () {
     let mediaRecorder;
     let audioChunks = [];
 
-    function startRecording() {
+    function startRecording(language_code) {
+        console.log(language_code);
         navigator.mediaDevices
             .getUserMedia({ audio: true })
             .then((stream) => {
@@ -119,7 +119,7 @@ $(document).ready(function () {
                     });
                     const formData = new FormData();
                     formData.append("audio", audioBlob, "audio.webm");
-                    formData.append("language", "en-US");
+                    formData.append("language_code", language_code);
 
                     $.ajax({
                         type: "POST",
@@ -168,7 +168,7 @@ $(document).ready(function () {
 
     $("#spellingBtn").on("click", function () {
         if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            startRecording();
+            startRecording(language_code);
             $("#onMic").show();
             $("#offMic").hide();
         } else if (mediaRecorder.state === "recording") {
@@ -178,16 +178,18 @@ $(document).ready(function () {
         }
     });
 
-    function exampleSentences(word) {
+    function exampleSentences(language, word) {
+        console.log(language, word);
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
                 url:
                     window.location.origin +
-                    `/example-sentences/${encodeURIComponent(word)}`,
+                    `/example-sentences/${language}/${encodeURIComponent(
+                        word
+                    )}`,
                 success: function (response) {
                     var result = JSON.parse(response);
-                    console.log(result);
                     resolve(result);
                 },
                 error: function (xhr, status, error) {
@@ -198,15 +200,19 @@ $(document).ready(function () {
         });
     }
 
+    const language = "arab";
+    const language_code = "AR";
+    const category = "rasul";
+
     $("#onMic").hide();
     $("#offMic").show();
     $("#nextSection").hide();
 
     // Fetch kata pertama saat halaman dimuat
-    generateRandomWord("inggris", "hewan");
+    generateRandomWord(language, category);
 
     // Tambahkan event listener untuk tombol 'Lanjut'
     $("#nextBtn").on("click", function () {
-        nextWord();
+        nextWord(language, category);
     });
 });

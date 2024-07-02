@@ -10,14 +10,17 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 });
+Route::get('/preferensi', function () {
+    return view('preferensi');
+})->name('preferensi');
 Route::get('/latihan', function () {
     return view('latihan');
 })->name('latihan');
-Route::post('/random-word/{language}/{kategori}', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
-Route::post('/translate/{word}', [APIController::class, 'translate'])->name('translate');
-Route::post('/example-sentences/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
-Route::post('/speech-to-text', [APIController::class, 'speechToText'])->name('speechToText');
-Route::post('/text-to-speech/{word}', [APIController::class, 'textToSpeech'])->name('textToSpeech');
+Route::post('/random-word/{language}/{category}', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
+Route::post('/translate/{json}/{language_code}/{word}', [APIController::class, 'translate'])->name('translate');
+Route::post('/example-sentences/{language_code}/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
+Route::post('/speech-to-text/', [APIController::class, 'speechToText'])->name('speechToText');
+Route::post('/text-to-speech/{language_code}/{word}', [APIController::class, 'textToSpeech'])->name('textToSpeech');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

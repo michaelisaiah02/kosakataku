@@ -27,7 +27,7 @@
     @vite(['resources/sass/app.scss'])
 </head>
 
-<body class="vh-100 ">
+<body class="vh-100">
     <div class="container py-3">
         <div class="row">
             <h1>Speech To Text</h1>
@@ -40,7 +40,7 @@
         <div class="row my-3" id="correctSpellingAudio">
         </div>
         <div class="row" id="spellingSection">
-            <button class="btn btn-info d-flex justify-content-center my-3" id="spellingBtn">
+            <button type="button" class="btn btn-info d-flex justify-content-center my-3" id="spellingBtn">
                 <div id="offMic">
                     <p class="mt-3 ms-2">Mulai ucapkan</p>
                 </div>
