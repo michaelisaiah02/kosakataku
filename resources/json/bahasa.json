@@ -1,0 +1,149 @@
+{
+  "languages": [
+    {
+      "language": "Inggris",
+      "deeplcode": "EN",
+      "googlecode": "en-US"
+    },
+    {
+      "language": "Mandarin",
+      "deeplcode": "ZH",
+      "googlecode": "zh-CN"
+    },
+    {
+      "language": "Jepang",
+      "deeplcode": "JA",
+      "googlecode": "ja-JP"
+    },
+    {
+      "language": "Korea",
+      "deeplcode": "KO",
+      "googlecode": "ko-KR"
+    },
+    {
+      "language": "Arab",
+      "deeplcode": "AR",
+      "googlecode": "ar-SA"
+    },
+    {
+      "language": "Bulgaria",
+      "deeplcode": "BG",
+      "googlecode": "bg-BG"
+    },
+    {
+      "language": "Ceko",
+      "deeplcode": "CS",
+      "googlecode": "cs-CZ"
+    },
+    {
+      "language": "Denmark",
+      "deeplcode": "DA",
+      "googlecode": "da-DK"
+    },
+    {
+      "language": "Jerman",
+      "deeplcode": "DE",
+      "googlecode": "de-DE"
+    },
+    {
+      "language": "Yunani",
+      "deeplcode": "EL",
+      "googlecode": "el-GR"
+    },
+    {
+      "language": "Spanyol",
+      "deeplcode": "ES",
+      "googlecode": "es-ES"
+    },
+    {
+      "language": "Estonia",
+      "deeplcode": "ET",
+      "googlecode": "et-EE"
+    },
+    {
+      "language": "Finlandia",
+      "deeplcode": "FI",
+      "googlecode": "fi-FI"
+    },
+    {
+      "language": "Prancis",
+      "deeplcode": "FR",
+      "googlecode": "fr-FR"
+    },
+    {
+      "language": "Hungaria",
+      "deeplcode": "HU",
+      "googlecode": "hu-HU"
+    },
+    {
+      "language": "Italia",
+      "deeplcode": "IT",
+      "googlecode": "it-IT"
+    },
+    {
+      "language": "Lituania",
+      "deeplcode": "LT",
+      "googlecode": "lt-LT"
+    },
+    {
+      "language": "Latvia",
+      "deeplcode": "LV",
+      "googlecode": "lv-LV"
+    },
+    {
+      "language": "Norwegia Bokmål",
+      "deeplcode": "NB",
+      "googlecode": "no-NO"
+    },
+    {
+      "language": "Belanda",
+      "deeplcode": "NL",
+      "googlecode": "nl-NL"
+    },
+    {
+      "language": "Polandia",
+      "deeplcode": "PL",
+      "googlecode": "pl-PL"
+    },
+    {
+      "language": "Portugis",
+      "deeplcode": "PT",
+      "googlecode": "pt-PT"
+    },
+    {
+      "language": "Rumania",
+      "deeplcode": "RO",
+      "googlecode": "ro-RO"
+    },
+    {
+      "language": "Rusia",
+      "deeplcode": "RU",
+      "googlecode": "ru-RU"
+    },
+    {
+      "language": "Slovakia",
+      "deeplcode": "SK",
+      "googlecode": "sk-SK"
+    },
+    {
+      "language": "Slovenia",
+      "deeplcode": "SL",
+      "googlecode": "sl-SL"
+    },
+    {
+      "language": "Swedia",
+      "deeplcode": "SV",
+      "googlecode": "sv-SE"
+    },
+    {
+      "language": "Turki",
+      "deeplcode": "TR",
+      "googlecode": "tr-TR"
+    },
+    {
+      "language": "Ukraina",
+      "deeplcode": "UK",
+      "googlecode": "uk-UA"
+    }
+  ]
+}

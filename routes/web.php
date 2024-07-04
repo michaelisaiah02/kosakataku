@@ -13,6 +13,7 @@ Route::get('/home', function () {
 Route::get('/preferensi', function () {
     return view('preferensi');
 })->name('preferensi');
+Route::post('/post', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
 Route::get('/latihan', function () {
     return view('latihan');
 })->name('latihan');

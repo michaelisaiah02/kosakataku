@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Bahasa;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $jsonLanguage = resource_path('json/bahasa.json');
+        $languages = json_decode(file_get_contents($jsonLanguage), true);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        foreach ($languages as $language) {
+            Bahasa::create([
+                'bahasa' => $language['language'],
+                'deeplcode' => $language['deeplcode'],
+                'googlecode' => $language['googlecode'],
+            ]);
+        }
+
     }
 }

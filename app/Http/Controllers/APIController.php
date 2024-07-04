@@ -18,7 +18,7 @@ class APIController extends Controller
     function generateRandomWord($language, $category)
     {
         $client = new Client();
-        $prompt = "Generate 30 kata acak dari bahasa '$language' dalam kategori '$category'. Contoh kategori -> hewan: gajah, marmut, kucing, anjing. Buah: apel, pepaya, mangga, jeruk. Buat dalam format array";
+        $prompt = "Generate 30 kata acak dari bahasa '$language' dalam kategori '$category'. Contoh kategori -> hewan: gajah, marmut, kucing, anjing. Buah: apel, pepaya, mangga, jeruk. Buat dalam format array!";
         $apiKey = env("API_KEY_OPENAI");
         try {
             $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
@@ -39,7 +39,7 @@ class APIController extends Controller
                         ]
                     ],
                     'max_tokens' => 256,
-                    'temperature' => 0.7
+                    'temperature' => 1
                 ]
             ]);
 
