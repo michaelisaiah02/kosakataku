@@ -30,7 +30,7 @@
 <body class="vh-100">
     <div class="container py-3">
         <div class="row">
-            <h1>Speech To Text</h1>
+            <h1>KosakataKu</h1>
         </div>
         <div class="row my-3">
             <h2 class="text-center" id="randomWord"></h2>

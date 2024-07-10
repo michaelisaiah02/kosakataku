@@ -166,8 +166,8 @@ class APIController extends Controller
 
     public function exampleSentences($language_code, $word)
     {
-        if ($language_code !== 'EN-US') {
-            $english_word = $this->translate(false, "EN-US", $word);
+        if ($language_code !== 'en-US') {
+            $english_word = $this->translate(false, "en-US", $word);
         } else {
             $english_word = $word;
         }

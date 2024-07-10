@@ -3,13 +3,13 @@ $(document).ready(function () {
     let wordsArray = [];
     let currentIndex = 0;
 
-    function displayWord(language, word) {
+    function displayWord(word) {
         $("#randomWord").html(word);
-        textToSpeech(word);
+        textToSpeech(word, googlecode);
         translate(true, word).then((response) => {
             $("#translatedWord").html(response);
         });
-        exampleSentences(language_code, word).then((response) => {
+        exampleSentences(deeplcode, word).then((response) => {
             if (response !== null) {
                 $("#example").html(response.examples);
             }
@@ -21,7 +21,7 @@ $(document).ready(function () {
 
     function nextWord(language, category) {
         if (currentIndex < wordsArray.length) {
-            displayWord(language, wordsArray[currentIndex]);
+            displayWord(wordsArray[currentIndex]);
             currentIndex++;
         } else {
             generateRandomWord(language, category);
@@ -49,13 +49,13 @@ $(document).ready(function () {
         });
     }
 
-    function translate(json = true, word, language_code = "id") {
+    function translate(json = true, word, googlecode = "id") {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
                 url:
                     window.location.origin +
-                    `/translate/${json}/${language_code}/${encodeURIComponent(
+                    `/translate/${json}/${googlecode}/${encodeURIComponent(
                         word
                     )}`,
                 success: function (response) {
@@ -69,13 +69,13 @@ $(document).ready(function () {
         });
     }
 
-    function textToSpeech(word, language_code = "id") {
-        console.log(language_code, word);
+    function textToSpeech(word, googlecode) {
+        console.log(googlecode, word);
         $.ajax({
             type: "post",
             url:
                 window.location.origin +
-                `/text-to-speech/${language_code}/${encodeURIComponent(word)}`,
+                `/text-to-speech/${googlecode}/${encodeURIComponent(word)}`,
             success: function (response) {
                 const audioUrl = response.audio_url;
                 var audioContainer = $("#correctSpellingAudio");
@@ -99,8 +99,8 @@ $(document).ready(function () {
     let mediaRecorder;
     let audioChunks = [];
 
-    function startRecording(language_code) {
-        console.log(language_code);
+    function startRecording(googlecode) {
+        console.log(googlecode);
         navigator.mediaDevices
             .getUserMedia({ audio: true })
             .then((stream) => {
@@ -119,7 +119,7 @@ $(document).ready(function () {
                     });
                     const formData = new FormData();
                     formData.append("audio", audioBlob, "audio.webm");
-                    formData.append("language_code", language_code);
+                    formData.append("language_code", googlecode);
 
                     $.ajax({
                         type: "POST",
@@ -168,7 +168,7 @@ $(document).ready(function () {
 
     $("#spellingBtn").on("click", function () {
         if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            startRecording(language_code);
+            startRecording(googlecode);
             $("#onMic").show();
             $("#offMic").hide();
         } else if (mediaRecorder.state === "recording") {
@@ -178,19 +178,20 @@ $(document).ready(function () {
         }
     });
 
-    function exampleSentences(language, word) {
-        console.log(language, word);
+    function exampleSentences(deeplcode, word) {
+        console.log(deeplcode, word);
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
                 url:
                     window.location.origin +
-                    `/example-sentences/${language}/${encodeURIComponent(
+                    `/example-sentences/${deeplcode}/${encodeURIComponent(
                         word
                     )}`,
                 success: function (response) {
-                    var result = JSON.parse(response);
-                    resolve(result);
+                    console.log(response);
+                    $("#example").html(response);
+                    resolve(response);
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -200,9 +201,10 @@ $(document).ready(function () {
         });
     }
 
-    const language = "arab";
-    const language_code = "AR";
-    const category = "rasul";
+    const language = "korea";
+    const deeplcode = "KO";
+    const googlecode = "ko-KR";
+    const category = "benda";
 
     $("#onMic").hide();
     $("#offMic").show();
