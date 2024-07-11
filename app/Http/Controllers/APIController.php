@@ -7,6 +7,7 @@ use FFMpeg\FFMpeg;
 use GuzzleHttp\Client;
 use FFMpeg\Format\Audio\Wav;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;
@@ -15,56 +16,77 @@ use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 
 class APIController extends Controller
 {
-    function generateRandomWord($language, $category)
+    public function getWord($language, $category)
     {
         $client = new Client();
-        $prompt = "Generate 30 kata acak dari bahasa '$language' dalam kategori '$category'. Contoh kategori -> hewan: gajah, marmut, kucing, anjing. Buah: apel, pepaya, mangga, jeruk. Buat dalam format array!";
         $apiKey = env("API_KEY_OPENAI");
-        try {
-            $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    'model' => 'gpt-3.5-turbo',
-                    'messages' => [
-                        [
-                            'role' => 'system',
-                            'content' => 'You are a random word generator.'
-                        ],
-                        [
-                            'role' => 'user',
-                            'content' => $prompt
-                        ]
-                    ],
-                    'max_tokens' => 256,
-                    'temperature' => 1
-                ]
-            ]);
 
-            $data = json_decode($response->getBody(), true);
-            if (isset($data['choices'][0]['message']['content'])) {
-                return response()->json(json_decode($data['choices'][0]['message']['content']));
-            } else {
-                return "Tidak ada kata yang dihasilkan.";
-            }
-        } catch (Exception $e) {
-            return "Terjadi kesalahan: " . $e->getMessage();
+        // Cek cache terlebih dahulu
+        $cacheKey = "words_{$language}_{$category}";
+        $allWords = Cache::get($cacheKey, []);
+
+        // Jika cache kosong atau kurang dari 100 kata, lakukan permintaan baru
+        if (count($allWords) < 5) {
+            $allWords = $this->generateRandomWord($client, $apiKey, $language, $category);
+            Cache::put($cacheKey, $allWords, now()->addDays(1)); // Cache selama 1 hari
         }
+
+        // Ambil 10 kata unik dari cache
+        $uniqueWords = array_splice($allWords, 0, 1);
+        Cache::put($cacheKey, $allWords); // Perbarui cache dengan kata-kata yang tersisa
+        return response()->json($uniqueWords);
     }
 
-    public function translate($json, $language_code, $word)
+    private function generateRandomWord($client, $apiKey, $language, $category)
+    {
+        $allWords = [];
+        $prompt = "Generate a list of 50 random words in the language '$language' for the category '$category'. Separate each word with a comma and no numbering or additional formatting.";
+        $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json'
+            ],
+            'json' => [
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    [
+                        'role' => 'system',
+                        'content' => 'You are a random word generator.'
+                    ],
+                    [
+                        'role' => 'user',
+                        'content' => $prompt
+                    ]
+                ],
+                'max_tokens' => 3072,
+                'temperature' => 0.7
+            ]
+        ]);
+
+        $data = json_decode($response->getBody(), true);
+
+        if (isset($data['choices'][0]['message']['content'])) {
+            $content = $data['choices'][0]['message']['content'];
+
+            // Pembersihan respons untuk mengekstrak kata-kata
+            $content = preg_replace('/\d+\.\s*/', '', $content); // Menghapus penomoran
+            $content = trim(preg_replace('/\s*\n\s*/', ', ', $content)); // Mengganti baris baru dengan koma
+            $wordsArray = array_map('trim', explode(',', $content));
+
+            // Gabungkan hasil baru dengan semua kata yang sudah ada
+            $allWords = array_merge($allWords, $wordsArray);
+            $allWords = array_unique($allWords); // Pastikan kata-kata unik
+        }
+        return $allWords;
+    }
+
+    public function translate($language_code, $word)
     {
         $authKey = env("AUTH_KEY_DEEPL", null);
         $translator = new \DeepL\Translator($authKey);
 
-        $result = $translator->translateText($word, null, $language_code);
-        if ($json) {
-            return response()->json($result->text);
-        } else {
-            return $result->text;
-        }
+        $result = $translator->translateText($word, $language_code, "ID");
+        return response()->json($result->text);
     }
 
     public function textToSpeech($language_code, $word)
@@ -164,48 +186,43 @@ class APIController extends Controller
         }
     }
 
-    public function exampleSentences($language_code, $word)
+    public function exampleSentences($language, $word)
     {
-        if ($language_code !== 'en-US') {
-            $english_word = $this->translate(false, "en-US", $word);
-        } else {
-            $english_word = $word;
-        }
-        $curl = curl_init();
+        $client = new Client();
+        $prompt = "Generate 5 example sentences with the word '$word' in the language '$language' and their translations to Indonesian. Example, the word is rock, the language is English, format: [{\"sentence\": \"He stumbled over a rock while running in the park.\", \"translation\": \"Dia tersandung batu saat berlari di taman.\"}]";
+        $apiKey = env("API_KEY_OPENAI");
 
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://wordsapiv1.p.rapidapi.com/words/$english_word/examples",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "GET",
-            CURLOPT_HTTPHEADER => [
-                "x-rapidapi-host: wordsapiv1.p.rapidapi.com",
-                "x-rapidapi-key: d2ecf1000cmshe67379045cd9679p1b9e0djsn5ed8bb668b83"
-            ],
-        ]);
+        try {
+            $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type' => 'application/json'
+                ],
+                'json' => [
+                    'model' => 'gpt-3.5-turbo',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => 'You are a example sentence generator.'
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $prompt
+                        ]
+                    ],
+                    'max_tokens' => 512,
+                    'temperature' => 1.5
+                ]
+            ]);
 
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        $response = json_decode($response);
-        if (count($response->examples) > 0) {
-            $randomIndex = rand(0, count($response->examples) - 1);
-            $example = $response->examples[$randomIndex];
-        } else {
-            $example = null;
-        }
-        $response = json_encode($example);
-        curl_close($curl);
-
-        if ($language_code !== 'EN-US') {
-            $response = $this->translate(false, $language_code, $response);
-        }
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        } else {
-            return response()->json($response);
+            $data = $response->getBody();
+            if (isset($data['choices'][0]['message']['content'])) {
+                return response()->json(json_decode($data['choices'][0]['message']['content'], true));
+            } else {
+                return "Tidak ada kalimat yang dihasilkan.";
+            }
+        } catch (Exception $e) {
+            return "Terjadi kesalahan: " . $e->getMessage();
         }
     }
 

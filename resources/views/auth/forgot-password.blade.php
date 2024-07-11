@@ -1,6 +1,6 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    <div class="mb-4 text-muted">
+        {{ __('Lupa kata sandi? Tidak masalah. Ketikkan alamat emailmu, nanti akan dikirimkan link reset kata sandi melalui email agar kamu bisa membuat kata sandi baru.') }}
     </div>
 
     <!-- Session Status -->
@@ -10,16 +10,15 @@
         @csrf
 
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+        <div class="mb-3">
+            <x-input-label for="email" :value="'Email'" />
+            <x-text-input id="email" class="form-control mt-1" type="email" name="email" :value="old('email')" required
+                autofocus />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+        <div class="d-flex align-items-center justify-content-end mt-4">
+            <button class="btn btn-primary">Kirim Link Reset Kata Sandi</button>
         </div>
     </form>
 </x-guest-layout>

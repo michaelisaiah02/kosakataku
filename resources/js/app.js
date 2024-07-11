@@ -10,6 +10,14 @@ $(document).ready(function () {
             "X-CSRF-TOKEN": csrfToken,
         },
     });
+
+    $(".dropdown").on("show.bs.dropdown", function () {
+        $(this).find(".dropdown-menu").first().stop(true, true).fadeIn(150);
+    });
+
+    $(".dropdown").on("hide.bs.dropdown", function () {
+        $(this).find(".dropdown-menu").first().stop(true, true).fadeOut(0);
+    });
 });
 
 import Alpine from "alpinejs";
