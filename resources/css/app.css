@@ -1,36 +1,51 @@
-.nav-link {
-    position: relative;
-    margin: 0 15px;
-    text-decoration: none;
-    color: black;
-    transition: color 0.3s ease;
-    -webkit-transition: color 0.3s ease;
-    -moz-transition: color 0.3s ease;
-    -ms-transition: color 0.3s ease;
-    -o-transition: color 0.3s ease;
+.min-vh-75 {
+    min-height: 75vh;
 }
 
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    width: 0; /* Initial width is 0 */
-    height: 3px; /* Thickness of underline */
-    left: 20%; /* Start at the center */
-    bottom: 3px; /* Position below the text */
-    background-color: blue; /* Color of underline */
-    transition: width 0.3s ease, left 0.3s ease; /* Transition for width and position */
-  }
+.nav-link {
+position: relative;
+margin: 0 15px;
+text-decoration: none;
+color: black;
+transition: color 0.3s ease;
+-webkit-transition: color 0.3s ease;
+-moz-transition: color 0.3s ease;
+-ms-transition: color 0.3s ease;
+-o-transition: color 0.3s ease;
+}
 
-  .nav-link.active::after, .nav-link:hover::after {
-    width: 60%; /* 3/4 of the text width */
-    left: 10%; /* Center the underline */
-  }
+.nav-link::after {
+content: '';
+position: absolute;
+width: 0; /* Initial width is 0 */
+height: 3px; /* Thickness of underline */
+left: 20%; /* Start at the center */
+bottom: 3px; /* Position below the text */
+background-color: blue; /* Color of underline */
+transition: width 0.3s ease, left 0.3s ease; /* Transition for width and position */
+}
 
-  .nav-link.active, .nav-link:hover {
-    color: blue; /* Change text color on hover or active */
-  }
+.nav-link.active::after, .nav-link:hover::after {
+width: 60%; /* 3/4 of the text width */
+left: 10%; /* Center the underline */
+}
 
-  .dropdown-toggle::after {
-    content: none; /* Remove pseudo element */
-  }
+.nav-link.active, .nav-link:hover {
+color: blue; /* Change text color on hover or active */
+}
 
+.dropdown-toggle::after {
+content: none; /* Remove pseudo element */
+}
+
+.carousel-item {
+    transition: transform .6s ease-in-out;
+    -webkit-transition: transform .6s ease-in-out;
+    -moz-transition: transform .6s ease-in-out;
+    -ms-transition: transform .6s ease-in-out;
+    -o-transition: transform .6s ease-in-out;
+}
+
+.carousel-item.active {
+    display: block;
+}

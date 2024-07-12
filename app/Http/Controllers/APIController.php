@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use FFMpeg\FFMpeg;
+// use FFMpeg\FFMpeg;
 use GuzzleHttp\Client;
-use FFMpeg\Format\Audio\Wav;
-use Illuminate\Http\Request;
+// use FFMpeg\Format\Audio\Wav;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-use Google\Cloud\Speech\V1\SpeechClient;
-use Google\Cloud\Speech\V1\RecognitionAudio;
-use Google\Cloud\Speech\V1\RecognitionConfig;
+// use Google\Cloud\Speech\V1\SpeechClient;
+// use Google\Cloud\Speech\V1\RecognitionAudio;
+// use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 
 class APIController extends Controller
@@ -130,66 +130,66 @@ class APIController extends Controller
         return response()->json(['audio_url' => $url]);
     }
 
-    public function speechToText(Request $request)
-    {
-        $request->validate([
-            'audio' => 'required|file|mimetypes:video/webm',
-            'language_code' => 'required|string',
-        ]);
+    // public function speechToText(Request $request)
+    // {
+    //     $request->validate([
+    //         'audio' => 'required|file|mimetypes:video/webm',
+    //         'language_code' => 'required|string',
+    //     ]);
 
-        $audioFile = $request->file('audio');
+    //     $audioFile = $request->file('audio');
 
-        // Konversi file audio dari webm ke wav
-        $ffmpeg = FFMpeg::create();
-        $audio = $ffmpeg->open($audioFile->getPathname());
-        $wavPath = storage_path('app/public/' . uniqid() . '.wav');
-        $format = new Wav();
-        $format->setAudioChannels(1);
-        $audio->save($format, $wavPath);
+    //     // Konversi file audio dari webm ke wav
+    //     $ffmpeg = FFMpeg::create();
+    //     $audio = $ffmpeg->open($audioFile->getPathname());
+    //     $wavPath = storage_path('app/public/' . uniqid() . '.wav');
+    //     $format = new Wav();
+    //     $format->setAudioChannels(1);
+    //     $audio->save($format, $wavPath);
 
-        // Baca konten file wav
-        $audioContent = file_get_contents($wavPath);
+    //     // Baca konten file wav
+    //     $audioContent = file_get_contents($wavPath);
 
-        // Inisiasi client Google Speech-to-Text
-        $client = new SpeechClient([
-            'credentials' => config('services.google.application_credentials'),
-        ]);
+    //     // Inisiasi client Google Speech-to-Text
+    //     $client = new SpeechClient([
+    //         'credentials' => config('services.google.application_credentials'),
+    //     ]);
 
-        $audio = (new RecognitionAudio())
-            ->setContent($audioContent);
+    //     $audio = (new RecognitionAudio())
+    //         ->setContent($audioContent);
 
-        $config = (new RecognitionConfig())
-            ->setSampleRateHertz(48000)
-            ->setLanguageCode($request->language_code);
+    //     $config = (new RecognitionConfig())
+    //         ->setSampleRateHertz(48000)
+    //         ->setLanguageCode($request->language_code);
 
-        try {
-            $response = $client->recognize($config, $audio);
+    //     try {
+    //         $response = $client->recognize($config, $audio);
 
-            $transcription = [];
-            foreach ($response->getResults() as $result) {
-                $alternatives = $result->getAlternatives();
-                foreach ($alternatives as $alternative) {
-                    $transcription[] = $alternative->getTranscript();
-                }
-            }
+    //         $transcription = [];
+    //         foreach ($response->getResults() as $result) {
+    //             $alternatives = $result->getAlternatives();
+    //             foreach ($alternatives as $alternative) {
+    //                 $transcription[] = $alternative->getTranscript();
+    //             }
+    //         }
 
-            // Tutup klien untuk menghindari kebocoran sumber daya
-            $client->close();
+    //         // Tutup klien untuk menghindari kebocoran sumber daya
+    //         $client->close();
 
-            // Hapus file wav setelah diproses
-            unlink($wavPath);
+    //         // Hapus file wav setelah diproses
+    //         unlink($wavPath);
 
-            return response()->json(['transcription' => $transcription]);
-        } catch (Exception $e) {
-            error_log('Error during speech recognition: ' . $e->getMessage());
-            return response()->json(['error' => 'Speech recognition failed. Note:' . $e->getMessage()], 500);
-        }
-    }
+    //         return response()->json(['transcription' => $transcription]);
+    //     } catch (Exception $e) {
+    //         error_log('Error during speech recognition: ' . $e->getMessage());
+    //         return response()->json(['error' => 'Speech recognition failed. Note:' . $e->getMessage()], 500);
+    //     }
+    // }
 
     public function exampleSentences($language, $word)
     {
         $client = new Client();
-        $prompt = "Generate 5 example sentences with the word '$word' in the language '$language' and their translations to Indonesian. Example, the word is rock, the language is English, format: [{\"sentence\": \"He stumbled over a rock while running in the park.\", \"translation\": \"Dia tersandung batu saat berlari di taman.\"}]";
+        $prompt = "Generate 5 example sentences with the word '$word' in the language '$language' and their translations to Indonesian. Each sentence and its translation should be on a new line, separated by a dash ('-'). No numbering or extra formatting. Example output:\nSentence in language - Translation in Indonesian";
         $apiKey = env("API_KEY_OPENAI");
 
         try {
@@ -203,7 +203,7 @@ class APIController extends Controller
                     'messages' => [
                         [
                             'role' => 'system',
-                            'content' => 'You are a example sentence generator.'
+                            'content' => 'You are an example sentence generator.'
                         ],
                         [
                             'role' => 'user',
@@ -211,19 +211,39 @@ class APIController extends Controller
                         ]
                     ],
                     'max_tokens' => 512,
-                    'temperature' => 1.5
+                    'temperature' => 0.7
                 ]
             ]);
 
-            $data = $response->getBody();
+            $data = json_decode($response->getBody(), true);
             if (isset($data['choices'][0]['message']['content'])) {
-                return response()->json(json_decode($data['choices'][0]['message']['content'], true));
+                $content = $data['choices'][0]['message']['content'];
+                $examples = $this->parseExampleSentences($content);
+                return response()->json($examples);
             } else {
-                return "Tidak ada kalimat yang dihasilkan.";
+                return response()->json(["error" => "Tidak ada kalimat yang dihasilkan."]);
             }
         } catch (Exception $e) {
-            return "Terjadi kesalahan: " . $e->getMessage();
+            return response()->json(["error" => "Terjadi kesalahan: " . $e->getMessage()]);
         }
+    }
+
+    private function parseExampleSentences($content)
+    {
+        $sentences = explode("\n", $content);
+        $examples = [];
+
+        foreach ($sentences as $sentence) {
+            if (strpos($sentence, ' - ') !== false) {
+                list($exampleSentence, $translation) = explode(' - ', $sentence);
+                $examples[] = [
+                    'sentence' => trim($exampleSentence),
+                    'translation' => trim($translation)
+                ];
+            }
+        }
+
+        return $examples;
     }
 
     /**

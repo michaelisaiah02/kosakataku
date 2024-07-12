@@ -13,16 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $jsonLanguage = resource_path('json/bahasa.json');
-        $languages = json_decode(file_get_contents($jsonLanguage), true);
-
-        foreach ($languages as $language) {
-            Bahasa::create([
-                'bahasa' => $language['language'],
-                'deeplcode' => $language['deeplcode'],
-                'googlecode' => $language['googlecode'],
-            ]);
-        }
-
+        $this->call([
+            BahasaSeeder::class,
+            KategoriSeeder::class,
+            TingkatKesulitanSeeder::class,
+        ]);
     }
 }

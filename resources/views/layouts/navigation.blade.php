@@ -27,8 +27,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('preferensi') ? 'active' : '' }}"
-                        href="{{ route('preferensi') }}">
+                    <a class="nav-link {{ request()->routeIs('latihan*') ? 'active' : '' }}"
+                        href="{{ route('latihan.index') }}">
                         Latihan
                     </a>
                 </li>

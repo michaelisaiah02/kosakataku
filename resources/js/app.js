@@ -1,6 +1,6 @@
-import "./bootstrap";
 import $ from "jquery";
 window.$ = window.jQuery = $;
+import "./bootstrap";
 
 $(document).ready(function () {
     const csrfToken = $('meta[name="csrf-token"]').attr("content");

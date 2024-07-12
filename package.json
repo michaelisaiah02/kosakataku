@@ -16,9 +16,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "autoprefixer": "^10.4.19",
         "ffmpeg": "^0.0.4",
-        "jquery": "^3.7.1",
-        "postcss": "^8.4.39"
+        "jquery": "^3.7.1"
     }
 }

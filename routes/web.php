@@ -4,29 +4,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\LatihanController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
-Route::get('/home', function () {
-    return view('home');
-});
-
-
-Route::get('/beranda', function () {
-    return view('beranda');
-})->middleware('auth')->name('beranda');
-
+    if (auth()->check()) {
+        return view('beranda');
+    } else {
+        return view('welcome');
+    }
+})->name('beranda');
 
 Route::middleware('auth')->group(function () {
     Route::middleware('verified')->group(function () {
         // Latihan Route
-        Route::get('/preferensi', function () {
-            return view('preferensi');
-        })->name('preferensi');
-        Route::get('/latihan', function () {
-            return view('latihan');
-        })->name('latihan');
+        Route::resource('latihan', LatihanController::class)->only(['index', 'store', 'show', 'edit', 'update']);
     });
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

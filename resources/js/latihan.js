@@ -1,8 +1,8 @@
 $(document).ready(function () {
     let word;
+    let recognition;
 
     function displayWord(word) {
-        console.log(word);
         $("#randomWord").html(word);
         textToSpeech(word, googlecode);
         translate(deeplcode, word).then((response) => {
@@ -10,18 +10,19 @@ $(document).ready(function () {
         });
         exampleSentences(language, word).then((response) => {
             if (response !== null) {
-                $("#example").html(response.examples);
+                loadExampleSentences(response);
             }
         });
         $("#spellingSection").show();
         $("#nextSection").hide();
+        $("#trueSection").hide();
     }
 
     function getWord(language, category) {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
-                url: window.location.origin + `/word/${language}/${category}`,
+                url: `${window.location.origin}/word/${language}/${category}`,
                 success: function (response) {
                     word = response[0];
                     console.log(word);
@@ -39,9 +40,9 @@ $(document).ready(function () {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
-                url:
-                    window.location.origin +
-                    `/translate/${deeplcode}/${encodeURIComponent(word)}`,
+                url: `${
+                    window.location.origin
+                }/translate/${deeplcode}/${encodeURIComponent(word)}`,
                 success: function (response) {
                     resolve(response);
                 },
@@ -57,9 +58,9 @@ $(document).ready(function () {
         console.log(googlecode, word);
         $.ajax({
             type: "post",
-            url:
-                window.location.origin +
-                `/text-to-speech/${googlecode}/${encodeURIComponent(word)}`,
+            url: `${
+                window.location.origin
+            }/text-to-speech/${googlecode}/${encodeURIComponent(word)}`,
             success: function (response) {
                 const audioUrl = response.audio_url;
                 var audioContainer = $("#correctSpellingAudio");
@@ -80,87 +81,49 @@ $(document).ready(function () {
         });
     }
 
-    let mediaRecorder;
-    let audioChunks = [];
+    function startRecognition() {
+        recognition = new (window.SpeechRecognition ||
+            window.webkitSpeechRecognition)();
+        recognition.lang = googlecode;
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 1;
 
-    function startRecording(googlecode) {
-        console.log(googlecode);
-        navigator.mediaDevices
-            .getUserMedia({ audio: true })
-            .then((stream) => {
-                mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: "audio/webm",
-                });
-                mediaRecorder.start();
+        recognition.onresult = function (event) {
+            const speechResult = event.results[0][0].transcript;
+            $("#spelledWord").html(speechResult);
+            $("#spelledWord").removeClass("text-success text-danger");
+            $("#spelledSection").show();
+            if (speechResult.toLowerCase() === word.toLowerCase()) {
+                $("#spelledWord").addClass("text-success");
+                $("#exampleSentence").show();
+                $("#spellingSection").hide();
+                $("#trueSection").show();
+                $("#exampleSentenceSection").show();
+                recognition.stop();
+            } else {
+                $("#spelledWord").addClass("text-danger");
+                recognition.stop();
+                startRecognition(); // Restart recognition
+            }
+        };
 
-                mediaRecorder.ondataavailable = (event) => {
-                    audioChunks.push(event.data);
-                };
+        recognition.onerror = function (event) {
+            console.error("Speech recognition error detected: " + event.error);
+            $("#onMic").hide();
+            $("#offMic").show();
+        };
 
-                mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, {
-                        type: "audio/webm",
-                    });
-                    const formData = new FormData();
-                    formData.append("audio", audioBlob, "audio.webm");
-                    formData.append("language_code", googlecode);
+        recognition.onend = function () {
+            console.log("Speech recognition service disconnected");
+        };
 
-                    $.ajax({
-                        type: "POST",
-                        url: "/speech-to-text",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            const speechResult = response.transcription[0];
-                            console.log(speechResult);
-                            $("#spelledWord").html("");
-                            $("#spelledWord").removeClass(
-                                "text-success text-danger"
-                            );
-                            $("#spelledWordLabel").show();
-                            $("#spelledWord").html(speechResult);
-                            if (
-                                speechResult.toLowerCase() ===
-                                word.toLowerCase()
-                            ) {
-                                $("#spelledWord").addClass("text-success");
-                                if (example) {
-                                    $("#exampleSentence").html(example);
-                                }
-                                $("#spellingSection").hide();
-                                $("#nextSection").show();
-                            } else {
-                                $("#spelledWord").addClass("text-danger");
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error(xhr.responseText);
-                        },
-                    });
-
-                    audioChunks = [];
-                };
-            })
-            .catch((error) =>
-                console.error("Error accessing media devices.", error)
-            );
-    }
-
-    function stopRecording() {
-        mediaRecorder.stop();
+        recognition.start();
     }
 
     $("#spellingBtn").on("click", function () {
-        if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            startRecording(googlecode);
-            $("#onMic").show();
-            $("#offMic").hide();
-        } else if (mediaRecorder.state === "recording") {
-            stopRecording();
-            $("#onMic").hide();
-            $("#offMic").show();
-        }
+        startRecognition();
+        $("#onMic").show();
+        $("#offMic").hide();
     });
 
     function exampleSentences(language, word) {
@@ -168,11 +131,9 @@ $(document).ready(function () {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
-                url:
-                    window.location.origin +
-                    `/example-sentences/${language}/${encodeURIComponent(
-                        word
-                    )}`,
+                url: `${
+                    window.location.origin
+                }/example-sentences/${language}/${encodeURIComponent(word)}`,
                 success: function (response) {
                     console.log(response);
                     loadExampleSentences(response);
@@ -193,7 +154,7 @@ $(document).ready(function () {
         sentences.forEach((example, index) => {
             const activeClass = index === 0 ? "active" : "";
             const item = `
-                <div class="carousel-item ${activeClass}">
+                <div class="carousel-item ${activeClass} text-center">
                     <blockquote class="blockquote mb-0">
                         <p>${example.sentence}</p>
                         <footer class="blockquote-footer">${example.translation}</footer>
@@ -202,33 +163,29 @@ $(document).ready(function () {
             `;
             carouselInner.append(item);
         });
-
-        $("#exampleCarousel").carousel();
     }
 
-    const language = "Japanese";
-    const category = "vehicles";
-    const deeplcode = "JA";
-    const googlecode = "ja-JP";
+    const language = "German";
+    const category = "animals";
+    const deeplcode = "DE";
+    const googlecode = "de-DE";
 
     $("#onMic").hide();
     $("#offMic").show();
-    $("#spelledWordLabel").hide();
-    $("#nextSection").hide();
+    $("#spelledSection").hide();
+    $("#trueSection").hide();
+    $("#exampleSentenceSection").hide();
 
     // Fetch kata pertama saat halaman dimuat
-    getWord(language, category).then((response) => {
-        if (response !== null) {
-            displayWord(word);
-        }
-    });
+    getWord(language, category).then(displayWord);
 
     // Tambahkan event listener untuk tombol 'Lanjut'
     $("#nextBtn").on("click", function () {
-        getWord(language, category).then((response) => {
-            if (response !== null) {
-                displayWord(word);
-            }
-        });
+        getWord(language, category).then(displayWord);
+        $("#onMic").hide();
+        $("#offMic").show();
+        $("#spelledSection").hide();
+        $("#trueSection").hide();
+        $("#exampleSentenceSection").hide();
     });
 });

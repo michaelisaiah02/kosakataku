@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -16,7 +17,6 @@ return new class extends Migration {
             $table->boolean('bantuan_pengejaan')->default(true);
             $table->integer('delay_bantuan')->default(0);
             $table->integer('maks_salah')->default(5);
-            $table->string('deskripsi');
             $table->timestamps();
         });
     }
