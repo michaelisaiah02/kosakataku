@@ -34,7 +34,7 @@
         <!-- Page Heading -->
         @isset($header)
             <header class="bg-white shadow-sm">
-                <div class="container py-6 px-4">
+                <div class="container px-3">
                     {{ $header }}
                 </div>
             </header>

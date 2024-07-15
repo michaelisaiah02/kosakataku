@@ -11,7 +11,16 @@ class Latihan extends Model
 
     protected $table = 'latihan';
 
-    protected $fillable = ['id_user', 'id_bahasa', 'id_kategori', 'id_tingkat_kesulitan', 'total_kata', 'benar', 'list_kata', 'list_benar'];
+    protected $fillable = [
+        'id_user',
+        'id_bahasa',
+        'id_kategori',
+        'id_tingkat_kesulitan',
+        'jumlah_kata',
+        'jumlah_benar',
+        'list',
+        'selesai'
+    ];
 
     public function user()
     {

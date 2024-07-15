@@ -8,9 +8,11 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    resolve: {
-        alias: {
-            $: "jquery",
-        },
+    optimizeDeps: {
+        include: ["jquery", "sweetalert2"],
+    },
+    server: {
+        host: "localhost", // atau gunakan 'localhost'
+        port: 3000, // atau port yang Anda gunakan
     },
 });

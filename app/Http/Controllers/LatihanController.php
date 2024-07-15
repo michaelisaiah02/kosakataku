@@ -10,11 +10,19 @@ use Illuminate\Http\Request;
 
 class LatihanController extends Controller
 {
+    protected $latihan;
+    public function __construct()
+    {
+        $this->latihan = Latihan::where('id_user', auth()->user()->id)->where('selesai', false);
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        if ($this->latihan->exists()) {
+            return redirect()->route('latihan.edit', $this->latihan->first()->id);
+        }
         $languages = Bahasa::all();
         $categories = Kategori::all();
         $difficulties = TingkatKesulitan::all();
@@ -45,7 +53,9 @@ class LatihanController extends Controller
             'id_kategori' => 'required|exists:kategori,id',
             'id_tingkat_kesulitan' => 'required|exists:tingkat_kesulitan,id',
         ]);
-        dd($request->all());
+        $request->merge([
+            'id_user' => auth()->id()
+        ]);
         // Validasi dan simpan pengaturan latihan ke database
         $latihan = Latihan::create($request->all());
 
@@ -58,7 +68,13 @@ class LatihanController extends Controller
      */
     public function show(Latihan $latihan)
     {
-        //
+        if ($this->latihan->exists()) {
+            return redirect()->route('latihan.edit', $latihan->id)->with('error', 'Kamu belum menyelesaikan latihan, semangat!');
+        }
+        return view('hasil', [
+            'latihan' => $latihan->load('bahasa', 'kategori', 'tingkatKesulitan'),
+            'nilai' => $latihan->jumlah_benar / $latihan->jumlah_kata * 100
+        ])->with('success', 'Selamat telah menyelesaikan latihan!');
     }
 
     /**
@@ -66,7 +82,15 @@ class LatihanController extends Controller
      */
     public function edit(Latihan $latihan)
     {
-        //
+        if ($latihan->selesai == true) {
+            return redirect()->route('latihan.index')->with('error', 'Latihan sebelumnya sudah selesai, kamu bisa melihat hasilnya di riwayat.');
+        }
+        return view('latihan', [
+            'latihan' => $latihan,
+            'bahasa' => $latihan->bahasa()->first(),
+            'kategori' => $latihan->kategori()->first()->kategori,
+            'tingkat_kesulitan' => $latihan->tingkatKesulitan()->first()->tingkat_kesulitan
+        ]);
     }
 
     /**
@@ -74,7 +98,14 @@ class LatihanController extends Controller
      */
     public function update(Request $request, Latihan $latihan)
     {
-        //
+        $latihan->update([
+            'jumlah_kata' => $request->jumlah_kata,
+            'jumlah_benar' => $request->jumlah_benar,
+            'list' => $request->list,
+            'selesai' => true
+        ]);
+
+        return redirect()->route('latihan.show', $latihan->id);
     }
 
     /**

@@ -16,7 +16,6 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::middleware('verified')->group(function () {
-        // Latihan Route
         Route::resource('latihan', LatihanController::class)->only(['index', 'store', 'show', 'edit', 'update']);
     });
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

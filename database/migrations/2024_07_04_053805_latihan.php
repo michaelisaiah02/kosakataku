@@ -17,10 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('id_bahasa');
             $table->unsignedBigInteger('id_kategori');
             $table->unsignedBigInteger('id_tingkat_kesulitan');
-            $table->integer('total_kata')->default(0);
-            $table->integer('benar')->default(0);
-            $table->json('list_kata')->nullable();
-            $table->json('list_benar')->nullable();
+            $table->integer('jumlah_kata')->default(0);
+            $table->integer('jumlah_benar')->default(0);
+            $table->json('list')->nullable()->default(null);
             $table->boolean('selesai')->default(false);
             $table->timestamps();
 

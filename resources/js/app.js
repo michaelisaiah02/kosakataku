@@ -1,6 +1,14 @@
 import $ from "jquery";
 window.$ = window.jQuery = $;
+
 import "./bootstrap";
+
+import Swal from "sweetalert2";
+window.Swal = Swal;
+
+import Alpine from "alpinejs";
+window.Alpine = Alpine;
+Alpine.start();
 
 $(document).ready(function () {
     const csrfToken = $('meta[name="csrf-token"]').attr("content");
@@ -19,7 +27,3 @@ $(document).ready(function () {
         $(this).find(".dropdown-menu").first().stop(true, true).fadeOut(0);
     });
 });
-
-import Alpine from "alpinejs";
-window.Alpine = Alpine;
-Alpine.start();

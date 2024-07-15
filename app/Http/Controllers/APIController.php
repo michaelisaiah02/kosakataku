@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use Exception;
-// use FFMpeg\FFMpeg;
+use FFMpeg\FFMpeg;
 use GuzzleHttp\Client;
-// use FFMpeg\Format\Audio\Wav;
-// use Illuminate\Http\Request;
+use FFMpeg\Format\Audio\Wav;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
-// use Google\Cloud\Speech\V1\SpeechClient;
-// use Google\Cloud\Speech\V1\RecognitionAudio;
-// use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V1\RecognitionAudio;
+use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 
 class APIController extends Controller
@@ -58,7 +58,7 @@ class APIController extends Controller
                         'content' => $prompt
                     ]
                 ],
-                'max_tokens' => 3072,
+                'max_tokens' => 4096,
                 'temperature' => 0.7
             ]
         ]);
@@ -130,61 +130,61 @@ class APIController extends Controller
         return response()->json(['audio_url' => $url]);
     }
 
-    // public function speechToText(Request $request)
-    // {
-    //     $request->validate([
-    //         'audio' => 'required|file|mimetypes:video/webm',
-    //         'language_code' => 'required|string',
-    //     ]);
+    public function speechToText(Request $request)
+    {
+        $request->validate([
+            'audio' => 'required|file|mimetypes:video/webm',
+            'language_code' => 'required|string',
+        ]);
 
-    //     $audioFile = $request->file('audio');
+        $audioFile = $request->file('audio');
 
-    //     // Konversi file audio dari webm ke wav
-    //     $ffmpeg = FFMpeg::create();
-    //     $audio = $ffmpeg->open($audioFile->getPathname());
-    //     $wavPath = storage_path('app/public/' . uniqid() . '.wav');
-    //     $format = new Wav();
-    //     $format->setAudioChannels(1);
-    //     $audio->save($format, $wavPath);
+        // Konversi file audio dari webm ke wav
+        $ffmpeg = FFMpeg::create();
+        $audio = $ffmpeg->open($audioFile->getPathname());
+        $wavPath = storage_path('app/public/' . uniqid() . '.wav');
+        $format = new Wav();
+        $format->setAudioChannels(1);
+        $audio->save($format, $wavPath);
 
-    //     // Baca konten file wav
-    //     $audioContent = file_get_contents($wavPath);
+        // Baca konten file wav
+        $audioContent = file_get_contents($wavPath);
 
-    //     // Inisiasi client Google Speech-to-Text
-    //     $client = new SpeechClient([
-    //         'credentials' => config('services.google.application_credentials'),
-    //     ]);
+        // Inisiasi client Google Speech-to-Text
+        $client = new SpeechClient([
+            'credentials' => config('services.google.application_credentials'),
+        ]);
 
-    //     $audio = (new RecognitionAudio())
-    //         ->setContent($audioContent);
+        $audio = (new RecognitionAudio())
+            ->setContent($audioContent);
 
-    //     $config = (new RecognitionConfig())
-    //         ->setSampleRateHertz(48000)
-    //         ->setLanguageCode($request->language_code);
+        $config = (new RecognitionConfig())
+            ->setSampleRateHertz(48000)
+            ->setLanguageCode($request->language_code);
 
-    //     try {
-    //         $response = $client->recognize($config, $audio);
+        try {
+            $response = $client->recognize($config, $audio);
 
-    //         $transcription = [];
-    //         foreach ($response->getResults() as $result) {
-    //             $alternatives = $result->getAlternatives();
-    //             foreach ($alternatives as $alternative) {
-    //                 $transcription[] = $alternative->getTranscript();
-    //             }
-    //         }
+            $transcription = [];
+            foreach ($response->getResults() as $result) {
+                $alternatives = $result->getAlternatives();
+                foreach ($alternatives as $alternative) {
+                    $transcription[] = $alternative->getTranscript();
+                }
+            }
 
-    //         // Tutup klien untuk menghindari kebocoran sumber daya
-    //         $client->close();
+            // Tutup klien untuk menghindari kebocoran sumber daya
+            $client->close();
 
-    //         // Hapus file wav setelah diproses
-    //         unlink($wavPath);
+            // Hapus file wav setelah diproses
+            unlink($wavPath);
 
-    //         return response()->json(['transcription' => $transcription]);
-    //     } catch (Exception $e) {
-    //         error_log('Error during speech recognition: ' . $e->getMessage());
-    //         return response()->json(['error' => 'Speech recognition failed. Note:' . $e->getMessage()], 500);
-    //     }
-    // }
+            return response()->json(['transcription' => $transcription]);
+        } catch (Exception $e) {
+            error_log('Error during speech recognition: ' . $e->getMessage());
+            return response()->json(['error' => 'Speech recognition failed. Note: ' . $e->getMessage()], 500);
+        }
+    }
 
     public function exampleSentences($language, $word)
     {

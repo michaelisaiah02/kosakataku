@@ -1,38 +1,57 @@
 .min-vh-75 {
-    min-height: 75vh;
+    min-height: 75svh;
 }
 
+/* CSS for Desktop */
 .nav-link {
-position: relative;
-margin: 0 15px;
-text-decoration: none;
-color: black;
-transition: color 0.3s ease;
--webkit-transition: color 0.3s ease;
--moz-transition: color 0.3s ease;
--ms-transition: color 0.3s ease;
--o-transition: color 0.3s ease;
+    position: relative;
+    margin: 0 15px;
+    text-decoration: none;
+    color: black;
+    transition: color 0.3s ease;
+    -webkit-transition: color 0.3s ease;
+    -moz-transition: color 0.3s ease;
+    -ms-transition: color 0.3s ease;
+    -o-transition: color 0.3s ease;
 }
 
 .nav-link::after {
-content: '';
-position: absolute;
-width: 0; /* Initial width is 0 */
-height: 3px; /* Thickness of underline */
-left: 20%; /* Start at the center */
-bottom: 3px; /* Position below the text */
-background-color: blue; /* Color of underline */
-transition: width 0.3s ease, left 0.3s ease; /* Transition for width and position */
+    content: '';
+    position: absolute;
+    width: 0; /* Initial width is 0 */
+    height: 3px; /* Thickness of underline */
+    left: 50%; /* Start at the center */
+    bottom: 3px; /* Position below the text */
+    background-color: blue; /* Color of underline */
+    transition: width 0.3s ease, left 0.3s ease; /* Transition for width and position */
 }
 
 .nav-link.active::after, .nav-link:hover::after {
-width: 60%; /* 3/4 of the text width */
-left: 10%; /* Center the underline */
+    width: 65%; /* 3/4 of the text width */
+    left: 13%; /* Center the underline */
 }
 
 .nav-link.active, .nav-link:hover {
-color: blue; /* Change text color on hover or active */
+    color: blue; /* Change text color on hover or active */
 }
+
+/* CSS for Mobile */
+@media (max-width: 767px) {
+    .nav-link {
+        margin: 10px 0;
+    }
+
+    .nav-link::after {
+        width: 0; /* Initial width is 0 */
+        left: 10%; /* Start at the left */
+    }
+
+    .nav-link.active::after, .nav-link:hover::after {
+        width: 9%; /* Almost full width for mobile */
+        left: -1px; /* Slight padding on sides */
+    }
+}
+
 
 .dropdown-toggle::after {
 content: none; /* Remove pseudo element */
@@ -48,4 +67,9 @@ content: none; /* Remove pseudo element */
 
 .carousel-item.active {
     display: block;
+}
+
+#nilai {
+    width: 100px;
+    height: 100px;
 }

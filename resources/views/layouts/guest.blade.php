@@ -24,7 +24,7 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
-    @vite(['resources/sass/app.scss'])
+    @vite(['resources/sass/app.scss', 'resources/css/app.css'])
 </head>
 
 <body class="font-sans text-dark bg-light">
