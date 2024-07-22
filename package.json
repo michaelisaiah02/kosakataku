@@ -18,6 +18,8 @@
     "dependencies": {
         "autoprefixer": "^10.4.19",
         "bootstrap-icons": "^1.11.3",
+        "datatables.net": "^2.1.0",
+        "datatables.net-bs5": "^2.1.0",
         "ffmpeg": "^0.0.4",
         "jquery": "^3.7.1",
         "postcss": "^8.4.39",

@@ -1,3 +1,13 @@
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin-animation {
+    animation: spin 0.5s linear;
+    -webkit-animation: spin 0.5s linear;
+}
+
 .min-vh-75 {
     min-height: 75svh;
 }
@@ -22,7 +32,7 @@
     height: 3px; /* Thickness of underline */
     left: 50%; /* Start at the center */
     bottom: 3px; /* Position below the text */
-    background-color: blue; /* Color of underline */
+    background-color: #0D6EFD; /* Color of underline */
     transition: width 0.3s ease, left 0.3s ease; /* Transition for width and position */
 }
 
@@ -32,7 +42,7 @@
 }
 
 .nav-link.active, .nav-link:hover {
-    color: blue; /* Change text color on hover or active */
+    color: #0D6EFD; /* Change text color on hover or active */
 }
 
 /* CSS for Mobile */
@@ -70,6 +80,6 @@ content: none; /* Remove pseudo element */
 }
 
 #nilai {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
 }

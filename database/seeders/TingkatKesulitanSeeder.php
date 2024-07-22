@@ -27,21 +27,21 @@ class TingkatKesulitanSeeder extends Seeder
             'tingkat_kesulitan' => 'mudah',
             'bantuan_pengejaan' => true,
             'delay_bantuan' => 0,
-            'maks_salah' => 9,
+            'maks_salah' => 10,
         ]);
 
         TingkatKesulitan::create([
             'tingkat_kesulitan' => 'normal',
             'bantuan_pengejaan' => true,
-            'delay_bantuan' => 2,
-            'maks_salah' => 4,
+            'delay_bantuan' => 3,
+            'maks_salah' => 5,
         ]);
 
         TingkatKesulitan::create([
             'tingkat_kesulitan' => 'sulit',
             'bantuan_pengejaan' => false,
             'delay_bantuan' => 0,
-            'maks_salah' => 2,
+            'maks_salah' => 3,
         ]);
     }
 }

@@ -13,7 +13,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Navigation Links -->
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto">
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('beranda') ? 'active' : '' }}"
                         href="{{ route('beranda') }}">

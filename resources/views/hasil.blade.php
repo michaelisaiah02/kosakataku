@@ -56,21 +56,16 @@
                             </div>
                             <div class="row justify-content-center mb-4">
                                 <div class="col-auto" x-data="{
-                                    nilai: {{ $nilai }},
-                                    stringNilai: (function() {
-                                        const val = {{ $nilai }};
-                                        return Number.isInteger(val) ? val : val.toFixed(1).replace('.', ',');
-                                    })()
+                                    nilai: {{ round(($latihan->jumlah_benar / $latihan->jumlah_kata) * 100) }}
                                 }">
                                     <button disabled class="btn btn-lg rounded-circle text-center fs-1" id="nilai"
                                         x-bind:class="nilai >= 80 ? 'btn-success' : nilai >= 50 ? 'btn-warning' : 'btn-danger'">
-                                        <span x-text="stringNilai"></span>
+                                        <span x-text="nilai"></span>
                                     </button>
                                 </div>
                             </div>
-
                         </div>
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center mb-3">
                             <div class="col-auto">
                                 <a href="{{ route('beranda') }}" class="btn btn-info">
                                     <i class="bi bi-house-door-fill"></i> Kembali Ke Beranda

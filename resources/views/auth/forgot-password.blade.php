@@ -17,8 +17,9 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="d-flex align-items-center justify-content-end mt-4">
-            <button class="btn btn-primary">Kirim Link Reset Kata Sandi</button>
+        <div class="d-flex align-items-center justify-content-between mt-4">
+            <a href="{{ route('login') }}" class="btn btn-link p-0">Kembali</a>
+            <button class="btn btn-primary">Reset Kata Sandi</button>
         </div>
     </form>
 </x-guest-layout>

@@ -1,14 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="row justify-content-between py-3" x-data>
+        <div class="row justify-content-between py-3">
             <div class="col-auto my-auto">
                 <h2 class="fw-semibold text-dark">
                     Latihan Kosakata
                 </h2>
             </div>
-            <div class="col-auto my-auto" id="skipSection">
+            <div class="col col-md-auto my-auto d-flex gap-3" id="skipSection">
+                <button class="btn btn-sm btn-danger d-flex justify-content-center finishBtnFalse" x-data
+                    @click="window.saveResults(false)">
+                    <p class="my-auto">Selesai Latihan</p>
+                    <div class="icon my-auto">
+                        <i class="bi bi-door-open"></i>
+                    </div>
+                </button>
                 <button class="btn btn-sm btn-danger d-flex justify-content-center" id="skipBtn">
-                    <p class="my-auto me-2">Lewati Kata Ini</p>
+                    <p class="my-auto">Lewati Kata Ini</p>
                     <div class="icon my-auto">
                         <i class="bi bi-skip-end"></i>
                     </div>
@@ -21,7 +28,10 @@
         <div class="container">
             <div class="row mb-3">
                 <h2 class="text-center" id="randomWord"></h2>
-                <h2 class="text-center">=</h2>
+                <div id="translatedIcon">
+                    <h2 class="text-center"><i class="bi bi-translate"></i></h2>
+                    <h2 class="text-center"><i class="bi bi-arrow-down"></i></h2>
+                </div>
                 <h2 class="text-center" id="translatedWord"></h2>
             </div>
             <div class="row mb-3" id="correctSpellingAudio">
@@ -70,8 +80,8 @@
                 </div>
             </div>
             <div class="row justify-content-center" id="trueSection">
-                <div class="col d-flex justify-content-center" x-data>
-                    <button class="btn btn-info d-flex justify-content-center" @click="window.saveResults()"
+                <div class="col d-flex justify-content-center">
+                    <button class="btn btn-info d-flex justify-content-center" x-data @click="window.saveResults(true)"
                         id="finishBtn">
                         <p class="my-auto me-2">Selesai</p>
                         <div class="icon my-auto">
@@ -99,10 +109,15 @@
     </form>
 
     <script>
+        const idLatihan = {{ $latihan->id }};
         const language = "{{ $bahasa->bahasa }}";
         const category = "{{ $kategori }}";
         const deeplcode = "{{ $bahasa->kode_deepl }}";
         const googlecode = "{{ $bahasa->kode_google }}";
+        const bantuanPengejaan = {{ $tingkat_kesulitan->bantuan_pengejaan }};
+        const delayBantuan = {{ $tingkat_kesulitan->delay_bantuan }};
+        const maksSalah = {{ $tingkat_kesulitan->maks_salah }};
+        console.log(idLatihan, language, category, deeplcode, googlecode, bantuanPengejaan, delayBantuan, maksSalah);
     </script>
     @vite(['resources/js/latihan.js'])
 </x-app-layout>

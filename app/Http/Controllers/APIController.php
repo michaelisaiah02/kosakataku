@@ -25,8 +25,8 @@ class APIController extends Controller
         $cacheKey = "words_{$language}_{$category}";
         $allWords = Cache::get($cacheKey, []);
 
-        // Jika cache kosong atau kurang dari 100 kata, lakukan permintaan baru
-        if (count($allWords) < 5) {
+        // Jika cache kosong atau kurang dari 5 kata, lakukan permintaan baru
+        if (is_array($allWords) && count($allWords) < 5) {
             $allWords = $this->generateRandomWord($client, $apiKey, $language, $category);
             Cache::put($cacheKey, $allWords, now()->addDays(1)); // Cache selama 1 hari
         }
@@ -214,7 +214,6 @@ class APIController extends Controller
                     'temperature' => 0.7
                 ]
             ]);
-
             $data = json_decode($response->getBody(), true);
             if (isset($data['choices'][0]['message']['content'])) {
                 $content = $data['choices'][0]['message']['content'];

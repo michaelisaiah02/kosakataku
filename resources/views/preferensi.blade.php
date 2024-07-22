@@ -16,23 +16,14 @@
                                 <label for="bahasa" class="form-label text-center fs-3">Bahasa</label>
                                 <select id="bahasa" name="id_bahasa" class="form-select form-select-lg"
                                     aria-label="bahasa">
-                                    <option selected>Pilih Bahasa</option>
+                                    <option>Pilih Bahasa</option>
                                     @foreach ($languages as $language)
-                                        <option value="{{ $language->id }}">{{ $language->indonesia }}</option>
+                                        <option value="{{ $language->id }}"
+                                            @if (old('id_bahasa') == $language->id) selected @endif>{{ $language->indonesia }}
+                                        </option>
                                     @endforeach
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center">
-                            <div class="row w-75">
-                                @error('id_bahasa')
-                                    <div class="alert alert-danger d-flex align-items-center mt-2" role="alert">
-                                        <i class="bi bi-exclamation-circle flex-shrink-0 me-2"></i>
-                                        <div>
-                                            {{ $message }}
-                                        </div>
-                                    </div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('id_bahasa')" class="mt-2 ms-3"></x-input-error>
                             </div>
                         </div>
                     </div>
@@ -44,21 +35,12 @@
                                     aria-label="kategori">
                                     <option selected>Pilih Kategori</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}">{{ $category->indonesia }}</option>
+                                        <option value="{{ $category->id }}"
+                                            @if (old('id_kategori') == $category->id) selected @endif>{{ $category->indonesia }}
+                                        </option>
                                     @endforeach
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center">
-                            <div class="row w-75">
-                                @error('id_kategori')
-                                    <div class="alert alert-danger d-flex align-items-center mt-2" role="alert">
-                                        <i class="bi bi-exclamation-circle flex-shrink-0 me-2"></i>
-                                        <div>
-                                            {{ $message }}
-                                        </div>
-                                    </div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('id_kategori')" class="mt-2 ms-3"></x-input-error>
                             </div>
                         </div>
                     </div>
@@ -68,26 +50,15 @@
                                 <label for="tingkat_kesulitan" class="form-label text-center fs-3">Tingkat
                                     Kesulitan</label>
                                 <select id="tingkat_kesulitan" name="id_tingkat_kesulitan"
-                                    class="form-select form-select-lg text-capitalize mb-3"
-                                    aria-label="tingkat_kesulitan">
+                                    class="form-select form-select-lg text-capitalize" aria-label="tingkat_kesulitan">
                                     <option selected>Pilih Tingkat Kesulitan</option>
                                     @foreach ($difficulties as $difiiculty)
-                                        <option value="{{ $difiiculty->id }}" class="text-capitalize">
+                                        <option value="{{ $difiiculty->id }}"
+                                            @if (old('id_tingkat_kesulitan') == $difiiculty->id) selected @endif class="text-capitalize">
                                             {{ $difiiculty->tingkat_kesulitan }}</option>
                                     @endforeach
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center">
-                            <div class="row w-75">
-                                @error('id_tingkat_kesulitan')
-                                    <div class="alert alert-danger d-flex align-items-center mt-2" role="alert">
-                                        <i class="bi bi-exclamation-circle flex-shrink-0 me-2"></i>
-                                        <div>
-                                            {{ $message }}
-                                        </div>
-                                    </div>
-                                @enderror
+                                <x-input-error :messages="$errors->get('id_tingkat_kesulitan')" class="mt-2 ms-3"></x-input-error>
                             </div>
                         </div>
                     </div>

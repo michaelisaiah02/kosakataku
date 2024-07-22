@@ -22,21 +22,23 @@
         </div>
 
         <!-- Remember Me -->
-        <div class="form-check mb-3">
-            <input id="remember_me" type="checkbox" class="form-check-input" name="remember">
-            <label for="remember_me" class="form-check-label">
-                Remember me
+        <div class="form-check mb-3 d-flex justify-content-between align-items-center">
+            <input id="remember_me" type="checkbox" class="form-check-input me-2" name="remember">
+            <label for="remember_me" class="form-check-label user-select-none">
+                Ingat saya
             </label>
+            <a class="btn btn-link ms-auto p-0" href="{{ route('register') }}">
+                Belum punya akun?
+            </a>
         </div>
 
         <div class="d-flex align-items-center justify-content-end mt-4">
             @if (Route::has('password.request'))
-                <a class="text-decoration-underline text-sm text-muted me-3" href="{{ route('password.request') }}">
+                <a class="btn btn-link me-auto p-0" href="{{ route('password.request') }}">
                     Lupa kata sandi?
                 </a>
             @endif
-
-            <button class="btn btn-primary">Log in</button>
+            <button class="btn btn-primary">Login</button>
         </div>
     </form>
 </x-guest-layout>

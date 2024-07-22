@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold h5 text-dark leading-tight">
-            {{ __('Profile') }}
+        <h2 class="fw-semibold text-dark py-3">
+            Profilku
         </h2>
     </x-slot>
 

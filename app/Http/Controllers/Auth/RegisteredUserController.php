@@ -33,6 +33,21 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'captcha' => ['required', 'captcha'],
+        ], [
+            'name.required' => 'Nama harus diisi.',
+            'name.max' => 'Nama maksimal 255 karakter.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Email tidak valid.',
+            'email.max' => 'Email maksimal 255 karakter.',
+            'email.lowercase' => 'Email harus huruf kecil semua.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'password.required' => 'Password harus diisi.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password.min' => 'Password minimal 8 karakter.',
+            'password.max' => 'Password maksimal 255 karakter.',
+            'captcha.required' => 'Captcha harus diisi.',
+            'captcha.captcha' => 'Captcha tidak cocok.',
         ]);
 
         $user = User::create([
