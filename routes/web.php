@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\LatihanController;
 
 Route::get('/', function () {
@@ -25,9 +24,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/detail-riwayat/{id}', [LatihanController::class, 'detailRiwayat'])->name('detailRiwayat');
 
         // API Route
-        Route::post('/post', [APIController::class, 'generateRandomWord'])->name('generateRandomWord');
-        Route::post('/word/{language}/{category}', [APIController::class, 'getWord']);
-        Route::post('/translate/{language_code}/{word}', [APIController::class, 'translate'])->name('translate');
+        Route::post('/word/{language}/{category}', [APIController::class, 'getWord'])->name('getWord');
         Route::post('/example-sentences/{language}/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
         Route::post('/speech-to-text/', [APIController::class, 'speechToText'])->name('speechToText');
         Route::post('/text-to-speech/{language_code}/{word}', [APIController::class, 'textToSpeech'])->name('textToSpeech');

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-light border-bottom shadow-sm">
+<nav class="navbar navbar-expand-md navbar-light bg-transparent border-bottom shadow-sm navbarApp">
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('beranda') }}">
@@ -41,10 +41,11 @@
             </ul>
 
             <!-- Settings Dropdown -->
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav ms-auto mb-lg-0">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i>
                         {{ Auth::user()->name }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

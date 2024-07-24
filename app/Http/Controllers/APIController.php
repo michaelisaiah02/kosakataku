@@ -12,7 +12,12 @@ use Illuminate\Support\Facades\Storage;
 use Google\Cloud\Speech\V1\SpeechClient;
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
+use Google\Cloud\TextToSpeech\V1\AudioConfig;
+use Google\Cloud\TextToSpeech\V1\AudioEncoding;
+use Google\Cloud\TextToSpeech\V1\SynthesisInput;
+use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
+use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 
 class APIController extends Controller
 {
@@ -40,14 +45,15 @@ class APIController extends Controller
     private function generateRandomWord($client, $apiKey, $language, $category)
     {
         $allWords = [];
-        $prompt = "Generate a list of 50 random words in the language '$language' for the category '$category'. Separate each word with a comma and no numbering or additional formatting.";
+        $prompt = "Generate a list of 50 random words in the language '$language' for the category '$category'. For each word, provide its translation in Indonesian and its pronunciation. Format the response as: word - translation - pronunciation.";
+
         $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type' => 'application/json'
             ],
             'json' => [
-                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4o-mini',
                 'messages' => [
                     [
                         'role' => 'system',
@@ -67,26 +73,27 @@ class APIController extends Controller
 
         if (isset($data['choices'][0]['message']['content'])) {
             $content = $data['choices'][0]['message']['content'];
+            $lines = explode("\n", $content);
 
-            // Pembersihan respons untuk mengekstrak kata-kata
-            $content = preg_replace('/\d+\.\s*/', '', $content); // Menghapus penomoran
-            $content = trim(preg_replace('/\s*\n\s*/', ', ', $content)); // Mengganti baris baru dengan koma
-            $wordsArray = array_map('trim', explode(',', $content));
+            foreach ($lines as $line) {
+                // Pemisahan kata, terjemahan, dan cara baca
+                $parts = array_map('trim', explode(' - ', $line));
 
-            // Gabungkan hasil baru dengan semua kata yang sudah ada
-            $allWords = array_merge($allWords, $wordsArray);
-            $allWords = array_unique($allWords); // Pastikan kata-kata unik
+                if (count($parts) === 3) {
+                    // Menghapus nomor atau karakter lain dari kata
+                    $word = preg_replace('/^\d+\.\s*/', '', $parts[0]);
+
+                    $wordDetails = [
+                        'word' => $word,
+                        'translation' => $parts[1],
+                        'pronunciation' => $parts[2]
+                    ];
+                    $allWords[] = $wordDetails;
+                }
+            }
         }
+
         return $allWords;
-    }
-
-    public function translate($language_code, $word)
-    {
-        $authKey = env("AUTH_KEY_DEEPL", null);
-        $translator = new \DeepL\Translator($authKey);
-
-        $result = $translator->translateText($word, $language_code, "ID");
-        return response()->json($result->text);
     }
 
     public function textToSpeech($language_code, $word)
@@ -95,15 +102,15 @@ class APIController extends Controller
             'credentials' => config('services.google.application_credentials'),
         ]);
 
-        $inputWord = (new \Google\Cloud\TextToSpeech\V1\SynthesisInput())
+        $inputWord = (new SynthesisInput())
             ->setText($word);
 
-        $voice = (new \Google\Cloud\TextToSpeech\V1\VoiceSelectionParams())
+        $voice = (new VoiceSelectionParams())
             ->setLanguageCode($language_code)
-            ->setSsmlGender(\Google\Cloud\TextToSpeech\V1\SsmlVoiceGender::NEUTRAL);
+            ->setSsmlGender(SsmlVoiceGender::NEUTRAL);
 
-        $audioConfig = (new \Google\Cloud\TextToSpeech\V1\AudioConfig())
-            ->setAudioEncoding(\Google\Cloud\TextToSpeech\V1\AudioEncoding::MP3);
+        $audioConfig = (new AudioConfig())
+            ->setAudioEncoding(AudioEncoding::MP3);
 
         $response = $client->synthesizeSpeech($inputWord, $voice, $audioConfig);
 
@@ -132,11 +139,6 @@ class APIController extends Controller
 
     public function speechToText(Request $request)
     {
-        $request->validate([
-            'audio' => 'required|file|mimetypes:video/webm',
-            'language_code' => 'required|string',
-        ]);
-
         $audioFile = $request->file('audio');
 
         // Konversi file audio dari webm ke wav
@@ -199,7 +201,7 @@ class APIController extends Controller
                     'Content-Type' => 'application/json'
                 ],
                 'json' => [
-                    'model' => 'gpt-3.5-turbo',
+                    'model' => 'gpt-4o-mini',
                     'messages' => [
                         [
                             'role' => 'system',

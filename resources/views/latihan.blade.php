@@ -27,7 +27,8 @@
     <div class="py-4 min-vh-75 d-flex align-items-center">
         <div class="container">
             <div class="row mb-3">
-                <h2 class="text-center" id="randomWord"></h2>
+                <h2 class="text-center" id="kata"></h2>
+                <p class="text-center" id="ejaan"></p>
                 <div id="translatedIcon">
                     <h2 class="text-center"><i class="bi bi-translate"></i></h2>
                     <h2 class="text-center"><i class="bi bi-arrow-down"></i></h2>
@@ -37,7 +38,7 @@
             <div class="row mb-3" id="correctSpellingAudio">
             </div>
             <div class="row mb-3 justify-content-center" id="spellingSection">
-                <button type="button" class="btn btn-sm btn-info d-flex justify-content-center my-3 w-50"
+                <button type="button" class="btn btn-sm btn-primary d-flex justify-content-center my-3 w-50"
                     id="spellingBtn">
                     <div id="offMic">
                         <p class="mt-3 ms-2">Mulai ucapkan</p>

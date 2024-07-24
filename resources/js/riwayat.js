@@ -1,13 +1,14 @@
 $(document).ready(function () {
     // Inisialisasi DataTables untuk tabel riwayat tanpa drawCallback
-    var table = $("#tabelRiwayat").DataTable({
+    $("#tabelRiwayat").DataTable({
+        scrollX: true,
         language: {
             lengthMenu: "Tampilkan _MENU_ data per halaman",
             zeroRecords: "Tidak ada data yang ditemukan",
             info: "Menampilkan _PAGE_ dari _PAGES_ halaman",
             infoEmpty: "Tidak ada data tersedia",
             infoFiltered: "(disaring dari _MAX_ total data)",
-            search: "Cari:",
+            search: '<i class="bi bi-search fs-5"></i>',
             paginate: {
                 first: '<i class="bi bi-skip-start"></i>',
                 last: '<i class="bi bi-skip-end"></i>',
@@ -56,9 +57,11 @@ $(document).ready(function () {
                 // Menampilkan data detail latihan dalam tabel
                 const tabelDetailBody = $("#tabelDetailBody");
                 tabelDetailBody.empty();
-                JSON.parse(data.list).forEach((list, index) => {
+                JSON.parse(data.list).forEach((list) => {
+                    console.log(list);
                     const row = `<tr class="align-middle">
                         <td class="text-nowrap">${list.kata}</td>
+                        <td class="text-nowrap">${list.cara_baca}</td>
                         <td class="text-nowrap">${list.terjemahan}</td>
                         <td class="text-center">${list.percobaan}</td>
                         <td class="text-center">${Math.round(list.durasi)}</td>
@@ -70,27 +73,29 @@ $(document).ready(function () {
                     </tr>`;
                     tabelDetailBody.append(row);
                 });
-                var detailTable = $("#tabelDetail").DataTable({
-                    paging: true,
-                    searching: true,
-                    ordering: true,
-                    info: true,
-                    language: {
-                        lengthMenu: "Tampilkan _MENU_ data per halaman",
-                        zeroRecords: "Tidak ada data yang ditemukan",
-                        info: "Menampilkan _PAGE_ dari _PAGES_ halaman",
-                        infoEmpty: "Tidak ada data tersedia",
-                        infoFiltered: "(disaring dari _MAX_ total data)",
-                        search: "Cari:",
-                        paginate: {
-                            first: '<i class="bi bi-skip-start"></i>',
-                            last: '<i class="bi bi-skip-end"></i>',
-                            next: '<i class="bi bi-chevron-right"></i>',
-                            previous: '<i class="bi bi-chevron-left"></i>',
+                $("#tabelDetail")
+                    .DataTable({
+                        scrollX: true,
+                        paging: true,
+                        searching: true,
+                        ordering: true,
+                        info: true,
+                        language: {
+                            lengthMenu: "Tampilkan _MENU_ data per halaman",
+                            zeroRecords: "Tidak ada data yang ditemukan",
+                            info: "Menampilkan _PAGE_ dari _PAGES_ halaman",
+                            infoEmpty: "Tidak ada data tersedia",
+                            infoFiltered: "(disaring dari _MAX_ total data)",
+                            search: '<i class="bi bi-search fs-5"></i>',
+                            paginate: {
+                                first: '<i class="bi bi-skip-start"></i>',
+                                last: '<i class="bi bi-skip-end"></i>',
+                                next: '<i class="bi bi-chevron-right"></i>',
+                                previous: '<i class="bi bi-chevron-left"></i>',
+                            },
                         },
-                    },
-                });
-                detailTable.draw(); // Redraw tabel detail setelah data diupdate
+                    })
+                    .draw();
             })
             .catch((error) =>
                 console.error("Error fetching latihan data:", error)

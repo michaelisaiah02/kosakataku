@@ -27,8 +27,8 @@
     @vite(['resources/sass/app.scss', 'resources/css/app.css'])
 </head>
 
-<body class="font-sans text-dark bg-light">
-    <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom shadow-sm">
+<body class="font-sans text-dark bg-light utama">
+    <nav class="navbar navbar-expand-md navbar-light bg-light border-bottom shadow-sm navbarApp">
         <div class="container">
             <!-- Logo -->
             <a class="navbar-brand" href="{{ route('beranda') }}">
@@ -61,7 +61,7 @@
         </div>
     </nav>
     <main>
-        <header class="bg-white shadow-sm">
+        <header class="bg-light shadow-sm">
             <div class="container px-3">
                 <h2 class="fw-semibold text-dark py-3">
                     Selamat datang di {{ config('app.name', 'Laravel') }}!

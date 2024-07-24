@@ -111,27 +111,33 @@ class LatihanController extends Controller
         $histories = Latihan::where('id_user', auth()->user()->id)
             ->where('selesai', true)
             ->with('bahasa', 'kategori', 'tingkatKesulitan')
-            ->get();
+            ->get() ?? null;
+
+        if ($histories->isEmpty()) {
+            return view('riwayat', ['info' => 'Kamu belum pernah latihan kosakata!']);
+        }
 
         // 1. Bahasa yang sering dipelajari
         $bahasaSeringDipelajari = $histories->groupBy('id_bahasa')->map(function ($bahasa) {
             return $bahasa->count();
-        })->sortDesc()->take(5);
+        })->sortDesc()->take(1);
 
-        $bahasaSeringDipelajariId = $bahasaSeringDipelajari->keys()->first();
+        $bahasaSeringDipelajariIndex = $bahasaSeringDipelajari->keys()->first();
         $bahasaSeringDipelajariCount = $bahasaSeringDipelajari->first();
-        $bahasaSeringDipelajariName = Bahasa::find($bahasaSeringDipelajariId)->indonesia;
+        $bahasaSeringDipelajariName = Bahasa::find($bahasaSeringDipelajariIndex)->indonesia;
 
         // 2. Bahasa yang paling banyak benar (per latihan)
         $bahasaPalingBanyakBenar = $histories->mapToGroups(function ($history) {
             $benarPersentase = $history->jumlah_benar / $history->jumlah_kata * 100;
-            return [$history->id_bahasa => $benarPersentase];
+            return [$history->id_bahasa => ['persentase' => $benarPersentase, 'id' => $history->id]];
         })->map(function ($persentase) {
-            return $persentase->avg();
+            return $persentase->sortByDesc('persentase')->first();
         })->sortDesc()->take(1);
 
         $bahasaPalingBanyakBenarId = $bahasaPalingBanyakBenar->keys()->first();
-        $bahasaPalingBanyakBenarCount = $bahasaPalingBanyakBenar->first();
+        $bahasaPalingBanyakBenarData = $bahasaPalingBanyakBenar->first();
+        $bahasaPalingBanyakBenarLatihanId = $bahasaPalingBanyakBenarData['id'];
+        $bahasaPalingBanyakBenarCount = $bahasaPalingBanyakBenarData['persentase'];
         $bahasaPalingBanyakBenarName = Bahasa::find($bahasaPalingBanyakBenarId)->indonesia;
 
         // 3. Latihan paling lama
@@ -148,21 +154,38 @@ class LatihanController extends Controller
         // 4. Bahasa yang paling banyak salah (per latihan)
         $bahasaPalingBanyakSalah = $histories->mapToGroups(function ($history) {
             $salahPersentase = ($history->jumlah_kata - $history->jumlah_benar) / $history->jumlah_kata * 100;
-            return [$history->id_bahasa => $salahPersentase];
+            return [$history->id_bahasa => ['persentase' => $salahPersentase, 'id' => $history->id]];
         })->map(function ($persentase) {
-            return $persentase->avg();
+            return $persentase->sortByDesc('persentase')->first();
         })->sortDesc()->take(1);
 
         $bahasaPalingBanyakSalahId = $bahasaPalingBanyakSalah->keys()->first();
-        $bahasaPalingBanyakSalahCount = $bahasaPalingBanyakSalah->first();
+        $bahasaPalingBanyakSalahData = $bahasaPalingBanyakSalah->first();
+        $bahasaPalingBanyakSalahLatihanId = $bahasaPalingBanyakSalahData['id'];
+        $bahasaPalingBanyakSalahCount = $bahasaPalingBanyakSalahData['persentase'];
         $bahasaPalingBanyakSalahName = Bahasa::find($bahasaPalingBanyakSalahId)->indonesia;
 
         return view('riwayat', [
             'histories' => $histories,
-            'bahasaSeringDipelajari' => $bahasaSeringDipelajariName . " (" . $bahasaSeringDipelajariCount . " Kali)",
-            'bahasaPalingBanyakBenar' => $bahasaPalingBanyakBenarName . " (" . round($bahasaPalingBanyakBenarCount) . "%)",
-            'latihanPalingLama' =>  $latihanPalingLamaFormatted . " (" . $latihanPalingLama->bahasa->indonesia . ")",
-            'bahasaPalingBanyakSalah' => $bahasaPalingBanyakSalahName . " (" . round($bahasaPalingBanyakSalahCount) . "%)",
+            'bahasaSeringDipelajari' => [
+                'bahasa' => $bahasaSeringDipelajariName,
+                'jumlah' => $bahasaSeringDipelajariCount
+            ],
+            'bahasaPalingBanyakBenar' => [
+                'id' => $bahasaPalingBanyakBenarLatihanId,
+                'bahasa' => $bahasaPalingBanyakBenarName,
+                'jumlah' => $bahasaPalingBanyakBenarCount
+            ],
+            'latihanPalingLama' =>  [
+                'id' => $latihanPalingLama->id,
+                'bahasa' => $latihanPalingLama->bahasa->indonesia,
+                'durasi' => $latihanPalingLamaFormatted
+            ],
+            'bahasaPalingBanyakSalah' => [
+                'id' => $bahasaPalingBanyakSalahLatihanId,
+                'bahasa' => $bahasaPalingBanyakSalahName,
+                'jumlah' => $bahasaPalingBanyakSalahCount
+            ]
         ]);
     }
 

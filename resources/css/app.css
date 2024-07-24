@@ -1,6 +1,60 @@
+.navbarApp,
+#riwayatModalHeader {
+    background: rgb(248, 249, 250);
+    background: -moz-linear-gradient(
+        0deg,
+        rgba(248, 249, 250, 1) 10%,
+        rgba(196, 244, 255, 1) 100%
+    );
+    background: -webkit-linear-gradient(
+        0deg,
+        rgba(248, 249, 250, 1) 10%,
+        rgba(196, 244, 255, 1) 100%
+    );
+    background: linear-gradient(
+        0deg,
+        rgba(248, 249, 250, 1) 10%,
+        rgba(196, 244, 255, 1) 100%
+    );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f8f9fa",endColorstr="#c4f4ff",GradientType=1);
+}
+
+.utama,
+#riwayatModalBody {
+    background: rgb(8, 124, 167);
+    background: -moz-linear-gradient(
+        2deg,
+        rgba(8, 124, 167, 1) 0%,
+        rgba(5, 178, 220, 1) 25%,
+        rgba(248, 249, 250, 1) 75%
+    );
+    background: -webkit-linear-gradient(
+        2deg,
+        rgba(8, 124, 167, 1) 0%,
+        rgba(5, 178, 220, 1) 25%,
+        rgba(248, 249, 250, 1) 75%
+    );
+    background: linear-gradient(
+        2deg,
+        rgba(8, 124, 167, 1) 0%,
+        rgba(5, 178, 220, 1) 25%,
+        rgba(248, 249, 250, 1) 75%
+    );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#087ca7", endColorstr="#f8f9fa", GradientType=1);
+    color: #333; /* Pastikan teks memiliki kontras yang baik dengan latar belakang */
+}
+
+.dt-info {
+    color: #f8f9fa;
+}
+
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .spin-animation {
@@ -26,23 +80,29 @@
 }
 
 .nav-link::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 0; /* Initial width is 0 */
     height: 3px; /* Thickness of underline */
     left: 50%; /* Start at the center */
     bottom: 3px; /* Position below the text */
-    background-color: #0D6EFD; /* Color of underline */
+    background-color: #087ca7; /* Color of underline */
     transition: width 0.3s ease, left 0.3s ease; /* Transition for width and position */
 }
 
-.nav-link.active::after, .nav-link:hover::after {
+.nav-link.active::after,
+.nav-link:hover::after {
     width: 65%; /* 3/4 of the text width */
     left: 13%; /* Center the underline */
 }
 
-.nav-link.active, .nav-link:hover {
-    color: #0D6EFD; /* Change text color on hover or active */
+.nav-link.active,
+.nav-link:hover {
+    color: #087ca7; /* Change text color on hover or active */
+}
+
+.icon-pc-only {
+    display: inline;
 }
 
 /* CSS for Mobile */
@@ -56,23 +116,65 @@
         left: 10%; /* Start at the left */
     }
 
-    .nav-link.active::after, .nav-link:hover::after {
+    .nav-link.active::after,
+    .nav-link:hover::after {
         width: 9%; /* Almost full width for mobile */
         left: -1px; /* Slight padding on sides */
     }
+
+    .icon-pc-only {
+        display: none !important;
+    }
 }
 
+.container {
+    overflow: hidden; /* Prevents scrolling of the container */
+}
+
+.table-container {
+    overflow-x: auto; /* Enables horizontal scrolling for the table */
+    overflow-y: hidden; /* Prevents vertical scrolling */
+    padding-bottom: 1rem; /* Adds some space for the scrollbar */
+}
+
+.table-responsive {
+    width: 100%; /* Ensures table takes the full width of the container */
+    overflow-x: auto; /* Enables horizontal scrolling within this element */
+}
+
+.table {
+    width: 100%; /* Ensures the table takes full width */
+}
+
+.dropdown-item {
+    background: transparent !important;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -ms-transition: 0.3s;
+    -o-transition: 0.3s;
+}
+
+.dropdown-item:hover {
+    background: #087ca7 !important;
+    color: #f8f9fa !important;
+    transition: 0.3s;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -ms-transition: 0.3s;
+    -o-transition: 0.3s;
+}
 
 .dropdown-toggle::after {
-content: none; /* Remove pseudo element */
+    content: none; /* Remove pseudo element */
 }
 
 .carousel-item {
-    transition: transform .6s ease-in-out;
-    -webkit-transition: transform .6s ease-in-out;
-    -moz-transition: transform .6s ease-in-out;
-    -ms-transition: transform .6s ease-in-out;
-    -o-transition: transform .6s ease-in-out;
+    transition: transform 0.6s ease-in-out;
+    -webkit-transition: transform 0.6s ease-in-out;
+    -moz-transition: transform 0.6s ease-in-out;
+    -ms-transition: transform 0.6s ease-in-out;
+    -o-transition: transform 0.6s ease-in-out;
 }
 
 .carousel-item.active {

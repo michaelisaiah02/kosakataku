@@ -23,7 +23,6 @@ return new class extends Migration
             $table->boolean('selesai')->default(false);
             $table->timestamps();
 
-            // Foreign key constraints with onDelete and onUpdate
             $table->foreign('id_user')->references('id')->on('users')
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('id_bahasa')->references('id')->on('bahasa')

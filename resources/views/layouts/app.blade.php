@@ -28,12 +28,12 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-vh-100 bg-light">
+    <div class="min-vh-100 utama">
         @include('layouts.navigation')
 
         <!-- Page Heading -->
         @isset($header)
-            <header class="bg-white shadow-sm">
+            <header class="bg-light shadow-sm">
                 <div class="container px-3">
                     {{ $header }}
                 </div>

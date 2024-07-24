@@ -28,7 +28,7 @@
 </head>
 
 <body class="font-sans text-dark bg-light">
-    <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center pt-6">
+    <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center utama">
         <div class="text-center">
             <a href="/">
                 <x-application-logo class="w-25 h-25 text-secondary" />

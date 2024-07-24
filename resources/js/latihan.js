@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let word;
+    let list;
     let totalWords = 0;
     let totalCorrect = 0;
     let attemptCount = 0; // New variable to track incorrect attempts per word
@@ -24,10 +24,9 @@ $(document).ready(function () {
     }
 
     // Memuat data dari local storage
-
     function saveCurrentWordData() {
-        if (word) {
-            const index = wordList.findIndex((w) => w.kata === word);
+        if (list) {
+            const index = wordList.findIndex((w) => w.kata === list.kata);
             if (index !== -1) {
                 wordList[index].terjemahan = $("#translatedWord").text();
                 wordList[index].percobaan = attemptCount;
@@ -63,28 +62,27 @@ $(document).ready(function () {
         console.log("storage", localStorage);
     }
 
-    function displayWord(word) {
-        $("#randomWord").text(word);
-        textToSpeech(word, googlecode);
-        translate(deeplcode, word).then((response) => {
-            $("#translatedWord").text(response);
-            $("#translatedIcon").show();
-            $("#spellingSection").show();
-            $("#offMic").show();
-            $("#skipSection").show();
-            if (consecutiveErrors == delayBantuan) {
-                if (bantuanPengejaan == true) {
-                    $("#correctSpellingAudio").show();
-                }
+    function displayWord(list) {
+        console.log(list);
+        $("#kata").text(list.word);
+        $("#ejaan").text(list.pronunciation);
+        $("#translatedWord").text(list.translation);
+        $("#translatedIcon").show();
+        $("#spellingSection").show();
+        $("#offMic").show();
+        $("#skipSection").show();
+        if (consecutiveErrors == delayBantuan) {
+            if (bantuanPengejaan == true) {
+                $("#correctSpellingAudio").show();
             }
-        });
-        exampleSentences(language, word);
+        }
+        exampleSentences(language, list.word);
 
-        // Reset errors and assistance for new word
+        // Reset percobaan dan kesalahan
         attemptCount = 0;
         consecutiveErrors = 0;
 
-        // Set start time
+        // Mengatur waktu mulai
         startTime = new Date();
     }
 
@@ -102,35 +100,20 @@ $(document).ready(function () {
                 type: "post",
                 url: `${window.location.origin}/word/${language}/${category}`,
                 success: function (response) {
-                    word = response[0];
+                    list = response[0];
+                    console.log(list);
                     totalWords++;
                     wordList.push({
-                        kata: word,
-                        benar: 0,
-                        terjemahan: "",
+                        kata: list.word,
+                        cara_baca: list.pronunciation,
+                        terjemahan: list.translation,
                         percobaan: 0,
+                        benar: 0,
                         durasi: 0,
                     });
+                    textToSpeech(list.word, googlecode);
                     updateLocalStorage();
-                    resolve(word);
-                },
-                error: function (xhr, status, error) {
-                    console.error(xhr.responseText);
-                    reject(error);
-                },
-            });
-        });
-    }
-
-    function translate(deeplcode, word) {
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                type: "post",
-                url: `${
-                    window.location.origin
-                }/translate/${deeplcode}/${encodeURIComponent(word)}`,
-                success: function (response) {
-                    resolve(response);
+                    resolve(list);
                 },
                 error: function (xhr, status, error) {
                     console.error(xhr.responseText);
@@ -194,6 +177,7 @@ $(document).ready(function () {
                         processData: false,
                         contentType: false,
                         success: function (response) {
+                            console.log(response);
                             const speechResult = response.transcription[0];
                             $("#spelledWord").text(speechResult);
                             $("#spelledWord").removeClass(
@@ -202,16 +186,14 @@ $(document).ready(function () {
                             $("#spelledSection").show();
                             attemptCount++;
                             try {
-                                if (compareWords(speechResult, word)) {
+                                if (compareWords(speechResult, list.word)) {
                                     if (attemptCount <= maksSalah) {
                                         totalCorrect++;
                                         const index = wordList.findIndex(
-                                            (w) => w.kata === word
+                                            (w) => w.kata === list.word
                                         );
                                         if (index !== -1) {
                                             wordList[index].benar = 1;
-                                            wordList[index].terjemahan =
-                                                $("#translatedWord").text();
                                             wordList[index].percobaan =
                                                 attemptCount;
                                             wordList[index].durasi =
@@ -258,6 +240,7 @@ $(document).ready(function () {
                                     }
                                 }
                             } catch (error) {
+                                console.error(error);
                                 if (error instanceof TypeError) {
                                     Swal.fire({
                                         title: "Kesalahan!",
@@ -270,7 +253,7 @@ $(document).ready(function () {
                             }
                         },
                         error: function (xhr, status, error) {
-                            if (xhr.responseText.includes("cURL error 56")) {
+                            if (xhr.responseText.includes("error")) {
                                 Swal.fire({
                                     title: "Kesalahan!",
                                     text: "Koneksi internet terputus!",
@@ -313,6 +296,17 @@ $(document).ready(function () {
         }
     });
 
+    function normalizeText(text) {
+        return text
+            .normalize("NFKC") // Unicode normalization
+            .replace(/\s+/g, "") // Remove spaces
+            .toLowerCase(); // Convert to lowercase
+    }
+
+    function compareWords(word1, word2) {
+        return normalizeText(word1) === normalizeText(word2);
+    }
+
     function exampleSentences(language, word) {
         return new Promise((resolve, reject) => {
             $.ajax({
@@ -350,17 +344,6 @@ $(document).ready(function () {
                 carouselInner.append(item);
             });
         }
-    }
-
-    function normalizeText(text) {
-        return text
-            .normalize("NFKC") // Unicode normalization
-            .replace(/\s+/g, "") // Remove spaces
-            .toLowerCase(); // Convert to lowercase
-    }
-
-    function compareWords(word1, word2) {
-        return normalizeText(word1) === normalizeText(word2);
     }
 
     function saveResults(finish = false) {
