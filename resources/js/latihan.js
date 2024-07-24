@@ -101,7 +101,6 @@ $(document).ready(function () {
                 url: `${window.location.origin}/word/${language}/${category}`,
                 success: function (response) {
                     list = response[0];
-                    console.log(list);
                     totalWords++;
                     wordList.push({
                         kata: list.word,

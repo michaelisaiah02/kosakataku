@@ -117,7 +117,7 @@ class LatihanController extends Controller
             return view('riwayat', ['info' => 'Kamu belum pernah latihan kosakata!']);
         }
 
-        // 1. Bahasa yang sering dipelajari
+        // Bahasa yang sering dipelajari
         $bahasaSeringDipelajari = $histories->groupBy('id_bahasa')->map(function ($bahasa) {
             return $bahasa->count();
         })->sortDesc()->take(1);
@@ -126,7 +126,7 @@ class LatihanController extends Controller
         $bahasaSeringDipelajariCount = $bahasaSeringDipelajari->first();
         $bahasaSeringDipelajariName = Bahasa::find($bahasaSeringDipelajariIndex)->indonesia;
 
-        // 2. Bahasa yang paling banyak benar (per latihan)
+        // Bahasa yang paling banyak benar (per latihan)
         $bahasaPalingBanyakBenar = $histories->mapToGroups(function ($history) {
             $benarPersentase = $history->jumlah_benar / $history->jumlah_kata * 100;
             return [$history->id_bahasa => ['persentase' => $benarPersentase, 'id' => $history->id]];
@@ -140,7 +140,7 @@ class LatihanController extends Controller
         $bahasaPalingBanyakBenarCount = $bahasaPalingBanyakBenarData['persentase'];
         $bahasaPalingBanyakBenarName = Bahasa::find($bahasaPalingBanyakBenarId)->indonesia;
 
-        // 3. Latihan paling lama
+        // Latihan paling lama
         $latihanPalingLama = $histories->sortByDesc(function ($history) {
             return strtotime($history->updated_at) - strtotime($history->created_at);
         })->first();
@@ -151,7 +151,7 @@ class LatihanController extends Controller
         $latihanPalingLamaSeconds = $latihanPalingLamaDuration % 60;
         $latihanPalingLamaFormatted = ($latihanPalingLamaHours == 0 ? "" : $latihanPalingLamaHours . " Jam ") . ($latihanPalingLamaMinutes == 0 ?  "" : $latihanPalingLamaMinutes . " Menit ") . $latihanPalingLamaSeconds . " Detik";
 
-        // 4. Bahasa yang paling banyak salah (per latihan)
+        // Bahasa yang paling banyak salah (per latihan)
         $bahasaPalingBanyakSalah = $histories->mapToGroups(function ($history) {
             $salahPersentase = ($history->jumlah_kata - $history->jumlah_benar) / $history->jumlah_kata * 100;
             return [$history->id_bahasa => ['persentase' => $salahPersentase, 'id' => $history->id]];
