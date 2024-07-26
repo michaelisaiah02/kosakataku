@@ -1,22 +1,45 @@
 $(document).ready(function () {
+    const idLatihan = $("#data").data("id-latihan");
+    const idBahasa = $("#data").data("id-bahasa");
+    const bahasa = $("#data").data("bahasa");
+    const kategori = $("#data").data("kategori");
+    const bantuanSuara = $("#data").data("bantuan-suara");
+    const bantuanPengucapan = $("#data").data("bantuan-pengucapan");
+    const delayBantuan = $("#data").data("delay-bantuan");
+    const maksSalah = $("#data").data("maks-salah");
     let list;
-    let totalWords = 0;
-    let totalCorrect = 0;
-    let attemptCount = 0; // New variable to track incorrect attempts per word
-    let consecutiveErrors = 0; // New variable to track consecutive errors per word
-    let wordList = [];
+    let totalWords = 0; // Jumlah kata yang sudah dilatih
+    let totalCorrect = 0; // Jumlah kata yang benar
+    let attemptCount = 0; // Jumlah percobaan
+    let consecutiveErrors = 0; // Jumlah kesalahan berturut-turut
+    let wordList = []; // Daftar kata yang sudah dilatih
+    let speechContextWords = []; // Konteks ucapan kata saat pengenalan suara
     let mediaRecorder;
     let audioChunks = [];
     let recordingTimeout;
     let startTime;
 
+    console.log("idLatihan", idLatihan);
+    console.log("idBahasa", idBahasa);
+    console.log("bahasa", bahasa);
+    console.log("kategori", kategori);
+    console.log("bantuanSuara", bantuanSuara);
+    console.log("bantuanPengucapan", bantuanPengucapan);
+    console.log("delayBantuan", delayBantuan);
+    console.log("maksSalah", maksSalah);
+
     // Cek apakah ini latihan baru atau lanjutan
-    function isNewSession() {
+    function isNewSession(idLatihan) {
         return parseInt(localStorage.getItem("idLatihan")) !== idLatihan;
     }
 
+    function getIndex() {
+        const index = wordList.findIndex((w) => w.kata === list.word);
+        return index;
+    }
+
     // Jika ini adalah latihan baru, hapus local storage
-    if (isNewSession()) {
+    if (isNewSession(idLatihan)) {
         clearLocalStorage();
         localStorage.setItem("idLatihan", idLatihan);
     } else {
@@ -25,14 +48,9 @@ $(document).ready(function () {
 
     // Memuat data dari local storage
     function saveCurrentWordData() {
-        if (list) {
-            const index = wordList.findIndex((w) => w.kata === list.kata);
-            if (index !== -1) {
-                wordList[index].terjemahan = $("#translatedWord").text();
-                wordList[index].percobaan = attemptCount;
-                wordList[index].durasi = (new Date() - startTime) / 1000;
-                updateLocalStorage();
-            }
+        if (getIndex() !== -1) {
+            wordList[getIndex()].durasi = (new Date() - startTime) / 1000;
+            updateLocalStorage();
         }
     }
 
@@ -62,8 +80,7 @@ $(document).ready(function () {
         console.log("storage", localStorage);
     }
 
-    function displayWord(list) {
-        console.log(list);
+    function displayWord() {
         $("#kata").text(list.word);
         $("#ejaan").text(list.pronunciation);
         $("#translatedWord").text(list.translation);
@@ -72,11 +89,11 @@ $(document).ready(function () {
         $("#offMic").show();
         $("#skipSection").show();
         if (consecutiveErrors == delayBantuan) {
-            if (bantuanPengejaan == true) {
+            if (bantuanPengucapan == true) {
                 $("#correctSpellingAudio").show();
             }
         }
-        exampleSentences(language, list.word);
+        exampleSentences(list.word);
 
         // Reset percobaan dan kesalahan
         attemptCount = 0;
@@ -86,9 +103,10 @@ $(document).ready(function () {
         startTime = new Date();
     }
 
-    function getWord(language, category) {
+    function getWord() {
         $("#spellingBtn").prop("disabled", false);
         $("#translatedIcon").hide();
+        $("#spellingSection").hide();
         $("#onMic").hide();
         $("#spelledSection").hide();
         $("#trueSection").hide();
@@ -98,7 +116,7 @@ $(document).ready(function () {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
-                url: `${window.location.origin}/word/${language}/${category}`,
+                url: `${window.location.origin}/word/${bahasa}/${kategori}`,
                 success: function (response) {
                     list = response[0];
                     totalWords++;
@@ -110,7 +128,8 @@ $(document).ready(function () {
                         benar: 0,
                         durasi: 0,
                     });
-                    textToSpeech(list.word, googlecode);
+                    speechContextWords.push(list.word);
+                    textToSpeech();
                     updateLocalStorage();
                     resolve(list);
                 },
@@ -122,13 +141,18 @@ $(document).ready(function () {
         });
     }
 
-    function textToSpeech(word, googlecode) {
+    function textToSpeech() {
         $.ajax({
-            type: "post",
+            type: "get",
             url: `${
                 window.location.origin
-            }/text-to-speech/${googlecode}/${encodeURIComponent(word)}`,
+            }/text-to-speech/${idBahasa}/${encodeURIComponent(
+                list.word
+            )}/${bantuanSuara}`,
+            processData: false,
+            contentType: false,
             success: function (response) {
+                console.log(response);
                 const audioUrl = response.audio_url;
                 var audioContainer = $("#correctSpellingAudio");
 
@@ -140,9 +164,11 @@ $(document).ready(function () {
 
                 audioContainer.append(mainAudio);
 
-                mainAudio.play();
+                mainAudio.play().catch((error) => {
+                    console.error("Audio playback failed:", error);
+                });
             },
-            error: function (xhr, status, error) {
+            error: function (xhr) {
                 console.error(xhr.responseText);
             },
         });
@@ -165,14 +191,18 @@ $(document).ready(function () {
                     const audioBlob = new Blob(audioChunks, {
                         type: "audio/webm",
                     });
-                    const formData = new FormData();
-                    formData.append("audio", audioBlob, "audio.webm");
-                    formData.append("language_code", googlecode);
+                    const formSTT = new FormData();
+                    formSTT.append("audio", audioBlob, "audio.webm");
+                    formSTT.append("languageId", idBahasa);
+                    formSTT.append(
+                        "speechContext",
+                        JSON.stringify(speechContextWords)
+                    );
 
                     $.ajax({
                         type: "POST",
                         url: `${window.location.origin}/speech-to-text`,
-                        data: formData,
+                        data: formSTT,
                         processData: false,
                         contentType: false,
                         success: function (response) {
@@ -185,18 +215,11 @@ $(document).ready(function () {
                             $("#spelledSection").show();
                             attemptCount++;
                             try {
-                                if (compareWords(speechResult, list.word)) {
+                                if (compareWords(speechResult)) {
                                     if (attemptCount <= maksSalah) {
                                         totalCorrect++;
-                                        const index = wordList.findIndex(
-                                            (w) => w.kata === list.word
-                                        );
-                                        if (index !== -1) {
-                                            wordList[index].benar = 1;
-                                            wordList[index].percobaan =
-                                                attemptCount;
-                                            wordList[index].durasi =
-                                                (new Date() - startTime) / 1000;
+                                        if (getIndex() !== -1) {
+                                            wordList[getIndex()].benar = 1;
                                         }
                                     }
                                     $("#spelledWord").addClass("text-success");
@@ -207,7 +230,6 @@ $(document).ready(function () {
                                         "d-flex justify-content-center"
                                     );
                                     $("#skipSection").hide();
-                                    updateLocalStorage();
                                 } else {
                                     consecutiveErrors++;
                                     $("#spelledWord").addClass("text-danger");
@@ -216,7 +238,7 @@ $(document).ready(function () {
                                     $("#exampleSentenceSection").hide();
 
                                     if (consecutiveErrors == delayBantuan) {
-                                        if (bantuanPengejaan == true) {
+                                        if (bantuanPengucapan == true) {
                                             $("#correctSpellingAudio").show();
                                         }
                                     }
@@ -238,6 +260,11 @@ $(document).ready(function () {
                                         });
                                     }
                                 }
+                                if (getIndex() !== -1) {
+                                    wordList[getIndex()].percobaan =
+                                        attemptCount;
+                                }
+                                saveCurrentWordData();
                             } catch (error) {
                                 console.error(error);
                                 if (error instanceof TypeError) {
@@ -287,7 +314,7 @@ $(document).ready(function () {
 
     $("#spellingBtn").on("click", function () {
         if (!mediaRecorder || mediaRecorder.state === "inactive") {
-            startRecognition(googlecode);
+            startRecognition();
             $("#onMic").show();
             $("#offMic").hide();
         } else if (mediaRecorder.state === "recording") {
@@ -302,17 +329,17 @@ $(document).ready(function () {
             .toLowerCase(); // Convert to lowercase
     }
 
-    function compareWords(word1, word2) {
-        return normalizeText(word1) === normalizeText(word2);
+    function compareWords(hasilPengucapan) {
+        return normalizeText(list.word) === normalizeText(hasilPengucapan);
     }
 
-    function exampleSentences(language, word) {
+    function exampleSentences() {
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
                 url: `${
                     window.location.origin
-                }/example-sentences/${language}/${encodeURIComponent(word)}`,
+                }/example-sentences/${bahasa}/${encodeURIComponent(list.word)}`,
                 success: function (response) {
                     console.log(response);
                     loadExampleSentences(response);
@@ -370,13 +397,9 @@ $(document).ready(function () {
         });
     }
 
-    // Fetch kata pertama saat halaman dimuat
-    getWord(language, category).then(displayWord);
-
     // Tambahkan event listener untuk tombol 'Lanjut'
     $("#nextBtn").on("click", function () {
-        saveCurrentWordData();
-        getWord(language, category).then(displayWord);
+        getWord().then(displayWord);
     });
 
     $("#skipBtn").on("click", function () {
@@ -392,10 +415,13 @@ $(document).ready(function () {
             cancelButtonText: "Batal",
         }).then((result) => {
             if (result.isConfirmed) {
-                getWord(language, category).then(displayWord);
+                getWord().then(displayWord);
             }
         });
     });
+
+    // Fetch kata pertama saat halaman dimuat
+    getWord().then(displayWord);
 
     window.saveResults = saveResults;
 });

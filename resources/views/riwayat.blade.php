@@ -147,7 +147,7 @@
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body" id="riwayatModalBody">
-                        <div class="container-sm container-fluid">
+                        <div class="container-fluid">
                             <div class="row justify-content-center mb-md-3 mb-0">
                                 <div class="col-md-auto col-1 d-flex align-items-center py-md-0 py-3">
                                     <i class="bi bi-globe"></i>

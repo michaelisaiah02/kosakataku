@@ -19,6 +19,7 @@ class Latihan extends Model
         'jumlah_kata',
         'jumlah_benar',
         'list',
+        'bantuan_suara',
         'selesai'
     ];
 

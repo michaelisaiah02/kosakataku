@@ -25,15 +25,17 @@ class BahasaSeeder extends Seeder
 
         // Load JSON data
         $json = File::get(resource_path('json/bahasa.json'));
-        $languages = json_decode($json, true)['languages'];
+        $languages = json_decode($json, true)['bahasa'];
 
         // Insert each language into the database
         foreach ($languages as $language) {
             Bahasa::create([
-                'bahasa' => $language['language'],
+                'inggris' => $language['inggris'],
                 'indonesia' => $language['indonesia'],
-                'kode_deepl' => $language['deeplcode'],
-                'kode_google' => $language['googlecode'],
+                'kode_tts' => $language['kode_tts'],
+                'kode_stt' => $language['kode_stt'],
+                'suara_pria' => $language['suara_pria'],
+                'suara_wanita' => $language['suara_wanita'],
             ]);
         }
     }

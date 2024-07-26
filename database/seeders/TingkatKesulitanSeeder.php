@@ -25,21 +25,21 @@ class TingkatKesulitanSeeder extends Seeder
         // Seed the table with data
         TingkatKesulitan::create([
             'tingkat_kesulitan' => 'mudah',
-            'bantuan_pengejaan' => true,
+            'bantuan_pengucapan' => true,
             'delay_bantuan' => 0,
             'maks_salah' => 10,
         ]);
 
         TingkatKesulitan::create([
             'tingkat_kesulitan' => 'normal',
-            'bantuan_pengejaan' => true,
+            'bantuan_pengucapan' => true,
             'delay_bantuan' => 3,
             'maks_salah' => 5,
         ]);
 
         TingkatKesulitan::create([
             'tingkat_kesulitan' => 'sulit',
-            'bantuan_pengejaan' => false,
+            'bantuan_pengucapan' => false,
             'delay_bantuan' => 0,
             'maks_salah' => 3,
         ]);

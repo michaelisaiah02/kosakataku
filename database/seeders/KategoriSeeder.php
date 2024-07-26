@@ -25,11 +25,11 @@ class KategoriSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $json = File::get(resource_path('json/kategori.json'));
-        $categories = json_decode($json, true)['categories'];
+        $categories = json_decode($json, true)['kategori'];
 
         foreach ($categories as $category) {
             Kategori::create([
-                'kategori' => $category['kategori'],
+                'inggris' => $category['inggris'],
                 'indonesia' => $category['indonesia']
             ]);
         }

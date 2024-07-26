@@ -55,6 +55,7 @@ class LatihanController extends Controller
         $request->merge([
             'id_user' => auth()->id()
         ]);
+        // dd($request->all());
         // Validasi dan simpan pengaturan latihan ke database
         $latihan = Latihan::create($request->all());
 
@@ -86,7 +87,7 @@ class LatihanController extends Controller
         return view('latihan', [
             'latihan' => $latihan,
             'bahasa' => $latihan->bahasa()->first(),
-            'kategori' => $latihan->kategori()->first()->kategori,
+            'kategori' => $latihan->kategori()->first(),
             'tingkat_kesulitan' => $latihan->tingkatKesulitan()->first()
         ]);
     }

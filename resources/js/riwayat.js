@@ -58,7 +58,6 @@ $(document).ready(function () {
                 const tabelDetailBody = $("#tabelDetailBody");
                 tabelDetailBody.empty();
                 JSON.parse(data.list).forEach((list) => {
-                    console.log(list);
                     const row = `<tr class="align-middle">
                         <td class="text-nowrap">${list.kata}</td>
                         <td class="text-nowrap">${list.cara_baca}</td>
@@ -75,11 +74,6 @@ $(document).ready(function () {
                 });
                 $("#tabelDetail")
                     .DataTable({
-                        scrollX: true,
-                        paging: true,
-                        searching: true,
-                        ordering: true,
-                        info: true,
                         language: {
                             lengthMenu: "Tampilkan _MENU_ data per halaman",
                             zeroRecords: "Tidak ada data yang ditemukan",

@@ -1,54 +1,100 @@
 {
-    "categories": [
-      { "kategori": "Animals", "indonesia": "Hewan" },
-      { "kategori": "Colors", "indonesia": "Warna" },
-      { "kategori": "Countries", "indonesia": "Negara" },
-      { "kategori": "Food and Drinks", "indonesia": "Makanan dan Minuman" },
-      { "kategori": "Sports", "indonesia": "Olahraga" },
-      { "kategori": "Technology", "indonesia": "Teknologi" },
-      { "kategori": "Clothing", "indonesia": "Pakaian" },
-      { "kategori": "Household Items", "indonesia": "Barang Rumah Tangga" },
-      { "kategori": "Nature", "indonesia": "Alam" },
-      { "kategori": "School Subjects", "indonesia": "Mata Pelajaran" },
-      { "kategori": "Professions", "indonesia": "Profesi" },
-      { "kategori": "Transportation", "indonesia": "Transportasi" },
-      { "kategori": "Music", "indonesia": "Musik" },
-      { "kategori": "Body Parts", "indonesia": "Bagian Tubuh" },
-      { "kategori": "Emotions", "indonesia": "Emosi" },
-      { "kategori": "Weather", "indonesia": "Cuaca" },
-      { "kategori": "Family", "indonesia": "Keluarga" },
-      { "kategori": "Hobbies", "indonesia": "Hobi" },
-      { "kategori": "Numbers", "indonesia": "Angka" },
-      { "kategori": "Shapes", "indonesia": "Bentuk" },
-      { "kategori": "Buildings", "indonesia": "Bangunan" },
-      { "kategori": "Cities", "indonesia": "Kota" },
-      { "kategori": "Fruits", "indonesia": "Buah-buahan" },
-      { "kategori": "Vegetables", "indonesia": "Sayuran" },
-      { "kategori": "Tools", "indonesia": "Alat" },
-      { "kategori": "Furniture", "indonesia": "Perabotan" },
-      { "kategori": "Appliances", "indonesia": "Peralatan" },
-      { "kategori": "Vehicles", "indonesia": "Kendaraan" },
-      { "kategori": "Electronics", "indonesia": "Elektronik" },
-      { "kategori": "Instruments", "indonesia": "Instrumen" },
-      { "kategori": "Occupations", "indonesia": "Pekerjaan" },
-      { "kategori": "Places", "indonesia": "Tempat" },
-      { "kategori": "Plants", "indonesia": "Tanaman" },
-      { "kategori": "Trees", "indonesia": "Pohon" },
-      { "kategori": "Flowers", "indonesia": "Bunga" },
-      { "kategori": "Sea Creatures", "indonesia": "Makhluk Laut" },
-      { "kategori": "Insects", "indonesia": "Serangga" },
-      { "kategori": "Birds", "indonesia": "Burung" },
-      { "kategori": "Fish", "indonesia": "Ikan" },
-      { "kategori": "Reptiles", "indonesia": "Reptil" },
-      { "kategori": "Mammals", "indonesia": "Mamalia" },
-      { "kategori": "Amphibians", "indonesia": "Amfibi" },
-      { "kategori": "Languages", "indonesia": "Bahasa" },
-      { "kategori": "Home", "indonesia": "Rumah" },
-      { "kategori": "School", "indonesia": "Sekolah" },
-      { "kategori": "Office", "indonesia": "Kantor" },
-      { "kategori": "Space", "indonesia": "Ruang Angkasa" },
-      { "kategori": "Computers", "indonesia": "Komputer" },
-      { "kategori": "Chemicals", "indonesia": "Bahan Kimia" },
-      { "kategori": "Materials", "indonesia": "Material" }
+    "kategori": [
+      {
+        "inggris": "Animals",
+        "indonesia": "Hewan"
+      },
+      {
+        "inggris": "Colors",
+        "indonesia": "Warna"
+      },
+      {
+        "inggris": "Food and Drinks",
+        "indonesia": "Makanan dan Minuman"
+      },
+      {
+        "inggris": "Sports",
+        "indonesia": "Olahraga"
+      },
+      {
+        "inggris": "Clothing",
+        "indonesia": "Pakaian"
+      },
+      {
+        "inggris": "Household Items",
+        "indonesia": "Barang Rumah Tangga"
+      },
+      {
+        "inggris": "Nature",
+        "indonesia": "Alam"
+      },
+      {
+        "inggris": "School Subjects",
+        "indonesia": "Mata Pelajaran"
+      },
+      {
+        "inggris": "Professions",
+        "indonesia": "Profesi"
+      },
+      {
+        "inggris": "Transportation",
+        "indonesia": "Transportasi"
+      },
+      {
+        "inggris": "Music and Instruments",
+        "indonesia": "Musik dan Instrumen"
+      },
+      {
+        "inggris": "Body Parts",
+        "indonesia": "Bagian Tubuh"
+      },
+      {
+        "inggris": "Emotions",
+        "indonesia": "Emosi"
+      },
+      {
+        "inggris": "Weather",
+        "indonesia": "Cuaca"
+      },
+      {
+        "inggris": "Family",
+        "indonesia": "Keluarga"
+      },
+      {
+        "inggris": "Hobbies",
+        "indonesia": "Hobi"
+      },
+      {
+        "inggris": "Numbers",
+        "indonesia": "Angka"
+      },
+      {
+        "inggris": "Shapes",
+        "indonesia": "Bentuk"
+      },
+      {
+        "inggris": "Fruits and Vegetables",
+        "indonesia": "Buah dan Sayuran"
+      },
+      {
+        "inggris": "Tools",
+        "indonesia": "Peralatan"
+      },
+      {
+        "inggris": "Electronics and Computers",
+        "indonesia": "Elektronik dan Komputer"
+      },
+      {
+        "inggris": "Places",
+        "indonesia": "Tempat"
+      },
+      {
+        "inggris": "Home",
+        "indonesia": "Rumah"
+      },
+      {
+        "inggris": "School",
+        "indonesia": "Sekolah"
+      }
     ]
   }

@@ -82,23 +82,23 @@
 .nav-link::after {
     content: "";
     position: absolute;
-    width: 0; /* Initial width is 0 */
-    height: 3px; /* Thickness of underline */
-    left: 50%; /* Start at the center */
-    bottom: 3px; /* Position below the text */
-    background-color: #087ca7; /* Color of underline */
-    transition: width 0.3s ease, left 0.3s ease; /* Transition for width and position */
+    width: 0;
+    height: 3px;
+    left: 50%;
+    bottom: 3px;
+    background-color: #087ca7;
+    transition: width 0.3s ease, left 0.3s ease;
 }
 
 .nav-link.active::after,
 .nav-link:hover::after {
-    width: 65%; /* 3/4 of the text width */
-    left: 13%; /* Center the underline */
+    width: 65%;
+    left: 13%;
 }
 
 .nav-link.active,
 .nav-link:hover {
-    color: #087ca7; /* Change text color on hover or active */
+    color: #087ca7;
 }
 
 .icon-pc-only {
@@ -112,14 +112,14 @@
     }
 
     .nav-link::after {
-        width: 0; /* Initial width is 0 */
-        left: 10%; /* Start at the left */
+        width: 0;
+        left: 10%;
     }
 
     .nav-link.active::after,
     .nav-link:hover::after {
-        width: 9%; /* Almost full width for mobile */
-        left: -1px; /* Slight padding on sides */
+        width: 9%;
+        left: -1px;
     }
 
     .icon-pc-only {
@@ -166,7 +166,7 @@
 }
 
 .dropdown-toggle::after {
-    content: none; /* Remove pseudo element */
+    content: none;
 }
 
 .carousel-item {
@@ -184,4 +184,13 @@
 #nilai {
     width: 150px;
     height: 150px;
+}
+
+.bantuan-suara {
+    background-color: #f8f9fa;
+    color: black;
+}
+
+.bantuan-suara:hover {
+    color: #f8f9fa !important;
 }

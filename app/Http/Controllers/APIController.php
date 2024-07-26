@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bahasa;
 use Exception;
 use FFMpeg\FFMpeg;
+use FFMpeg\Format\Audio\Flac;
 use GuzzleHttp\Client;
 use FFMpeg\Format\Audio\Wav;
+use FFMpeg\Format\Video\Ogg;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Google\Cloud\Speech\V1\SpeechClient;
+use Google\Cloud\Speech\V1\SpeechContext;
 use Google\Cloud\Speech\V1\RecognitionAudio;
 use Google\Cloud\Speech\V1\RecognitionConfig;
 use Google\Cloud\TextToSpeech\V1\AudioConfig;
@@ -18,6 +22,7 @@ use Google\Cloud\TextToSpeech\V1\SynthesisInput;
 use Google\Cloud\TextToSpeech\V1\SsmlVoiceGender;
 use Google\Cloud\TextToSpeech\V1\TextToSpeechClient;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
+use Illuminate\Support\Facades\Log;
 
 class APIController extends Controller
 {
@@ -96,8 +101,9 @@ class APIController extends Controller
         return $allWords;
     }
 
-    public function textToSpeech($language_code, $word)
+    public function textToSpeech($idBahasa, $word, $bantuanPengucapan)
     {
+        $bahasa = Bahasa::find($idBahasa);
         $client = new TextToSpeechClient([
             'credentials' => config('services.google.application_credentials'),
         ]);
@@ -106,8 +112,8 @@ class APIController extends Controller
             ->setText($word);
 
         $voice = (new VoiceSelectionParams())
-            ->setLanguageCode($language_code)
-            ->setSsmlGender(SsmlVoiceGender::NEUTRAL);
+            ->setLanguageCode($bahasa->kode_tts)
+            ->setName($bantuanPengucapan === 'wanita' ? $bahasa->suara_wanita : $bahasa->suara_pria);
 
         $audioConfig = (new AudioConfig())
             ->setAudioEncoding(AudioEncoding::MP3);
@@ -140,6 +146,7 @@ class APIController extends Controller
     public function speechToText(Request $request)
     {
         $audioFile = $request->file('audio');
+        $bahasa = Bahasa::find($request->input('languageId'));
 
         // Konversi file audio dari webm ke wav
         $ffmpeg = FFMpeg::create();
@@ -160,9 +167,16 @@ class APIController extends Controller
         $audio = (new RecognitionAudio())
             ->setContent($audioContent);
 
+        $speechContextWords = json_decode($request->input('speechContext'), true);
+        $speechContext = (new SpeechContext())
+            ->setPhrases($speechContextWords);
+
         $config = (new RecognitionConfig())
+            ->setEncoding(RecognitionConfig\AudioEncoding::LINEAR16)
             ->setSampleRateHertz(48000)
-            ->setLanguageCode($request->language_code);
+            ->setLanguageCode($bahasa->kode_stt)
+            ->setSpeechContexts([$speechContext])
+            ->setMaxAlternatives(3);
 
         try {
             $response = $client->recognize($config, $audio);
@@ -181,7 +195,10 @@ class APIController extends Controller
             // Hapus file wav setelah diproses
             unlink($wavPath);
 
-            return response()->json(['transcription' => $transcription]);
+            return response()->json([
+                'transcription' => $transcription,
+                'speech_context' => $speechContextWords
+            ]);
         } catch (Exception $e) {
             error_log('Error during speech recognition: ' . $e->getMessage());
             return response()->json(['error' => 'Speech recognition failed. Note: ' . $e->getMessage()], 500);

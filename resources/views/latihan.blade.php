@@ -57,8 +57,8 @@
                 <h3 id="spelledWord" class="text-center mt-1 mb-3"></h3>
             </div>
             <div class="row mb-3" id="exampleSentenceSection">
-                <div class="card">
-                    <div class="card-header">
+                <div class="card p-0 rounded-5">
+                    <div class="card-header bg-primary text-light rounded-top-5 text-center">
                         Contoh Kalimat
                     </div>
                     <div class="card-body">
@@ -108,17 +108,12 @@
         <input type="hidden" name="jumlah_benar" id="jumlah_benar" value="">
         <input type="hidden" name="list" id="list" value="">
     </form>
-
-    <script>
-        const idLatihan = {{ $latihan->id }};
-        const language = "{{ $bahasa->bahasa }}";
-        const category = "{{ $kategori }}";
-        const deeplcode = "{{ $bahasa->kode_deepl }}";
-        const googlecode = "{{ $bahasa->kode_google }}";
-        const bantuanPengejaan = {{ $tingkat_kesulitan->bantuan_pengejaan }};
-        const delayBantuan = {{ $tingkat_kesulitan->delay_bantuan }};
-        const maksSalah = {{ $tingkat_kesulitan->maks_salah }};
-        console.log(idLatihan, language, category, deeplcode, googlecode, bantuanPengejaan, delayBantuan, maksSalah);
-    </script>
+    {{-- @dd($latihan, $bahasa, $kategori, $tingkat_kesulitan) --}}
+    <div id="data" data-id-latihan="{{ $latihan->id }}" data-id-bahasa="{{ $bahasa->id }}"
+        data-bahasa="{{ $bahasa->inggris }}" data-kategori="{{ $kategori->inggris }}"
+        data-bantuan-suara="{{ $latihan->bantuan_suara }}"
+        data-bantuan-pengucapan="{{ $tingkat_kesulitan->bantuan_pengucapan }}"
+        data-delay-bantuan="{{ $tingkat_kesulitan->delay_bantuan }}"
+        data-maks-salah="{{ $tingkat_kesulitan->maks_salah }}"></div>
     @vite(['resources/js/latihan.js'])
 </x-app-layout>

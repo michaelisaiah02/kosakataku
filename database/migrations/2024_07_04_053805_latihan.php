@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('jumlah_kata')->default(0);
             $table->integer('jumlah_benar')->default(0);
             $table->json('list')->nullable()->default(null);
+            $table->enum('bantuan_suara', ['pria', 'wanita'])->default('wanita');
             $table->boolean('selesai')->default(false);
             $table->timestamps();
 

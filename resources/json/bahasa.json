@@ -1,166 +1,244 @@
 {
-    "languages": [
-      {
-        "language": "English (US)",
-        "indonesia": "Inggris",
-        "deeplcode": "EN",
-        "googlecode": "en-US"
-      },
-      {
-        "language": "Mandarin Chinese",
-        "indonesia": "Mandarin",
-        "deeplcode": "ZH",
-        "googlecode": "cmn-CN"
-      },
-      {
-        "language": "Japanese",
-        "indonesia": "Jepang",
-        "deeplcode": "JA",
-        "googlecode": "ja-JP"
-      },
-      {
-        "language": "Korean",
-        "indonesia": "Korea",
-        "deeplcode": "KO",
-        "googlecode": "ko-KR"
-      },
-      {
-        "language": "Arabic",
-        "indonesia": "Arab",
-        "deeplcode": "AR",
-        "googlecode": "ar-XA"
-      },
-      {
-        "language": "Bulgarian",
-        "indonesia": "Bulgaria",
-        "deeplcode": "BG",
-        "googlecode": "bg-BG"
-      },
-      {
-        "language": "Czech",
-        "indonesia": "Ceko",
-        "deeplcode": "CS",
-        "googlecode": "cs-CZ"
-      },
-      {
-        "language": "Danish",
-        "indonesia": "Denmark",
-        "deeplcode": "DA",
-        "googlecode": "da-DK"
-      },
-      {
-        "language": "German",
-        "indonesia": "Jerman",
-        "deeplcode": "DE",
-        "googlecode": "de-DE"
-      },
-      {
-        "language": "Greek",
-        "indonesia": "Yunani",
-        "deeplcode": "EL",
-        "googlecode": "el-GR"
-      },
-      {
-        "language": "Spanish",
-        "indonesia": "Spanyol",
-        "deeplcode": "ES",
-        "googlecode": "es-ES"
-      },
-      {
-        "language": "Finnish",
-        "indonesia": "Finlandia",
-        "deeplcode": "FI",
-        "googlecode": "fi-FI"
-      },
-      {
-        "language": "French",
-        "indonesia": "Perancis",
-        "deeplcode": "FR",
-        "googlecode": "fr-FR"
-      },
-      {
-        "language": "Hungarian",
-        "indonesia": "Hungaria",
-        "deeplcode": "HU",
-        "googlecode": "hu-HU"
-      },
-      {
-        "language": "Italian",
-        "indonesia": "Italia",
-        "deeplcode": "IT",
-        "googlecode": "it-IT"
-      },
-      {
-        "language": "Lithuanian",
-        "indonesia": "Lituania",
-        "deeplcode": "LT",
-        "googlecode": "lt-LT"
-      },
-      {
-        "language": "Latvian",
-        "indonesia": "Latvia",
-        "deeplcode": "LV",
-        "googlecode": "lv-LV"
-      },
-      {
-        "language": "Norwegian",
-        "indonesia": "Norwegia",
-        "deeplcode": "NB",
-        "googlecode": "nb-NO"
-      },
-      {
-        "language": "Dutch",
-        "indonesia": "Belanda",
-        "deeplcode": "NL",
-        "googlecode": "nl-NL"
-      },
-      {
-        "language": "Polish",
-        "indonesia": "Polandia",
-        "deeplcode": "PL",
-        "googlecode": "pl-PL"
-      },
-      {
-        "language": "Portuguese",
-        "indonesia": "Portugis",
-        "deeplcode": "PT",
-        "googlecode": "pt-PT"
-      },
-      {
-        "language": "Romanian",
-        "indonesia": "Rumania",
-        "deeplcode": "RO",
-        "googlecode": "ro-RO"
-      },
-      {
-        "language": "Russian",
-        "indonesia": "Rusia",
-        "deeplcode": "RU",
-        "googlecode": "ru-RU"
-      },
-      {
-        "language": "Slovak",
-        "indonesia": "Slovakia",
-        "deeplcode": "SK",
-        "googlecode": "sk-SK"
-      },
-      {
-        "language": "Swedish",
-        "indonesia": "Swedia",
-        "deeplcode": "SV",
-        "googlecode": "sv-SE"
-      },
-      {
-        "language": "Turkish",
-        "indonesia": "Turki",
-        "deeplcode": "TR",
-        "googlecode": "tr-TR"
-      },
-      {
-        "language": "Ukrainian",
-        "indonesia": "Ukraina",
-        "deeplcode": "UK",
-        "googlecode": "uk-UA"
-      }
+    "bahasa": [
+        {
+            "inggris": "Arabic (Saudi Arabia)",
+            "indonesia": "Arab",
+            "kode_tts": "ar-XA",
+            "kode_stt": "ar-SA",
+            "suara_pria": "ar-XA-Wavenet-B",
+            "suara_wanita": "ar-XA-Wavenet-A"
+        },
+        {
+            "inggris": "Danish (Denmark)",
+            "indonesia": "Denmark",
+            "kode_tts": "da-DK",
+            "kode_stt": "da-DK",
+            "suara_pria": "da-DK-Wavenet-C",
+            "suara_wanita": "da-DK-Wavenet-A"
+        },
+        {
+            "inggris": "Dutch (Netherlands)",
+            "indonesia": "Belanda",
+            "kode_tts": "nl-NL",
+            "kode_stt": "nl-NL",
+            "suara_pria": "nl-NL-Wavenet-B",
+            "suara_wanita": "nl-NL-Wavenet-A"
+        },
+        {
+            "inggris": "English (US)",
+            "indonesia": "Inggris",
+            "kode_tts": "en-US",
+            "kode_stt": "en-US",
+            "suara_pria": "en-US-Studio-Q",
+            "suara_wanita": "en-US-Studio-O"
+        },
+        {
+            "inggris": "Filipino (Philippines)",
+            "indonesia": "Filipino",
+            "kode_tts": "fil-PH",
+            "kode_stt": "fil-PH",
+            "suara_pria": "fil-PH-Wavenet-C",
+            "suara_wanita": "fil-PH-Wavenet-A"
+        },
+        {
+            "inggris": "French (France)",
+            "indonesia": "Prancis",
+            "kode_tts": "fr-FR",
+            "kode_stt": "fr-FR",
+            "suara_pria": "fr-FR-Studio-D",
+            "suara_wanita": "fr-FR-Studio-A"
+        },
+        {
+            "inggris": "German (Germany)",
+            "indonesia": "Jerman",
+            "kode_tts": "de-DE",
+            "kode_stt": "de-DE",
+            "suara_pria": "de-DE-Studio-B",
+            "suara_wanita": "de-DE-Studio-C"
+        },
+        {
+            "inggris": "Greek (Greece)",
+            "indonesia": "Yunani",
+            "kode_tts": "el-GR",
+            "kode_stt": "el-GR",
+            "suara_pria": "",
+            "suara_wanita": "el-GR-Wavenet-A"
+        },
+        {
+            "inggris": "Hebrew (Israel)",
+            "indonesia": "Ibrani",
+            "kode_tts": "he-IL",
+            "kode_stt": "iw-IL",
+            "suara_pria": "he-IL-Wavenet-B",
+            "suara_wanita": "he-IL-Wavenet-A"
+        },
+        {
+            "inggris": "Hindi (India)",
+            "indonesia": "Hindi",
+            "kode_tts": "hi-IN",
+            "kode_stt": "hi-IN",
+            "suara_pria": "hi-IN-Wavenet-B",
+            "suara_wanita": "hi-IN-Wavenet-A"
+        },
+        {
+            "inggris": "Hungarian (Hungary)",
+            "indonesia": "Hongaria (Magyar)",
+            "kode_tts": "hu-HU",
+            "kode_stt": "hu-HU",
+            "suara_pria": "",
+            "suara_wanita": "hu-HU-Wavenet-A"
+        },
+        {
+            "inggris": "Italian (Italy)",
+            "indonesia": "Italia",
+            "kode_tts": "it-IT",
+            "kode_stt": "it-IT",
+            "suara_pria": "it-IT-Wavenet-C",
+            "suara_wanita": "it-IT-Wavenet-A"
+        },
+        {
+            "inggris": "Japanese (Japan)",
+            "indonesia": "Jepang",
+            "kode_tts": "ja-JP",
+            "kode_stt": "ja-JP",
+            "suara_pria": "ja-JP-Wavenet-C",
+            "suara_wanita": "ja-JP-Wavenet-A"
+        },
+        {
+            "inggris": "Japanese (Japan)",
+            "indonesia": "Jepang",
+            "kode_tts": "ja-JP",
+            "kode_stt": "ja-JP",
+            "suara_pria": "ja-JP-Wavenet-C",
+            "suara_wanita": "ja-JP-Wavenet-A"
+        },
+        {
+            "inggris": "Korean (South Korea)",
+            "indonesia": "Korea",
+            "kode_tts": "ko-KR",
+            "kode_stt": "ko-KR",
+            "suara_pria": "ko-KR-Wavenet-C",
+            "suara_wanita": "ko-KR-Wavenet-A"
+        },
+        {
+            "inggris": "Malay (Malaysia)",
+            "indonesia": "Melayu",
+            "kode_tts": "ms-MY",
+            "kode_stt": "ms-MY",
+            "suara_pria": "ms-MY-Wavenet-B",
+            "suara_wanita": "ms-MY-Wavenet-A"
+        },
+        {
+            "inggris": "Mandarin Chinese",
+            "indonesia": "Mandarin",
+            "kode_tts": "cmn-CN",
+            "kode_stt": "cmn-Hans-CN",
+            "suara_pria": "cmn-CN-Wavenet-B",
+            "suara_wanita": "cmn-CN-Wavenet-A"
+        },
+        {
+            "inggris": "Norwegian (Norway)",
+            "indonesia": "Norwegia",
+            "kode_tts": "nb-NO",
+            "kode_stt": "no-NO",
+            "suara_pria": "nb-NO-Wavenet-B",
+            "suara_wanita": "nb-NO-Wavenet-A"
+        },
+        {
+            "inggris": "Polish (Poland)",
+            "indonesia": "Polandia",
+            "kode_tts": "pl-PL",
+            "kode_stt": "pl-PL",
+            "suara_pria": "pl-PL-Wavenet-B",
+            "suara_wanita": "pl-PL-Wavenet-A"
+        },
+        {
+            "inggris": "Portuguese (Brazil)",
+            "indonesia": "Portugis (Brasil)",
+            "kode_tts": "pt-BR",
+            "kode_stt": "pt-BR",
+            "suara_pria": "pt-BR-Wavenet-B",
+            "suara_wanita": "pt-BR-Wavenet-A"
+        },
+        {
+            "inggris": "Portuguese (Portugal)",
+            "indonesia": "Portugis (Portugal)",
+            "kode_tts": "pt-PT",
+            "kode_stt": "pt-PT",
+            "suara_pria": "pt-PT-Wavenet-B",
+            "suara_wanita": "pt-PT-Wavenet-A"
+        },
+        {
+            "inggris": "Romanian (Romania)",
+            "indonesia": "Rumania",
+            "kode_tts": "ro-RO",
+            "kode_stt": "ro-RO",
+            "suara_pria": "",
+            "suara_wanita": "ro-RO-Wavenet-A"
+        },
+        {
+            "inggris": "Russian (Russia)",
+            "indonesia": "Rusia",
+            "kode_tts": "ru-RU",
+            "kode_stt": "ru-RU",
+            "suara_pria": "ru-RU-Wavenet-B",
+            "suara_wanita": "ru-RU-Wavenet-A"
+        },
+        {
+            "inggris": "Slovak (Slovakia)",
+            "indonesia": "Slovak",
+            "kode_tts": "sk-SK",
+            "kode_stt": "sk-SK",
+            "suara_pria": "",
+            "suara_wanita": "sk-SK-Wavenet-A"
+        },
+        {
+            "inggris": "Spanish (Spain)",
+            "indonesia": "Spanyol",
+            "kode_tts": "es-ES",
+            "kode_stt": "es-ES",
+            "suara_pria": "es-ES-Wavenet-B",
+            "suara_wanita": "es-ES-Wavenet-C"
+        },
+        {
+            "inggris": "Swedish (Sweden)",
+            "indonesia": "Swedia",
+            "kode_tts": "sv-SE",
+            "kode_stt": "sv-SE",
+            "suara_pria": "sv-SE-Wavenet-C",
+            "suara_wanita": "sv-SE-Wavenet-A"
+        },
+        {
+            "inggris": "Thai (Thailand)",
+            "indonesia": "Thai",
+            "kode_tts": "th-TH",
+            "kode_stt": "th-TH",
+            "suara_pria": "",
+            "suara_wanita": "th-TH-Neural2-C"
+        },
+        {
+            "inggris": "Turkish (Turkey)",
+            "indonesia": "Turki",
+            "kode_tts": "tr-TR",
+            "kode_stt": "tr-TR",
+            "suara_pria": "tr-TR-Wavenet-B",
+            "suara_wanita": "tr-TR-Wavenet-A"
+        },
+        {
+            "inggris": "Ukrainian (Ukraine)",
+            "indonesia": "Ukraina",
+            "kode_tts": "uk-UA",
+            "kode_stt": "uk-UA",
+            "suara_pria": "",
+            "suara_wanita": "uk-UA-Wavenet-A"
+        },
+        {
+            "inggris": "Vietnamese (Vietnam)",
+            "indonesia": "Vietnam",
+            "kode_tts": "vi-VN",
+            "kode_stt": "vi-VN",
+            "suara_pria": "vi-VN-Wavenet-B",
+            "suara_wanita": "vi-VN-Wavenet-A"
+        }
     ]
-  }
+}

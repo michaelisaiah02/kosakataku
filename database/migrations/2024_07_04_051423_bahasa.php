@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('bahasa', function (Blueprint $table) {
             $table->id();
-            $table->string('bahasa');
+            $table->string('inggris');
             $table->string('indonesia');
-            $table->string('kode_deepl');
-            $table->string('kode_google');
+            $table->string('kode_tts');
+            $table->string('kode_stt');
+            $table->string('suara_pria')->nullable();
+            $table->string('suara_wanita')->nullable();
             $table->timestamps();
         });
     }

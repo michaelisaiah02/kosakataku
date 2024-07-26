@@ -51,8 +51,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{ request()->routeIs('riwayat') ? 'active' : '' }}"
-                            href="{{ route('login') }}">
+                        <a class="nav-link" href="{{ route('login') }}">
                             Login
                         </a>
                     </li>
@@ -80,12 +79,21 @@
                 <!-- Langkah-langkah Awal -->
                 <div class="row mb-4">
                     <h3 class="fw-semibold">Langkah-langkah Awal</h3>
-                    <p>Klik / tekan 'Registrasi' yang ada di atas layar untuk mendaftar.</p>
-                    <p>Kalau sudah pernah mendaftar, klik / tekan 'Login', untuk masuk gunakan email dan kata sandi yang
-                        telah kamu daftarkan.</p>
-                    <p>Setelah registrasi / login silahkan menjelajahi pembelajaran ini atau kamu juga bisa melihat
-                        panduan untuk memulai pembelajarannya.</p>
+                    <p>
+                        Klik atau tekan link ini <a class="link-primary" href="{{ route('register') }}">Registrasi</a>
+                        atau link yang ada di atas layar untuk mendaftar.
+                    </p>
+                    <p>
+                        Kalau sudah pernah mendaftar, klik atau tekan link ini <a class="link-primary"
+                            href="{{ route('login') }}">Login</a>
+                        untuk masuk. Gunakan email dan kata sandi yang telah kamu daftarkan.
+                    </p>
+                    <p>
+                        Setelah registrasi atau login, silakan menjelajahi pembelajaran ini atau kamu juga bisa melihat
+                        panduan untuk memulai pembelajaran.
+                    </p>
                 </div>
+
 
                 <!-- Fitur Utama -->
                 <div class="row mb-4">
