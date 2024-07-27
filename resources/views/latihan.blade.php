@@ -1,12 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="row justify-content-between py-3">
-            <div class="col-auto my-auto">
-                <h2 class="fw-semibold text-dark">
+            <div class="col-md-auto col-12 mb-md-0 mb-2 text-md-start text-center">
+                <h2 class="fw-semibold text-dark p-0 m-0">
                     Latihan Kosakata
                 </h2>
             </div>
-            <div class="col col-md-auto my-auto d-flex gap-3" id="skipSection">
+            <audio id="correct-audio" src="/audio/correct.mp3" preload="auto"></audio>
+            <audio id="wrong-audio" src="/audio/wrong.mp3" preload="auto"></audio>
+
+            <div class="col col-md-auto d-flex gap-3" id="skipSection">
                 <button class="btn btn-sm btn-danger d-flex justify-content-center finishBtnFalse" x-data
                     @click="window.saveResults(false)">
                     <p class="my-auto">Selesai Latihan</p>
@@ -24,6 +27,14 @@
         </div>
     </x-slot>
 
+    <div class="d-flex justify-content-center align-items-center min-vh-75" id="loading">
+        <div class="row justify-content-center text-center">
+            <h1 class="pb-3">Tunggu sebentar...</h1>
+            <div class="spinner-border text-primary" style="width: 10rem; height: 10rem;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
     <div class="py-4 min-vh-75 d-flex align-items-center">
         <div class="container">
             <div class="row mb-3">

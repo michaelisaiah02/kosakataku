@@ -127,10 +127,6 @@
     }
 }
 
-.container {
-    overflow: hidden; /* Prevents scrolling of the container */
-}
-
 .table-container {
     overflow-x: auto; /* Enables horizontal scrolling for the table */
     overflow-y: hidden; /* Prevents vertical scrolling */

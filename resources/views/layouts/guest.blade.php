@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
@@ -27,15 +27,14 @@
     @vite(['resources/sass/app.scss', 'resources/css/app.css'])
 </head>
 
-<body class="font-sans text-dark bg-light">
+<body class="font-sans bg-transparent">
     <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center utama">
-        <div class="text-center">
+        <div class="text-center pt-3">
             <a href="/">
-                <x-application-logo class="w-25 h-25 text-secondary" />
+                <x-application-logo class="w-25 h-25" />
             </a>
         </div>
-
-        <div class="w-100 mt-5 px-5 py-4 bg-white shadow-sm overflow-hidden rounded-3" style="max-width: 24rem;">
+        <div class="w-100 p-4 bg-transparent shadow overflow-hidden rounded-3" style="max-width: 24rem;">
             {{ $slot }}
         </div>
     </div>

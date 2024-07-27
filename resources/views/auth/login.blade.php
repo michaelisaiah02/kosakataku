@@ -23,18 +23,18 @@
 
         <!-- Remember Me -->
         <div class="form-check mb-3 d-flex justify-content-between align-items-center">
-            <input id="remember_me" type="checkbox" class="form-check-input me-2" name="remember">
-            <label for="remember_me" class="form-check-label user-select-none">
+            <input id="remember_me" type="checkbox" class="form-check-input my-auto" name="remember">
+            <label for="remember_me" class="form-check-label user-select-none text-light ms-1">
                 Ingat saya
             </label>
-            <a class="btn btn-link ms-auto p-0" href="{{ route('register') }}">
+            <a class="btn btn-link link-light ms-auto p-0" href="{{ route('register') }}">
                 Belum punya akun?
             </a>
         </div>
 
         <div class="d-flex align-items-center justify-content-end mt-4">
             @if (Route::has('password.request'))
-                <a class="btn btn-link me-auto p-0" href="{{ route('password.request') }}">
+                <a class="btn btn-link link-light me-auto p-0" href="{{ route('password.request') }}">
                     Lupa kata sandi?
                 </a>
             @endif

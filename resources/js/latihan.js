@@ -88,6 +88,8 @@ $(document).ready(function () {
         $("#spellingSection").show();
         $("#offMic").show();
         $("#skipSection").show();
+        $("#loading").removeClass("d-flex justify-content-center");
+        $("#loading").hide();
         if (consecutiveErrors == delayBantuan) {
             if (bantuanPengucapan == true) {
                 $("#correctSpellingAudio").show();
@@ -104,6 +106,8 @@ $(document).ready(function () {
     }
 
     function getWord() {
+        $("#loading").show();
+        $("#loading").addClass("d-flex justify-content-center");
         $("#spellingBtn").prop("disabled", false);
         $("#translatedIcon").hide();
         $("#spellingSection").hide();
@@ -119,6 +123,7 @@ $(document).ready(function () {
                 url: `${window.location.origin}/word/${bahasa}/${kategori}`,
                 success: function (response) {
                     list = response[0];
+                    console.log(list);
                     totalWords++;
                     wordList.push({
                         kata: list.word,
@@ -207,15 +212,32 @@ $(document).ready(function () {
                         contentType: false,
                         success: function (response) {
                             console.log(response);
-                            const speechResult = response.transcription[0];
-                            $("#spelledWord").text(speechResult);
+                            const speechResults = response.transcription; // Array of 3 alternatives
+                            let matchedResult = speechResults[0];
+
+                            // Check for any matching transcription
+                            let isCorrect = false;
+                            for (let i = 0; i < speechResults.length; i++) {
+                                if (compareWords(speechResults[i])) {
+                                    matchedResult = speechResults[i];
+                                    isCorrect = true;
+                                    break;
+                                }
+                            }
+
+                            $("#spelledWord").text(matchedResult); // Show matched result
                             $("#spelledWord").removeClass(
                                 "text-success text-danger"
                             );
                             $("#spelledSection").show();
                             attemptCount++;
                             try {
-                                if (compareWords(speechResult)) {
+                                if (isCorrect) {
+                                    // Play correct audio
+                                    document
+                                        .getElementById("correct-audio")
+                                        .play();
+
                                     if (attemptCount <= maksSalah) {
                                         totalCorrect++;
                                         if (getIndex() !== -1) {
@@ -231,6 +253,11 @@ $(document).ready(function () {
                                     );
                                     $("#skipSection").hide();
                                 } else {
+                                    // Play wrong audio
+                                    document
+                                        .getElementById("wrong-audio")
+                                        .play();
+
                                     consecutiveErrors++;
                                     $("#spelledWord").addClass("text-danger");
                                     $("#spellingSection").show();

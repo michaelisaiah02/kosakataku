@@ -105,14 +105,6 @@
             "suara_wanita": "ja-JP-Wavenet-A"
         },
         {
-            "inggris": "Japanese (Japan)",
-            "indonesia": "Jepang",
-            "kode_tts": "ja-JP",
-            "kode_stt": "ja-JP",
-            "suara_pria": "ja-JP-Wavenet-C",
-            "suara_wanita": "ja-JP-Wavenet-A"
-        },
-        {
             "inggris": "Korean (South Korea)",
             "indonesia": "Korea",
             "kode_tts": "ko-KR",

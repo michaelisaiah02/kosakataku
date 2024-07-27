@@ -36,7 +36,7 @@
                                 <label for="kategori" class="form-label text-center fs-3">Kategori</label>
                                 <select id="kategori" name="id_kategori" class="form-select form-select-lg"
                                     aria-label="kategori">
-                                    <option selected>Pilih Kategori</option>
+                                    <option value="">Pilih Kategori</option>
                                     @foreach ($categories as $category)
                                         <option value="{{ $category->id }}"
                                             @if (old('id_kategori') == $category->id) selected @endif>{{ $category->indonesia }}
@@ -47,14 +47,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-4 justify-content-center">
+                    <div class="row mb-3 justify-content-center">
                         <div class="col-12 d-flex justify-content-center">
                             <div class="row w-75">
                                 <label for="tingkat_kesulitan" class="form-label text-center fs-3">Tingkat
                                     Kesulitan</label>
                                 <select id="tingkat_kesulitan" name="id_tingkat_kesulitan"
                                     class="form-select form-select-lg text-capitalize" aria-label="tingkat_kesulitan">
-                                    <option selected>Pilih Tingkat Kesulitan</option>
+                                    <option value="">Pilih Tingkat Kesulitan</option>
                                     @foreach ($difficulties as $difficulty)
                                         <option value="{{ $difficulty->id }}"
                                             @if (old('id_tingkat_kesulitan') == $difficulty->id) selected @endif class="text-capitalize">
@@ -67,45 +67,44 @@
                     </div>
                     <div class="row mb-3 justify-content-center" x-show="selectedLanguage">
                         <div class="col-12 d-flex justify-content-center">
-                            <div class="row w-75 justify-content-between mb-3" id="bantuanSuara">
-                                <div class="col-auto d-flex align-items-center" id="laki">
-                                    <input type="radio" class="btn-check" name="bantuan_suara" id="opsi1"
-                                        autocomplete="off" value="pria" x-bind:disabled="!voiceOptions.male">
-                                    <label :class="voiceOptions.male ? 'btn btn-outline-primary bantuan-suara' : ''"
-                                        for="opsi1">Laki - Laki</label>
-                                </div>
-                                <div class="col-auto d-flex align-items-center">
+                            <div class="row w-75 justify-content-center mb-3" id="bantuanSuara">
+                                <div class="col-12 text-center mb-3">
                                     <label for="bantuan_suara" class="fs-3">Bantuan Suara</label>
                                 </div>
-                                <div class="col-auto d-flex align-items-center" id="perempuan">
-                                    <input type="radio" class="btn-check" name="bantuan_suara" id="opsi2"
-                                        autocomplete="off" value="wanita" x-bind:disabled="!voiceOptions.female">
-                                    <label :class="voiceOptions.female ? 'btn btn-outline-danger bantuan-suara' : ''"
-                                        for="opsi2">Perempuan</label>
+                                <div class="row justify-content-evenly mt-2">
+                                    <div class="col-auto d-flex flex-column align-items-center" id="laki">
+                                        <input type="radio" class="btn-check" name="bantuan_suara" id="opsi1"
+                                            autocomplete="off" value="pria" x-bind:disabled="!voiceOptions.male">
+                                        <label :class="'btn btn-outline-primary btn-lg bantuan-suara my-auto'"
+                                            x-show="voiceOptions.male" for="opsi1">Laki - Laki</label>
+                                        <div x-show="!voiceOptions.male"
+                                            class="alert alert-link user-select-none text-center text-muted my-auto">
+                                            Suara laki-laki belum tersedia
+                                        </div>
+                                    </div>
+                                    <div class="col-auto d-flex flex-column align-items-center" id="perempuan">
+                                        <input type="radio" class="btn-check" name="bantuan_suara" id="opsi2"
+                                            autocomplete="off" value="wanita" x-bind:disabled="!voiceOptions.female">
+                                        <label :class="'btn my-auto btn-outline-danger btn-lg bantuan-suara'"
+                                            x-show="voiceOptions.female" for="opsi2">Perempuan</label>
+                                        <div x-show="!voiceOptions.female"
+                                            class="alert alert-info text-center text-primary my-auto">
+                                            Suara perempuan belum tersedia
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row w-75 justify-content-center"">
-                            <alert x-show="!voiceOptions.female" class="alert alert-info text-center text-primary">
-                                Suara
-                                perempuan belum
-                                tersedia</alert>
-                            <alert x-show="!voiceOptions.male" class="alert alert-info text-center text-primary">
-                                Suara
-                                laki-laki belum
-                                tersedia</alert>
-                        </div>
                     </div>
-                </div>
-                <div class="row py-3 justify-content-center">
-                    <button type="submit" class="btn btn-lg btn-primary d-flex justify-content-center w-50">
-                        Mulai Latihan
-                    </button>
+                    <div class="row py-3 justify-content-center">
+                        <button type="submit" class="btn btn-lg btn-primary d-flex justify-content-center w-50">
+                            Mulai Latihan
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
-
     <script>
         function setup() {
             return {
@@ -135,5 +134,4 @@
             }
         }
     </script>
-    @vite(['resources/js/preferensi.js'])
 </x-app-layout>
