@@ -19,15 +19,6 @@ $(document).ready(function () {
     let recordingTimeout;
     let startTime;
 
-    console.log("idLatihan", idLatihan);
-    console.log("idBahasa", idBahasa);
-    console.log("bahasa", bahasa);
-    console.log("kategori", kategori);
-    console.log("bantuanSuara", bantuanSuara);
-    console.log("bantuanPengucapan", bantuanPengucapan);
-    console.log("delayBantuan", delayBantuan);
-    console.log("maksSalah", maksSalah);
-
     // Cek apakah ini latihan baru atau lanjutan
     function isNewSession(idLatihan) {
         return parseInt(localStorage.getItem("idLatihan")) !== idLatihan;
@@ -68,7 +59,6 @@ $(document).ready(function () {
         totalWords = parseInt(localStorage.getItem("totalWords")) || 0;
         totalCorrect = parseInt(localStorage.getItem("totalCorrect")) || 0;
         wordList = JSON.parse(localStorage.getItem("wordList")) || [];
-        console.log("storage", localStorage);
     }
 
     function clearLocalStorage() {
@@ -77,7 +67,6 @@ $(document).ready(function () {
         localStorage.removeItem("totalCorrect");
         localStorage.removeItem("wordList");
         localStorage.clear();
-        console.log("storage", localStorage);
     }
 
     function displayWord() {
@@ -123,7 +112,6 @@ $(document).ready(function () {
                 url: `${window.location.origin}/word/${bahasa}/${kategori}`,
                 success: function (response) {
                     list = response[0];
-                    console.log(list);
                     totalWords++;
                     wordList.push({
                         kata: list.word,
@@ -157,7 +145,6 @@ $(document).ready(function () {
             processData: false,
             contentType: false,
             success: function (response) {
-                console.log(response);
                 const audioUrl = response.audio_url;
                 var audioContainer = $("#correctSpellingAudio");
 
@@ -211,7 +198,6 @@ $(document).ready(function () {
                         processData: false,
                         contentType: false,
                         success: function (response) {
-                            console.log(response);
                             const speechResults = response.transcription; // Array of 3 alternatives
                             let matchedResult = speechResults[0];
 
@@ -368,7 +354,6 @@ $(document).ready(function () {
                     window.location.origin
                 }/example-sentences/${bahasa}/${encodeURIComponent(list.word)}`,
                 success: function (response) {
-                    console.log(response);
                     loadExampleSentences(response);
                     resolve(response);
                 },

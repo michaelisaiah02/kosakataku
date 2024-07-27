@@ -4,15 +4,25 @@ import laravel from "laravel-vite-plugin";
 export default defineConfig({
     plugins: [
         laravel({
-            input: ["resources/sass/app.scss", "resources/js/app.js"],
+            input: [
+                "resources/sass/app.scss",
+                "resources/css/app.css",
+                "resources/js/app.js",
+            ],
             refresh: true,
         }),
     ],
-    optimizeDeps: {
-        include: ["jquery", "sweetalert2"],
-    },
-    server: {
-        host: "localhost", // atau gunakan 'localhost'
-        port: 3000, // atau port yang Anda gunakan
+    build: {
+        manifest: true,
+        outDir: "public/build",
+        rollupOptions: {
+            input: {
+                main1: "resources/js/app.js",
+                main2: "resources/js/latihan.js",
+                main3: "resources/js/riwayat.js",
+                style1: "resources/sass/app.scss",
+                style2: "resources/css/app.css",
+            },
+        },
     },
 });
