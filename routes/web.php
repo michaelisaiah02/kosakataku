@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/word/{language}/{category}', [APIController::class, 'getWord'])->name('getWord');
         Route::post('/example-sentences/{language}/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
         Route::post('/speech-to-text', [APIController::class, 'speechToText'])->name('speechToText');
-        Route::get('/text-to-speech/{idBahasa}/{word}/{bantuanPengucapan}', [APIController::class, 'textToSpeech'])->name('textToSpeech');
+        Route::post('/text-to-speech', [APIController::class, 'textToSpeech'])->name('textToSpeech');
     });
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

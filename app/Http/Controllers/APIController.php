@@ -101,19 +101,19 @@ class APIController extends Controller
         return $allWords;
     }
 
-    public function textToSpeech($idBahasa, $word, $bantuanPengucapan)
+    public function textToSpeech(Request $request)
     {
-        $bahasa = Bahasa::find($idBahasa);
+        $bahasa = Bahasa::find($request->input('idBahasa'));
         $client = new TextToSpeechClient([
             'credentials' => config('services.google.application_credentials'),
         ]);
 
         $inputWord = (new SynthesisInput())
-            ->setText($word);
+            ->setText($request->input('kata'));
 
         $voice = (new VoiceSelectionParams())
             ->setLanguageCode($bahasa->kode_tts)
-            ->setName($bantuanPengucapan === 'wanita' ? $bahasa->suara_wanita : $bahasa->suara_pria);
+            ->setName($request->input('bantuanSuara') === 'wanita' ? $bahasa->suara_wanita : $bahasa->suara_pria);
 
         $audioConfig = (new AudioConfig())
             ->setAudioEncoding(AudioEncoding::MP3);
@@ -126,9 +126,6 @@ class APIController extends Controller
         $files = Storage::files($directory);
         foreach ($files as $file) {
             if (strpos($file, '.mp3') !== false) {
-                Storage::delete($file);
-            }
-            if (strpos($file, '.wav') !== false) {
                 Storage::delete($file);
             }
         }

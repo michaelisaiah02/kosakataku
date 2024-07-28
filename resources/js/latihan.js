@@ -135,27 +135,23 @@ $(document).ready(function () {
     }
 
     function textToSpeech() {
+        const formTTS = new FormData();
+        formTTS.append("kata", list.word);
+        formTTS.append("idBahasa", idBahasa);
+        formTTS.append("bantuanSuara", bantuanSuara);
         $.ajax({
-            type: "get",
-            url: `${
-                window.location.origin
-            }/text-to-speech/${idBahasa}/${encodeURIComponent(
-                list.word
-            )}/${bantuanSuara}`,
+            type: "post",
+            url: `${window.location.origin}/text-to-speech`,
+            data: formTTS,
             processData: false,
             contentType: false,
+            cache: false,
             success: function (response) {
                 const audioUrl = response.audio_url;
-                var audioContainer = $("#correctSpellingAudio");
-
-                audioContainer.empty();
-
-                var mainAudio = document.createElement("audio");
-                mainAudio.setAttribute("controls", "controls");
-                mainAudio.src = audioUrl;
-
-                audioContainer.append(mainAudio);
-
+                const mainAudio = new Audio(audioUrl);
+                const correctSpellingAudio = $("#correctSpellingAudio");
+                mainAudio.controls = true;
+                correctSpellingAudio.html(mainAudio);
                 mainAudio.play().catch((error) => {
                     console.error("Audio playback failed:", error);
                 });
@@ -219,10 +215,7 @@ $(document).ready(function () {
                             attemptCount++;
                             try {
                                 if (isCorrect) {
-                                    // Play correct audio
-                                    document
-                                        .getElementById("correct-audio")
-                                        .play();
+                                    playAudio("correct");
 
                                     if (attemptCount <= maksSalah) {
                                         totalCorrect++;
@@ -239,10 +232,7 @@ $(document).ready(function () {
                                     );
                                     $("#skipSection").hide();
                                 } else {
-                                    // Play wrong audio
-                                    document
-                                        .getElementById("wrong-audio")
-                                        .play();
+                                    playAudio("wrong"); // Play wrong audio
 
                                     consecutiveErrors++;
                                     $("#spelledWord").addClass("text-danger");
@@ -344,6 +334,21 @@ $(document).ready(function () {
 
     function compareWords(hasilPengucapan) {
         return normalizeText(list.word) === normalizeText(hasilPengucapan);
+    }
+
+    function playAudio(audioType) {
+        let audioSrc;
+
+        if (audioType === "correct") {
+            audioSrc = "/audio/correct.mp3";
+        } else if (audioType === "wrong") {
+            audioSrc = "/audio/wrong.mp3";
+        }
+
+        const audioPlayer = new Audio(audioSrc);
+        audioPlayer.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+        });
     }
 
     function exampleSentences() {
