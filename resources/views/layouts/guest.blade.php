@@ -34,11 +34,11 @@
                 <x-application-logo class="w-25 h-25" />
             </a>
         </div>
+        @vite(['resources/js/app.js'])
         <div class="w-100 p-4 bg-transparent shadow overflow-hidden rounded-3" style="max-width: 24rem;">
             {{ $slot }}
         </div>
     </div>
-    @vite(['resources/js/app.js'])
 </body>
 
 </html>

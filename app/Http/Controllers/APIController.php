@@ -109,7 +109,7 @@ class APIController extends Controller
         ]);
 
         $inputWord = (new SynthesisInput())
-            ->setText($request->input('kata'));
+            ->setText(urldecode($request->input('kata')));
 
         $voice = (new VoiceSelectionParams())
             ->setLanguageCode($bahasa->kode_tts)
