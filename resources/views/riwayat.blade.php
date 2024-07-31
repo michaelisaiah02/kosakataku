@@ -6,7 +6,7 @@
     </x-slot>
     {{-- @dd($errors) --}}
     @if (isset($info))
-        <div class="py-4 min-vh-75 d-flex align-items-center">
+        <div class="py-4 full-screen d-flex align-items-center">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="alert alert-info fs-3 text-center text-danger col-auto shadow-sm">
@@ -16,8 +16,49 @@
             </div>
         </div>
     @else
-        <div class="py-4 min-vh-75 d-flex align-items-center">
+        <div class="py-4 full-screen d-flex align-items-center">
             <div class="container-sm container-fluid">
+                <div class="row mb-3 justify-content-center mb-md-3">
+                    <div class="p-4 text-dark">
+                        Kamu sudah latihan <span class="fw-semibold">{{ $jumlahLatihan }}</span> kali.
+                    </div>
+                </div>
+                <div class="row justify-content-center mb-md-3">
+                    <div class="col-md-auto col-1 d-flex align-items-center py-3 py-md-0">
+                        <i class="bi bi-flag"></i>
+                    </div>
+                    <div class="col-md d-flex col-5 align-items-center">
+                        <p class="p-0 m-0">Bahasa yang pertama dipelajari</p>
+                    </div>
+                    <div class="col-md-auto col-1 d-flex align-items-center">
+                        <p class="p-0 m-0">:</p>
+                    </div>
+                    <div class="col-md col-5 d-flex align-items-center">
+                        <p class="p-0 m-0">
+                            <button type="button" class="btn btn-link text-decoration-none p-0" data-bs-toggle="modal"
+                                data-bs-target="#detailModal" data-id="{{ $bahasaPertamaDipelajari->id }}">
+                                {{ $bahasaPertamaDipelajari->bahasa->indonesia }}
+                            </button>
+                        </p>
+                    </div>
+                    <div class="col-md-auto col-1 d-flex align-items-center py-3 py-md-0">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
+                    <div class="col-md col-5 d-flex align-items-center">
+                        <p class="p-0 m-0">Bahasa yang terakhir dipelajari</p>
+                    </div>
+                    <div class="col-md-auto col-1 d-flex align-items-center">
+                        <p class="p-0 m-0">:</p>
+                    </div>
+                    <div class="col-md col-5 d-flex align-items-center">
+                        <p class="p-0 m-0">
+                            <button type="button" class="btn btn-link text-decoration-none p-0" data-bs-toggle="modal"
+                                data-bs-target="#detailModal" data-id="{{ $bahasaTerakhirDipelajari->id }}">
+                                {{ $bahasaTerakhirDipelajari->bahasa->indonesia }}
+                            </button>
+                        </p>
+                    </div>
+                </div>
                 <div class="row justify-content-center mb-md-3">
                     <div class="col-md-auto col-1 d-flex align-items-center py-3 py-md-0">
                         <i class="bi bi-globe"></i>
@@ -49,7 +90,7 @@
                                 data-bs-target="#detailModal" data-id="{{ $bahasaPalingBanyakBenar['id'] }}">
                                 {{ $bahasaPalingBanyakBenar['bahasa'] }}
                             </button>
-                            ({{ round($bahasaPalingBanyakBenar['jumlah']) }}%)
+                            ({{ round($bahasaPalingBanyakBenar['jumlah']) }}% Benar)
                         </p>
                     </div>
                 </div>
@@ -87,7 +128,7 @@
                                 data-bs-target="#detailModal" data-id="{{ $bahasaPalingBanyakSalah['id'] }}">
                                 {{ $bahasaPalingBanyakSalah['bahasa'] }}
                             </button>
-                            ({{ round($bahasaPalingBanyakSalah['jumlah']) }}%)
+                            ({{ round($bahasaPalingBanyakSalah['jumlah']) }}% Salah)
                         </p>
                     </div>
                 </div>
@@ -105,9 +146,11 @@
                                 <th scope="col"><i class="bi bi-bar-chart icon-pc-only"></i> Kesulitan</th>
                                 <th scope="col" class="text-center"><i class="bi bi-award icon-pc-only"></i> Nilai
                                 </th>
-                                <th scope="col" class="text-end"><i class="bi bi-calendar icon-pc-only"></i> Tanggal
+                                <th scope="col" class="text-end"><i class="bi bi-calendar icon-pc-only"></i>
+                                    Tanggal
                                 </th>
-                                <th scope="col" class="text-center"><i class="bi bi-gear icon-pc-only"></i> Aksi</th>
+                                <th scope="col" class="text-center"><i class="bi bi-gear icon-pc-only"></i> Aksi
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
@@ -136,7 +179,8 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl modal-fullscreen-lg-down">
                 <div class="modal-content">
                     <div class="modal-header" id="riwayatModalHeader">

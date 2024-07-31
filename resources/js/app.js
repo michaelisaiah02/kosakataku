@@ -29,4 +29,23 @@ $(document).ready(function () {
     $(".dropdown").on("hide.bs.dropdown", function () {
         $(this).find(".dropdown-menu").first().stop(true, true).fadeOut(0);
     });
+
+    $("#copy-link").on("click", function () {
+        copyToClipboard("http://kosakataku.my.id");
+    });
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(
+            function () {
+                $("#copy-link").text("Berhasil menyalin link.");
+                setTimeout(function () {
+                    $("#copy-link").text("sini");
+                }, 1000);
+            },
+            function (err) {
+                $("#copy-link").text("Gagal menyalin link.");
+                console.error("Gagal menyalin link: ", err);
+            }
+        );
+    }
 });

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bahasa;
-use App\Models\Kategori;
 use App\Models\Latihan;
-use App\Models\TingkatKesulitan;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
+use App\Models\TingkatKesulitan;
+use Illuminate\Support\Facades\DB;
 
 class LatihanController extends Controller
 {
@@ -15,6 +16,31 @@ class LatihanController extends Controller
     {
         $this->latihan = Latihan::where('id_user', auth()->user()->id)->where('selesai', false);
     }
+
+    public function beranda()
+    {
+        // Ambil bahasa yang paling banyak dipelajari dan jumlah pengguna yang mempelajarinya
+        $bahasaPalingBanyakDipakai = Latihan::select('id_bahasa', DB::raw('count(distinct id_user) as user_count'))
+            ->groupBy('id_bahasa')
+            ->orderBy('user_count', 'desc')
+            ->first();
+
+        // Nama bahasa dan jumlah pengguna
+        if ($bahasaPalingBanyakDipakai) {
+            $bahasa = Bahasa::find($bahasaPalingBanyakDipakai->id_bahasa);
+            $bahasaPalingBanyak = $bahasa ? $bahasa->indonesia : 'Tidak ada data';
+            $jumlahPenggunaBahasa = $bahasaPalingBanyakDipakai->user_count;
+        } else {
+            $bahasaPalingBanyak = 'Tidak ada data';
+            $jumlahPenggunaBahasa = 0;
+        }
+
+        // Jumlah pengguna yang pernah latihan
+        $jumlahPenggunaKosakataku = Latihan::distinct('id_user')->count('id_user');
+
+        return view('beranda', compact('jumlahPenggunaKosakataku', 'bahasaPalingBanyak', 'jumlahPenggunaBahasa'));
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -118,6 +144,15 @@ class LatihanController extends Controller
             return view('riwayat', ['info' => 'Kamu belum pernah latihan kosakata!']);
         }
 
+        // Jumlah latihan
+        $jumlahLatihan = $histories->count();
+
+        // Bahasa yang pertama kali dipelajari
+        $bahasaPertamaDipelajari = $histories->sortBy('created_at')->first();
+
+        // Bahasa yang terakhir dipelajari
+        $bahasaTerakhirDipelajari = $histories->sortByDesc('created_at')->first();
+
         // Bahasa yang sering dipelajari
         $bahasaSeringDipelajari = $histories->groupBy('id_bahasa')->map(function ($bahasa) {
             return $bahasa->count();
@@ -168,6 +203,9 @@ class LatihanController extends Controller
 
         return view('riwayat', [
             'histories' => $histories,
+            'jumlahLatihan' => $jumlahLatihan,
+            'bahasaPertamaDipelajari' => $bahasaPertamaDipelajari,
+            'bahasaTerakhirDipelajari' => $bahasaTerakhirDipelajari,
             'bahasaSeringDipelajari' => [
                 'bahasa' => $bahasaSeringDipelajariName,
                 'jumlah' => $bahasaSeringDipelajariCount

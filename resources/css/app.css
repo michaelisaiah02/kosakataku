@@ -62,8 +62,17 @@
     -webkit-animation: spin 0.5s linear;
 }
 
-.min-vh-75 {
-    min-height: 75svh;
+:root {
+    --header-height: 60px;
+}
+
+.navbar,
+header {
+    height: var(--header-height);
+}
+
+.full-screen {
+    min-height: calc(100vh - var(--header-height));
 }
 
 /* CSS for Desktop */
@@ -107,6 +116,11 @@
 
 /* CSS for Mobile */
 @media (max-width: 767px) {
+    .navbar,
+    header {
+        height: auto;
+    }
+
     .nav-link {
         margin: 10px 0;
     }

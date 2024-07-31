@@ -7,7 +7,7 @@ use App\Http\Controllers\LatihanController;
 
 Route::get('/', function () {
     if (auth()->check()) {
-        return view('beranda');
+        return app(LatihanController::class)->beranda();
     } else {
         return view('welcome');
     }

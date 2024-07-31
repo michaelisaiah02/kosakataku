@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-4 min-vh-75 d-flex align-items-center">
+    <div class="py-4 full-screen d-flex align-items-center">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-12 col-md-10">

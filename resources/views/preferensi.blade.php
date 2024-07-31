@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="py-1 min-vh-75 d-flex align-items-center">
+    <div class="py-1 full-screen d-flex align-items-center">
         <div class="container" x-data="setup()">
             <form action="{{ route('latihan.store') }}" method="POST">
                 @csrf

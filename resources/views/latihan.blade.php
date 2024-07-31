@@ -25,7 +25,7 @@
         </div>
     </x-slot>
 
-    <div class="d-flex justify-content-center align-items-center min-vh-75" id="loading">
+    <div class="d-flex justify-content-center align-items-center full-screen" id="loading">
         <div class="row justify-content-center text-center">
             <h1 class="pb-3">Tunggu sebentar...</h1>
             <div class="spinner-border text-primary" style="width: 10rem; height: 10rem;" role="status">
@@ -33,7 +33,7 @@
             </div>
         </div>
     </div>
-    <div class="py-4 min-vh-75 d-flex align-items-center">
+    <div class="py-4 full-screen d-flex align-items-center">
         <div class="container">
             <div class="row mb-3">
                 <h2 class="text-center" id="kata"></h2>

@@ -173,6 +173,8 @@ class APIController extends Controller
             ->setSampleRateHertz(48000)
             ->setLanguageCode($bahasa->kode_stt)
             ->setSpeechContexts([$speechContext])
+            ->setEnableAutomaticPunctuation(true)
+            ->setEnableWordTimeOffsets(true)
             ->setMaxAlternatives(3);
 
         try {
