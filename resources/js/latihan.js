@@ -196,7 +196,6 @@ $(document).ready(function () {
                         success: function (response) {
                             const speechResults = response.transcription; // Array of 3 alternatives
                             let matchedResult = speechResults[0];
-
                             // Check for any matching transcription
                             let isCorrect = false;
                             for (let i = 0; i < speechResults.length; i++) {
@@ -211,10 +210,10 @@ $(document).ready(function () {
                             $("#spelledWord").removeClass(
                                 "text-success text-danger"
                             );
-                            $("#spelledSection").show();
                             attemptCount++;
                             try {
                                 if (isCorrect) {
+                                    $("#spelledSection").show();
                                     playAudio("correct");
 
                                     if (attemptCount <= maksSalah) {
@@ -232,51 +231,56 @@ $(document).ready(function () {
                                     );
                                     $("#skipSection").hide();
                                 } else {
-                                    playAudio("wrong"); // Play wrong audio
-
-                                    consecutiveErrors++;
-                                    $("#spelledWord").addClass("text-danger");
-                                    $("#spellingSection").show();
+                                    playAudio("wrong");
                                     $("#spellingBtn").prop("disabled", false);
-                                    $("#exampleSentenceSection").hide();
+                                    if (speechResults[0] == undefined) {
+                                        Swal.fire({
+                                            title: "Kesalahan!",
+                                            text: "Ucapanmu tidak terdengar dengan jelas, coba ucapkan kata secara perlahan!",
+                                            icon: "warning",
+                                        });
+                                    } else {
+                                        $("#spelledSection").show();
+                                        consecutiveErrors++;
+                                        $("#spelledWord").addClass(
+                                            "text-danger"
+                                        );
+                                        $("#spellingSection").show();
+                                        $("#exampleSentenceSection").hide();
 
-                                    if (consecutiveErrors == delayBantuan) {
-                                        if (bantuanPengucapan == true) {
-                                            $("#correctSpellingAudio").show();
+                                        if (consecutiveErrors == delayBantuan) {
+                                            if (bantuanPengucapan == true) {
+                                                $(
+                                                    "#correctSpellingAudio"
+                                                ).show();
+                                            }
+                                        }
+
+                                        if (attemptCount == maksSalah) {
+                                            Swal.fire({
+                                                title: "Batas kesalahan tercapai!",
+                                                html: `Kamu sudah mencapai batas maksimum kesalahan.<br>Kalau salah lagi, kata ini akan dianggap salah.`,
+                                                icon: "warning",
+                                                confirmButtonText: "OK",
+                                            });
+                                        }
+                                        if (attemptCount == maksSalah + 1) {
+                                            Swal.fire({
+                                                title: "Kata masih salah!",
+                                                html: `Kamu masih salah.<br>Kamu boleh terus mencoba, tapi kata ini akan dianggap salah walaupun sudah benar. Semangat!`,
+                                                icon: "info",
+                                                confirmButtonText: "OK",
+                                            });
                                         }
                                     }
-
-                                    if (attemptCount == maksSalah) {
-                                        Swal.fire({
-                                            title: "Batas kesalahan tercapai!",
-                                            html: `Kamu sudah mencapai batas maksimum kesalahan.<br>Kalau salah lagi, kata ini akan dianggap salah.`,
-                                            icon: "warning",
-                                            confirmButtonText: "OK",
-                                        });
+                                    if (getIndex() !== -1) {
+                                        wordList[getIndex()].percobaan =
+                                            attemptCount;
                                     }
-                                    if (attemptCount == maksSalah + 1) {
-                                        Swal.fire({
-                                            title: "Kata masih salah!",
-                                            html: `Kamu masih salah.<br>Kamu boleh terus mencoba, tapi kata ini akan dianggap salah walaupun sudah benar. Semangat!`,
-                                            icon: "info",
-                                            confirmButtonText: "OK",
-                                        });
-                                    }
+                                    saveCurrentWordData();
                                 }
-                                if (getIndex() !== -1) {
-                                    wordList[getIndex()].percobaan =
-                                        attemptCount;
-                                }
-                                saveCurrentWordData();
                             } catch (error) {
                                 console.error(error);
-                                if (error instanceof TypeError) {
-                                    Swal.fire({
-                                        title: "Kesalahan!",
-                                        text: "Ucapanmu tidak terdengar dengan jelas, coba ucapkan kata secara perlahan!",
-                                        icon: "warning",
-                                    });
-                                }
                                 $("#spelledSection").hide();
                                 $("#spellingBtn").prop("disabled", false);
                             }
