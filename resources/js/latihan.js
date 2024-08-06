@@ -145,7 +145,6 @@ $(document).ready(function () {
             data: formTTS,
             processData: false,
             contentType: false,
-            cache: false,
             success: function (response) {
                 const audioUrl = response.audio_url;
                 const mainAudio = new Audio(audioUrl);

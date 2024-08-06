@@ -9,7 +9,7 @@ Route::get('/', function () {
     if (auth()->check()) {
         return app(LatihanController::class)->beranda();
     } else {
-        return view('welcome');
+        return app(ProfileController::class)->welcome();
     }
 })->name('beranda');
 Route::get('/captcha/refresh', function () {
@@ -18,6 +18,7 @@ Route::get('/captcha/refresh', function () {
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/panduan', [LatihanController::class, 'panduan'])->name('panduan');
     Route::middleware('verified')->group(function () {
         Route::resource('latihan', LatihanController::class)->only(['index', 'store', 'show', 'edit', 'update']);
         Route::get('/riwayat', [LatihanController::class, 'riwayat'])->name('riwayat');
@@ -32,10 +33,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::get('/panduan', function () {
-        return view('panduan');
-    })->name('panduan');
 });
 
 require __DIR__ . '/auth.php';

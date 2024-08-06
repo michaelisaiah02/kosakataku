@@ -41,6 +41,11 @@ class LatihanController extends Controller
         return view('beranda', compact('jumlahPenggunaKosakataku', 'bahasaPalingBanyak', 'jumlahPenggunaBahasa'));
     }
 
+    public function panduan()
+    {
+        return view('panduan');
+    }
+
     /**
      * Display a listing of the resource.
      */
