@@ -25,14 +25,6 @@
         </div>
     </x-slot>
 
-    <div class="d-flex justify-content-center align-items-center full-screen" id="loading">
-        <div class="row justify-content-center text-center">
-            <h1 class="pb-3">Tunggu sebentar...</h1>
-            <div class="spinner-border text-primary" style="width: 10rem; height: 10rem;" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-    </div>
     <div class="py-4 full-screen d-flex align-items-center">
         <div class="container">
             <div class="row mb-3">
@@ -43,6 +35,14 @@
                     <h2 class="text-center"><i class="bi bi-arrow-down"></i></h2>
                 </div>
                 <h2 class="text-center" id="translatedWord"></h2>
+            </div>
+            <div class="d-flex justify-content-center align-items-center full-screen" id="loading">
+                <div class="row justify-content-center text-center">
+                    <h1 class="pb-3">Tunggu sebentar...</h1>
+                    <div class="spinner-border text-primary" style="width: 10rem; height: 10rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
             </div>
             <div class="row mb-3" id="correctSpellingAudio">
             </div>

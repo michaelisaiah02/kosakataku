@@ -74,17 +74,8 @@ $(document).ready(function () {
         $("#ejaan").text(list.pronunciation);
         $("#translatedWord").text(list.translation);
         $("#translatedIcon").show();
-        $("#spellingSection").show();
         $("#offMic").show();
         $("#skipSection").show();
-        $("#loading").removeClass("d-flex justify-content-center");
-        $("#loading").hide();
-        if (consecutiveErrors == delayBantuan) {
-            if (bantuanPengucapan == true) {
-                $("#correctSpellingAudio").show();
-            }
-        }
-        exampleSentences(list.word);
 
         // Reset percobaan dan kesalahan
         attemptCount = 0;
@@ -95,8 +86,6 @@ $(document).ready(function () {
     }
 
     function getWord() {
-        $("#loading").show();
-        $("#loading").addClass("d-flex justify-content-center");
         $("#spellingBtn").prop("disabled", false);
         $("#translatedIcon").hide();
         $("#spellingSection").hide();
@@ -122,7 +111,6 @@ $(document).ready(function () {
                         durasi: 0,
                     });
                     speechContextWords.push(list.word);
-                    textToSpeech();
                     updateLocalStorage();
                     resolve(list);
                 },
@@ -134,30 +122,49 @@ $(document).ready(function () {
         });
     }
 
-    function textToSpeech() {
+    function textToSpeech(attempt = 1) {
+        const maxAttempts = 5;
         const formTTS = new FormData();
         formTTS.append("kata", list.word);
         formTTS.append("idBahasa", idBahasa);
         formTTS.append("bantuanSuara", bantuanSuara);
-        $.ajax({
-            type: "post",
-            url: `${window.location.origin}/text-to-speech`,
-            data: formTTS,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                const audioUrl = response.audio_url;
-                const mainAudio = new Audio(audioUrl);
-                const correctSpellingAudio = $("#correctSpellingAudio");
-                mainAudio.controls = true;
-                correctSpellingAudio.html(mainAudio);
-                mainAudio.play().catch((error) => {
-                    console.error("Audio playback failed:", error);
-                });
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText);
-            },
+        console.log(formTTS.getAll("kata"));
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "post",
+                url: `${window.location.origin}/text-to-speech`,
+                data: formTTS,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    const audioUrl = response.audio_url;
+                    const mainAudio = new Audio(audioUrl);
+                    const correctSpellingAudio = $("#correctSpellingAudio");
+                    mainAudio.controls = true;
+                    correctSpellingAudio.html(mainAudio);
+                    mainAudio.play().catch((error) => {
+                        console.error("Audio playback failed:", error);
+                    });
+                    resolve();
+                },
+                error: function (xhr) {
+                    console.error(
+                        `Attempt ${attempt} failed:`,
+                        xhr.responseText
+                    );
+                    if (attempt < maxAttempts) {
+                        setTimeout(
+                            () =>
+                                textToSpeech(attempt + 1)
+                                    .then(resolve)
+                                    .catch(reject),
+                            1000
+                        );
+                    } else {
+                        reject();
+                    }
+                },
+            });
         });
     }
 
@@ -204,12 +211,22 @@ $(document).ready(function () {
                                     break;
                                 }
                             }
-
-                            $("#spelledWord").text(matchedResult); // Show matched result
-                            $("#spelledWord").removeClass(
-                                "text-success text-danger"
-                            );
-                            attemptCount++;
+                            console.log(matchedResult);
+                            if (matchedResult == undefined) {
+                                Swal.fire({
+                                    title: "Kesalahan!",
+                                    text: "Ucapanmu tidak terdengar dengan jelas, coba ucapkan kata secara perlahan!",
+                                    icon: "warning",
+                                });
+                            } else {
+                                $("#spelledWord").text(
+                                    matchedResult.replace(/[\p{P}\p{S}]+$/u, "")
+                                ); // Show matched result
+                                $("#spelledWord").removeClass(
+                                    "text-success text-danger"
+                                );
+                                attemptCount++;
+                            }
                             try {
                                 if (isCorrect) {
                                     $("#spelledSection").show();
@@ -232,45 +249,33 @@ $(document).ready(function () {
                                 } else {
                                     playAudio("wrong");
                                     $("#spellingBtn").prop("disabled", false);
-                                    if (speechResults[0] == undefined) {
+                                    $("#spelledSection").show();
+                                    consecutiveErrors++;
+                                    $("#spelledWord").addClass("text-danger");
+                                    $("#spellingSection").show();
+                                    $("#exampleSentenceSection").hide();
+
+                                    if (consecutiveErrors == delayBantuan) {
+                                        if (bantuanPengucapan == true) {
+                                            $("#correctSpellingAudio").show();
+                                        }
+                                    }
+
+                                    if (attemptCount == maksSalah) {
                                         Swal.fire({
-                                            title: "Kesalahan!",
-                                            text: "Ucapanmu tidak terdengar dengan jelas, coba ucapkan kata secara perlahan!",
+                                            title: "Batas kesalahan tercapai!",
+                                            html: `Kamu sudah mencapai batas maksimum kesalahan.<br>Kalau salah lagi, kata ini akan dianggap salah.`,
                                             icon: "warning",
+                                            confirmButtonText: "OK",
                                         });
-                                    } else {
-                                        $("#spelledSection").show();
-                                        consecutiveErrors++;
-                                        $("#spelledWord").addClass(
-                                            "text-danger"
-                                        );
-                                        $("#spellingSection").show();
-                                        $("#exampleSentenceSection").hide();
-
-                                        if (consecutiveErrors == delayBantuan) {
-                                            if (bantuanPengucapan == true) {
-                                                $(
-                                                    "#correctSpellingAudio"
-                                                ).show();
-                                            }
-                                        }
-
-                                        if (attemptCount == maksSalah) {
-                                            Swal.fire({
-                                                title: "Batas kesalahan tercapai!",
-                                                html: `Kamu sudah mencapai batas maksimum kesalahan.<br>Kalau salah lagi, kata ini akan dianggap salah.`,
-                                                icon: "warning",
-                                                confirmButtonText: "OK",
-                                            });
-                                        }
-                                        if (attemptCount == maksSalah + 1) {
-                                            Swal.fire({
-                                                title: "Kata masih salah!",
-                                                html: `Kamu masih salah.<br>Kamu boleh terus mencoba, tapi kata ini akan dianggap salah walaupun sudah benar. Semangat!`,
-                                                icon: "info",
-                                                confirmButtonText: "OK",
-                                            });
-                                        }
+                                    }
+                                    if (attemptCount == maksSalah + 1) {
+                                        Swal.fire({
+                                            title: "Kata masih salah!",
+                                            html: `Kamu masih salah.<br>Kamu boleh terus mencoba, tapi kata ini akan dianggap salah walaupun sudah benar. Semangat!`,
+                                            icon: "info",
+                                            confirmButtonText: "OK",
+                                        });
                                     }
                                     if (getIndex() !== -1) {
                                         wordList[getIndex()].percobaan =
@@ -331,12 +336,15 @@ $(document).ready(function () {
     function normalizeText(text) {
         return text
             .normalize("NFKC") // Unicode normalization
-            .replace(/\s+/g, "") // Remove spaces
+            .replace(/[^\p{L}\p{N}\s]/gu, "") // Remove non-letter, non-number, non-space characters
+            .replace(/\s+/g, "") // Remove all spaces
             .toLowerCase(); // Convert to lowercase
     }
 
     function compareWords(hasilPengucapan) {
-        return normalizeText(list.word) === normalizeText(hasilPengucapan);
+        const normalizedExpected = normalizeText(list.word);
+        const normalizedActual = normalizeText(hasilPengucapan);
+        return normalizedExpected === normalizedActual;
     }
 
     function playAudio(audioType) {
@@ -376,6 +384,7 @@ $(document).ready(function () {
     function loadExampleSentences(sentences) {
         const carouselInner = $("#exampleSentencesCarousel");
         carouselInner.empty();
+        console.log(sentences, sentences !== null);
         if (sentences !== null) {
             sentences.forEach((example, index) => {
                 const activeClass = index === 0 ? "active" : "";
@@ -419,7 +428,7 @@ $(document).ready(function () {
 
     // Tambahkan event listener untuk tombol 'Lanjut'
     $("#nextBtn").on("click", function () {
-        getWord().then(displayWord);
+        load();
     });
 
     $("#skipBtn").on("click", function () {
@@ -435,13 +444,42 @@ $(document).ready(function () {
             cancelButtonText: "Batal",
         }).then((result) => {
             if (result.isConfirmed) {
-                getWord().then(displayWord);
+                load();
             }
         });
     });
 
+    function load() {
+        $("#loading")
+            .addClass("d-flex justify-content-center full-screen")
+            .show();
+        getWord()
+            .then(displayWord)
+            .then(() => $("#loading").removeClass("full-screen"))
+            .then(exampleSentences)
+            .then(() => textToSpeech())
+            .then(() => $("#spellingSection").show())
+            .then(() =>
+                $("#loading")
+                    .removeClass("d-flex justify-content-center")
+                    .hide()
+            )
+            .then(() => {
+                if (consecutiveErrors == delayBantuan) {
+                    if (bantuanPengucapan == true) {
+                        $("#correctSpellingAudio").show();
+                    }
+                }
+            })
+            .catch(() => {
+                console.error("Text-to-Speech gagal setelah 5 kali percobaan.");
+                // Handle the error accordingly
+                exampleSentences().then(() => $("#spellingSection").show());
+            });
+    }
+
     // Fetch kata pertama saat halaman dimuat
-    getWord().then(displayWord);
+    load();
 
     window.saveResults = saveResults;
 });

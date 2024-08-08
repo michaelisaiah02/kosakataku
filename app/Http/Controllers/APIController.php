@@ -50,7 +50,7 @@ class APIController extends Controller
     private function generateRandomWord($client, $apiKey, $language, $category)
     {
         $allWords = [];
-        $prompt = "Generate a list of 50 random words in the language '$language' for the category '$category'. For each word, provide its translation in Indonesian and its pronunciation. Format the response as: word - translation - pronunciation.";
+        $prompt = "Generate a list of 50 random words in the language '$language' for the category '$category'. For each word, provide its translation in Indonesian and its pronunciation. Format the response strictly as: 'word' - 'translation' - 'pronunciation'. Avoid using any numbers or extra characters in the response.";
 
         $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
             'headers' => [
