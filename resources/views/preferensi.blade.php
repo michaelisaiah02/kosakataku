@@ -67,11 +67,11 @@
                     </div>
                     <div class="row mb-3 justify-content-center" x-show="selectedLanguage">
                         <div class="col-12 d-flex justify-content-center">
-                            <div class="row w-75 justify-content-center mb-3" id="bantuanSuara">
-                                <div class="col-12 text-center mb-3">
-                                    <label for="bantuan_suara" class="fs-3">Bantuan Suara</label>
+                            <div class="row justify-content-center mb-md-3 mb-1" id="bantuanSuara">
+                                <div class="col-12 text-center">
+                                    <p for="bantuan_suara" class="fs-3">Bantuan Suara</p>
                                 </div>
-                                <div class="row justify-content-evenly mt-2">
+                                <div class="row justify-content-evenly">
                                     <div class="col-auto d-flex flex-column align-items-center" id="laki">
                                         <input type="radio" class="btn-check" name="bantuan_suara" id="opsi1"
                                             autocomplete="off" value="pria" x-bind:disabled="!voiceOptions.male">

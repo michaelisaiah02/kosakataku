@@ -19,6 +19,26 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f8f9fa",endColorstr="#c4f4ff",GradientType=1);
 }
 
+#navbarPanduan {
+    background: rgb(248, 249, 250);
+    background: -moz-linear-gradient(
+        0deg,
+        rgba(196, 244, 255, 1) 10%,
+        rgb(248, 248, 250) 100%
+    );
+    background: -webkit-linear-gradient(
+        0deg,
+        rgba(196, 244, 255, 1) 10%,
+        rgba(248, 249, 250, 1) 100%
+    );
+    background: linear-gradient(
+        0deg,
+        rgba(196, 244, 255, 1) 10%,
+        rgba(248, 249, 250, 1) 100%
+    );
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f8f9fa",endColorstr="#c4f4ff",GradientType=1);
+}
+
 .utama,
 #riwayatModalBody {
     background: rgb(8, 124, 167);
@@ -99,8 +119,14 @@ header {
     transition: width 0.3s ease, left 0.3s ease;
 }
 
-.nav-link.active::after,
-.nav-link:hover::after {
+#navbarKosakataku .nav-link.active::after,
+#navbarKosakataku .nav-link:hover::after {
+    width: 65%;
+    left: 13%;
+}
+
+#navbarPanduan .nav-link.active::after,
+#navbarPanduan .nav-link:hover::after {
     width: 65%;
     left: 13%;
 }
@@ -108,6 +134,11 @@ header {
 .nav-link.active,
 .nav-link:hover {
     color: #087ca7;
+}
+
+.dropdown-item.active {
+    background: #087ca7 !important;
+    color: #f8f9fa !important;
 }
 
 .icon-pc-only {
@@ -176,7 +207,7 @@ header {
 }
 
 .dropdown-toggle::after {
-    content: none;
+    content: none !important;
 }
 
 .carousel-item {

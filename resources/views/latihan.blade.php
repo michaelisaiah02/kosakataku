@@ -6,7 +6,6 @@
                     Latihan Kosakata
                 </h2>
             </div>
-            <audio id="audio-player"></audio>
             <div class="col col-md-auto d-flex gap-3" id="skipSection">
                 <button class="btn btn-sm btn-danger d-flex justify-content-center finishBtnFalse" x-data
                     @click="window.saveResults(false)">

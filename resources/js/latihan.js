@@ -128,7 +128,7 @@ $(document).ready(function () {
         formTTS.append("kata", list.word);
         formTTS.append("idBahasa", idBahasa);
         formTTS.append("bantuanSuara", bantuanSuara);
-        console.log(formTTS.getAll("kata"));
+
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
@@ -138,14 +138,43 @@ $(document).ready(function () {
                 contentType: false,
                 success: function (response) {
                     const audioUrl = response.audio_url;
-                    const mainAudio = new Audio(audioUrl);
-                    const correctSpellingAudio = $("#correctSpellingAudio");
-                    mainAudio.controls = true;
-                    correctSpellingAudio.html(mainAudio);
-                    mainAudio.play().catch((error) => {
-                        console.error("Audio playback failed:", error);
-                    });
-                    resolve();
+                    fetch(audioUrl)
+                        .then((res) => {
+                            if (!res.ok) {
+                                throw new Error(
+                                    `HTTP error! status: ${res.status}`
+                                );
+                            }
+                            return res.blob();
+                        })
+                        .then((blob) => {
+                            const mainAudio = new Audio(
+                                URL.createObjectURL(blob)
+                            );
+                            const correctSpellingAudio = $(
+                                "#correctSpellingAudio"
+                            );
+                            mainAudio.controls = true;
+                            correctSpellingAudio.html(mainAudio);
+                            mainAudio.play().catch((error) => {
+                                console.error("Audio playback failed:", error);
+                            });
+                            resolve();
+                        })
+                        .catch((error) => {
+                            console.error("Audio load failed:", error);
+                            if (attempt < maxAttempts) {
+                                setTimeout(
+                                    () =>
+                                        textToSpeech(attempt + 1)
+                                            .then(resolve)
+                                            .catch(reject),
+                                    1000
+                                );
+                            } else {
+                                reject();
+                            }
+                        });
                 },
                 error: function (xhr) {
                     console.error(
@@ -211,8 +240,10 @@ $(document).ready(function () {
                                     break;
                                 }
                             }
-                            console.log(matchedResult);
-                            if (matchedResult == undefined) {
+                            if (
+                                matchedResult == undefined ||
+                                matchedResult == ""
+                            ) {
                                 Swal.fire({
                                     title: "Kesalahan!",
                                     text: "Ucapanmu tidak terdengar dengan jelas, coba ucapkan kata secara perlahan!",
@@ -221,7 +252,7 @@ $(document).ready(function () {
                             } else {
                                 $("#spelledWord").text(
                                     matchedResult.replace(/[\p{P}\p{S}]+$/u, "")
-                                ); // Show matched result
+                                );
                                 $("#spelledWord").removeClass(
                                     "text-success text-danger"
                                 );
@@ -250,6 +281,12 @@ $(document).ready(function () {
                                     playAudio("wrong");
                                     $("#spellingBtn").prop("disabled", false);
                                     $("#spelledSection").show();
+                                    if (
+                                        matchedResult == undefined ||
+                                        matchedResult == ""
+                                    ) {
+                                        $("#spelledSection").hide();
+                                    }
                                     consecutiveErrors++;
                                     $("#spelledWord").addClass("text-danger");
                                     $("#spellingSection").show();
@@ -384,7 +421,6 @@ $(document).ready(function () {
     function loadExampleSentences(sentences) {
         const carouselInner = $("#exampleSentencesCarousel");
         carouselInner.empty();
-        console.log(sentences, sentences !== null);
         if (sentences !== null) {
             sentences.forEach((example, index) => {
                 const activeClass = index === 0 ? "active" : "";
@@ -474,7 +510,7 @@ $(document).ready(function () {
             .catch(() => {
                 console.error("Text-to-Speech gagal setelah 5 kali percobaan.");
                 // Handle the error accordingly
-                exampleSentences().then(() => $("#spellingSection").show());
+                $("#spellingSection").show();
             });
     }
 

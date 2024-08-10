@@ -78,7 +78,7 @@
 
                 <!-- Langkah-langkah Awal -->
                 <div class="row mb-4">
-                    <h3 class="fw-semibold">Langkah-langkah Awal</h3>
+                    <h3 class="fw-semibold">Langkah-Langkah Awal</h3>
                     <p>
                         Klik atau tekan link ini <a class="link-primary" href="{{ route('register') }}">Registrasi</a>
                         atau link yang ada di atas layar untuk mendaftar.
@@ -92,6 +92,16 @@
                         Setelah registrasi atau login, silakan menjelajahi pembelajaran ini atau kamu juga bisa melihat
                         panduan untuk memulai pembelajaran.
                     </p>
+                </div>
+
+                <!-- FAQ -->
+                <div class="row mb-4">
+                    <h3 class="fw-semibold">FAQ (Frequently Asked Questions)</h3>
+                    <p><strong>Q: Bagaimana kalau aku lupa kata sandi?</strong></p>
+                    <p>A: Kamu bisa buat kata sandi baru dengan mengklik 'Lupa Kata Sandi' pada halaman <a
+                            class="link-primary" href="{{ route('login') }}">Login</a>.</p>
+                    <p><strong>Q: Bagaimana cara mengubah email?</strong></p>
+                    <p>A: Kamu bisa ubah emailmu di halaman profil setelah login.</p>
                 </div>
 
                 <!-- Kontak Dukungan -->

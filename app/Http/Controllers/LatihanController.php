@@ -54,8 +54,8 @@ class LatihanController extends Controller
         if ($this->latihan->exists()) {
             return redirect()->route('latihan.edit', $this->latihan->first()->id);
         }
-        $languages = Bahasa::all();
-        $categories = Kategori::all();
+        $languages = Bahasa::all()->sortBy('indonesia');
+        $categories = Kategori::all()->sortBy('indonesia');
         $difficulties = TingkatKesulitan::all();
 
         return view('preferensi', [
@@ -78,15 +78,14 @@ class LatihanController extends Controller
                 'id_tingkat_kesulitan' => 'required|exists:tingkat_kesulitan,id',
             ],
             [
-                'id_bahasa.exists' => 'Pilih bahasa yang mau dilatih!',
-                'id_kategori.exists' => 'Pilih kategori kosakata yang mau dilatih!',
-                'id_tingkat_kesulitan.exists' => 'Pilih kesulitan yang mau dipilih!',
+                'id_bahasa.required' => 'Pilih bahasa yang mau dilatih!',
+                'id_kategori.required' => 'Pilih kategori kosakata yang mau dilatih!',
+                'id_tingkat_kesulitan.required' => 'Pilih kesulitan yang mau dipilih!',
             ]
         );
         $request->merge([
             'id_user' => auth()->id()
         ]);
-        // dd($request->all());
         // Validasi dan simpan pengaturan latihan ke database
         $latihan = Latihan::create($request->all());
 

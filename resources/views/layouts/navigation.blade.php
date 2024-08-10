@@ -6,12 +6,12 @@
         </a>
 
         <!-- Hamburger -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarKosakataku"
+            aria-controls="navbarKosakataku" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse" id="navbarKosakataku">
             <!-- Navigation Links -->
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
@@ -50,7 +50,8 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end z-3" aria-labelledby="navbarDropdown">
                         <li>
-                            <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                            <a class="dropdown-item {{ request()->routeIs('profile.edit') ? 'active' : '' }}"
+                                href="{{ route('profile.edit') }}">
                                 Profil
                             </a>
                         </li>

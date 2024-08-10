@@ -17,7 +17,13 @@ class LatihanFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'id_user' => $this->faker->randomNumber(),
+            'id_bahasa' => $this->faker->randomNumber(),
+            'id_kategori' => $this->faker->randomNumber(),
+            'id_tingkat_kesulitan' => $this->faker->randomNumber(),
+            'jumlah_kata' => $this->faker->randomNumber(),
+            'jumlah_benar' => $this->faker->randomNumber(),
+            'selesai' => $this->faker->boolean(),
         ];
     }
 }
