@@ -163,7 +163,7 @@
                                     <td class="text-center">
                                         {{ round(($history->jumlah_benar / $history->jumlah_kata) * 100) }}</td>
                                     <td class="text-end text-nowrap">
-                                        {{ \Carbon\Carbon::parse($history->created_at)->format('d M Y') }}
+                                        {{ \Carbon\Carbon::parse($history->created_at)->setTimezone('Asia/Jakarta')->format('d M Y') }}
                                     </td>
                                     <td class="d-flex justify-content-center">
                                         <button type="button" class="btn btn-sm btn-info text-nowrap"
