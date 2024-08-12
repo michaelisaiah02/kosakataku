@@ -1,32 +1,32 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold text-dark py-3">
+        <h2 class="fw-semibold text-dark py-3 mt-header">
             Panduan Aplikasi KosakataKu
         </h2>
-        <nav id="navbarPanduan" class="navbar bg-body-tertiary fixed-bottom px-3 mb-3 d-flex justify-content-evenly">
-            <h2 class="navbar-brand my-auto">Panduan</h2>
-            <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <a class="nav-link" href="#pengantar">Awal</a>
-                </li>
-                <li class="nav-item dropup-center dropup">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
-                        aria-expanded="false">Daftar Panduan</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#pengantar">Pengantar</a></li>
-                        <li><a class="dropdown-item" href="#video-tutorial">Video Tutorial</a></li>
-                        <li><a class="dropdown-item" href="#langkah">Langkah-Langkah</a></li>
-                        <li><a class="dropdown-item" href="#faq">FAQ</a></li>
-                        <li><a class="dropdown-item" href="#tips">Tips dan Trik</a></li>
-                        <li><a class="dropdown-item" href="#kontak">Kontak Dukungan</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#kontak">Akhir</a>
-                </li>
-            </ul>
-        </nav>
     </x-slot>
+    <nav id="navbarPanduan" class="navbar bg-body-tertiary fixed-bottom px-3 mb-3 d-flex justify-content-evenly">
+        <h2 class="navbar-brand my-auto">Panduan</h2>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link" href="#pengantar">Awal</a>
+            </li>
+            <li class="nav-item dropup-center dropup">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                    aria-expanded="false">Daftar Panduan</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#pengantar">Pengantar</a></li>
+                    <li><a class="dropdown-item" href="#video-tutorial">Video Tutorial</a></li>
+                    <li><a class="dropdown-item" href="#langkah">Langkah-Langkah</a></li>
+                    <li><a class="dropdown-item" href="#faq">FAQ</a></li>
+                    <li><a class="dropdown-item" href="#tips">Tips dan Trik</a></li>
+                    <li><a class="dropdown-item" href="#kontak">Kontak Dukungan</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#kontak">Akhir</a>
+            </li>
+        </ul>
+    </nav>
 
     <div class="py-4 full-screen d-flex align-items-center">
         <div data-bs-spy="scroll" data-bs-target="#navbar-panduan" data-bs-root-margin="0px 0px -40%"

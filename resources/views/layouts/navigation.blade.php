@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-light bg-transparent border-bottom shadow-sm navbarApp">
+<nav class="navbar navbar-expand-md navbar-light bg-transparent border-bottom shadow-sm navbarApp fixed-top">
     <div class="container">
         <!-- Logo -->
         <a class="navbar-brand" href="{{ route('beranda') }}">

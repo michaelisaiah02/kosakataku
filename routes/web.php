@@ -26,7 +26,7 @@ Route::middleware('auth')->group(function () {
 
         // API Route
         Route::post('/word/{language}/{category}', [APIController::class, 'getWord'])->name('getWord');
-        Route::post('/example-sentences/{language}/{word}', [APIController::class, 'exampleSentences'])->name('exampleSentences');
+        Route::post('/example-sentences', [APIController::class, 'exampleSentences'])->name('exampleSentences');
         Route::post('/speech-to-text', [APIController::class, 'speechToText'])->name('speechToText');
         Route::post('/text-to-speech', [APIController::class, 'textToSpeech'])->name('textToSpeech');
     });

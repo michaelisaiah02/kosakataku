@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="row justify-content-between py-3">
+        <div class="row justify-content-between py-3 mt-header">
             <div class="col-md-auto col-12 mb-md-0 mb-2 text-md-start text-center">
                 <h2 class="fw-semibold text-dark p-0 m-0">
                     Latihan Kosakata

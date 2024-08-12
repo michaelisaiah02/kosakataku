@@ -8,7 +8,7 @@
     "src": "node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/style2-D87lGVLh.css",
+    "file": "assets/style2-ByIS0wur.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -26,7 +26,7 @@
     ]
   },
   "resources/js/latihan.js": {
-    "file": "assets/main2-B5fndump.js",
+    "file": "assets/main2-DHHpsFjr.js",
     "name": "main2",
     "src": "resources/js/latihan.js",
     "isEntry": true

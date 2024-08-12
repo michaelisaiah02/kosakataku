@@ -138,6 +138,7 @@ $(document).ready(function () {
                 contentType: false,
                 success: function (response) {
                     const audioUrl = response.audio_url;
+                    console.log(audioUrl);
                     fetch(audioUrl)
                         .then((res) => {
                             if (!res.ok) {
@@ -246,7 +247,7 @@ $(document).ready(function () {
                             ) {
                                 Swal.fire({
                                     title: "Kesalahan!",
-                                    text: "Ucapanmu tidak terdengar dengan jelas, coba ucapkan kata secara perlahan!",
+                                    text: "Ucapanmu tidak terdengar dengan jelas, coba ucapkan kata secara perlahan! Ini tidak akan dihitung sebagai kesalahan.",
                                     icon: "warning",
                                 });
                             } else {
@@ -268,6 +269,10 @@ $(document).ready(function () {
                                         if (getIndex() !== -1) {
                                             wordList[getIndex()].benar = 1;
                                         }
+                                    }
+                                    if (getIndex() !== -1) {
+                                        wordList[getIndex()].percobaan =
+                                            attemptCount;
                                     }
                                     $("#spelledWord").addClass("text-success");
                                     $("#spellingSection").hide();
@@ -400,17 +405,25 @@ $(document).ready(function () {
     }
 
     function exampleSentences() {
+        const formExampleSentences = new FormData();
+        formExampleSentences.append("kata", list.word);
+        formExampleSentences.append("terjemahan", list.translation);
+        formExampleSentences.append("bahasa", bahasa);
+        formExampleSentences.append("kategori", kategori);
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",
-                url: `${
-                    window.location.origin
-                }/example-sentences/${bahasa}/${encodeURIComponent(list.word)}`,
+                url: `${window.location.origin}/example-sentences`,
+                data: formExampleSentences,
+                processData: false,
+                contentType: false,
                 success: function (response) {
+                    console.log(response);
                     loadExampleSentences(response);
                     resolve(response);
                 },
                 error: function (xhr, status, error) {
+                    console.log("coba");
                     console.error(xhr.responseText);
                     reject(error);
                 },
@@ -506,12 +519,12 @@ $(document).ready(function () {
                         $("#correctSpellingAudio").show();
                     }
                 }
-            })
-            .catch(() => {
-                console.error("Text-to-Speech gagal setelah 5 kali percobaan.");
-                // Handle the error accordingly
-                $("#spellingSection").show();
             });
+        // .catch(() => {
+        //     console.error("Text-to-Speech gagal setelah 5 kali percobaan.");
+        //     // Handle the error accordingly
+        //     $("#spellingSection").show();
+        // });
     }
 
     // Fetch kata pertama saat halaman dimuat

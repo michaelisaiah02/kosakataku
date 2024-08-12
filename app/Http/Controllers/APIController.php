@@ -50,7 +50,7 @@ class APIController extends Controller
     private function generateRandomWord($client, $apiKey, $language, $category)
     {
         $allWords = [];
-        $prompt = "Generate a list of 50 random words in the language '$language' for the category '$category'. For each word, provide its translation in Indonesian and its pronunciation. Format the response strictly as: 'word' - 'translation' - 'pronunciation'. Avoid using any numbers or extra characters in the response.";
+        $prompt = "Generate a list of 50 random words in the language '$language' for the category '$category'. For each word, provide its translation in Indonesian and its pronunciation. Format the response strictly as: 'word' - 'translation' - 'pronunciation'. Each word should be on a new line. Avoid using any numbers or extra characters in the response.";
 
         $response = $client->request('POST', 'https://api.openai.com/v1/chat/completions', [
             'headers' => [
@@ -62,15 +62,15 @@ class APIController extends Controller
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => 'You are a random word generator.'
+                        'content' => 'You are a precise random word generator for language learning purposes. Provide words that are appropriate for the specified language and category, ensuring accuracy in translations and pronunciations.'
                     ],
                     [
                         'role' => 'user',
                         'content' => $prompt
                     ]
                 ],
-                'max_tokens' => 4096,
-                'temperature' => 0.7
+                'max_tokens' => 2048,
+                'temperature' => 0.5
             ]
         ]);
 
@@ -81,21 +81,22 @@ class APIController extends Controller
             $lines = explode("\n", $content);
 
             foreach ($lines as $line) {
-                // Pemisahan kata, terjemahan, dan cara baca
                 $parts = array_map('trim', explode(' - ', $line));
 
                 if (count($parts) === 3) {
-                    // Menghapus nomor atau karakter lain dari kata
-                    $word = preg_replace('/^\d+\.\s*/', '', $parts[0]);
-
                     $wordDetails = [
-                        'word' => $word,
+                        'word' => $parts[0],
                         'translation' => $parts[1],
                         'pronunciation' => $parts[2]
                     ];
                     $allWords[] = $wordDetails;
                 }
             }
+        }
+
+        // Tambahkan penanganan kesalahan
+        if (empty($allWords)) {
+            throw new \Exception("Failed to generate words or parse the response.");
         }
 
         return $allWords;
@@ -204,10 +205,11 @@ class APIController extends Controller
         }
     }
 
-    public function exampleSentences($language, $word)
+    public function exampleSentences(Request $request)
     {
         $client = new Client();
-        $prompt = "Generate 5 example sentences with the word '$word' in the language '$language' and their translations to Indonesian. Each sentence and its translation should be on a new line, separated by a dash ('-'). No numbering or extra formatting. Example output:\nSentence in language - Translation in Indonesian";
+        $prompt = "Generate 5 example sentences using the word '$request->kata' (meaning: $request->terjemahan) in the language '$request->bahasa'. This word belongs to the category '$request->kategori'. Ensure the sentences clearly demonstrate the meaning of '$request->kata' as '$request->terjemahan'. Each sentence should be followed by its Indonesian translation on a new line, separated by a dash ('-'). No numbering or extra formatting. Example output format:Sentence in $request->bahasa - Translation in Indonesian";
+
         $apiKey = env("API_KEY_OPENAI");
 
         try {
@@ -221,17 +223,18 @@ class APIController extends Controller
                     'messages' => [
                         [
                             'role' => 'system',
-                            'content' => 'You are an example sentence generator.'
+                            'content' => "You are an expert example sentence generator for language learning. You specialize in creating accurate, context-appropriate sentences that clearly demonstrate the meaning of specific words. Always use the provided word with its given meaning and category."
                         ],
                         [
                             'role' => 'user',
                             'content' => $prompt
                         ]
                     ],
-                    'max_tokens' => 512,
-                    'temperature' => 0.7
+                    'max_tokens' => 1024,
+                    'temperature' => 0.3
                 ]
             ]);
+
             $data = json_decode($response->getBody(), true);
             if (isset($data['choices'][0]['message']['content'])) {
                 $content = $data['choices'][0]['message']['content'];
@@ -247,19 +250,17 @@ class APIController extends Controller
 
     private function parseExampleSentences($content)
     {
-        $sentences = explode("\n", $content);
+        $lines = explode("\n", $content);
         $examples = [];
-
-        foreach ($sentences as $sentence) {
-            if (strpos($sentence, ' - ') !== false) {
-                list($exampleSentence, $translation) = explode(' - ', $sentence);
+        foreach ($lines as $line) {
+            $parts = explode(' - ', $line);
+            if (count($parts) == 2) {
                 $examples[] = [
-                    'sentence' => trim($exampleSentence),
-                    'translation' => trim($translation)
+                    'sentence' => trim($parts[0]),
+                    'translation' => trim($parts[1])
                 ];
             }
         }
-
         return $examples;
     }
 
