@@ -138,7 +138,6 @@ $(document).ready(function () {
                 contentType: false,
                 success: function (response) {
                     const audioUrl = response.audio_url;
-                    console.log(audioUrl);
                     fetch(audioUrl)
                         .then((res) => {
                             if (!res.ok) {
@@ -323,7 +322,6 @@ $(document).ready(function () {
                                         wordList[getIndex()].percobaan =
                                             attemptCount;
                                     }
-                                    saveCurrentWordData();
                                 }
                             } catch (error) {
                                 console.error(error);
@@ -418,12 +416,10 @@ $(document).ready(function () {
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log(response);
                     loadExampleSentences(response);
                     resolve(response);
                 },
                 error: function (xhr, status, error) {
-                    console.log("coba");
                     console.error(xhr.responseText);
                     reject(error);
                 },
@@ -477,6 +473,7 @@ $(document).ready(function () {
 
     // Tambahkan event listener untuk tombol 'Lanjut'
     $("#nextBtn").on("click", function () {
+        saveCurrentWordData();
         load();
     });
 

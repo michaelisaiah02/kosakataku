@@ -70,7 +70,7 @@ class APIController extends Controller
                     ]
                 ],
                 'max_tokens' => 2048,
-                'temperature' => 0.5
+                'temperature' => 0.6
             ]
         ]);
 
@@ -230,8 +230,8 @@ class APIController extends Controller
                             'content' => $prompt
                         ]
                     ],
-                    'max_tokens' => 1024,
-                    'temperature' => 0.3
+                    'max_tokens' => 2048,
+                    'temperature' => 0.4
                 ]
             ]);
 
@@ -250,17 +250,35 @@ class APIController extends Controller
 
     private function parseExampleSentences($content)
     {
-        $lines = explode("\n", $content);
+        $lines = preg_split('/\r\n|\r|\n/', $content);
         $examples = [];
+        $currentExample = [];
+
         foreach ($lines as $line) {
-            $parts = explode(' - ', $line);
-            if (count($parts) == 2) {
+            $line = trim($line);
+            if (empty($line)) continue;
+
+            if (strpos($line, ' - ') !== false) {
+                // Jika ada ' - ', ini adalah satu set lengkap kalimat dan terjemahan
+                list($sentence, $translation) = array_map('trim', explode(' - ', $line, 2));
                 $examples[] = [
-                    'sentence' => trim($parts[0]),
-                    'translation' => trim($parts[1])
+                    'sentence' => $sentence,
+                    'translation' => $translation
                 ];
+            } elseif (!empty($currentExample)) {
+                // Jika tidak ada ' - ' dan kita memiliki kalimat sebelumnya, ini mungkin terjemahannya
+                $examples[] = [
+                    'sentence' => $currentExample['sentence'],
+                    'translation' => $line
+                ];
+                $currentExample = [];
+            } else {
+                // Jika tidak ada ' - ' dan tidak ada kalimat sebelumnya, ini mungkin kalimat baru
+                $currentExample['sentence'] = $line;
             }
         }
+
+        // Jika ada kalimat yang tersisa tanpa terjemahan, kita abaikan
         return $examples;
     }
 
