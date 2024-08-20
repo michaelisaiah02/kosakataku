@@ -10,8 +10,8 @@
             <div class="row bg-light shadow-sm rounded-3 bg-opacity-75">
                 <div class="px-4 py-3 text-dark">
                     Kamu sudah login! Selamat datang di KosakataKu. Silakan pilih menu <a
-                        href="{{ route('latihan.index') }}">latihan</a> untuk memulai latihan atau pilih menu di atas
-                    untuk yang lainnya.
+                        href="{{ route('latihan.index') }}">latihan</a> untuk memulai latihan atau pilih menu yang lain
+                    di atas.
                 </div>
             </div>
             <div class="row bg-light shadow-sm rounded-3 bg-opacity-75">
@@ -22,10 +22,10 @@
             </div>
             <div class="row bg-light shadow-sm rounded-3 bg-opacity-75">
                 <div class="px-4 py-3 text-dark">
-                    Dari semua orang yang terdaftar, bahasa yang paling banyak dipelajari adalah <span
+                    Dari semua orang yang latihan, bahasa yang paling banyak dilatih adalah bahasa <span
                         class="fw-semibold">{{ $bahasaPalingBanyak }}</span>. Sebanyak <span
-                        class="fw-semibold">{{ $jumlahPenggunaBahasa }}</span>
-                    orang.
+                        class="fw-semibold">{{ $jumlahLatihanBahasa }}</span>
+                    kali latihan.
                 </div>
             </div>
         </div>

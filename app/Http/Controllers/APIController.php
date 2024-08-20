@@ -41,7 +41,7 @@ class APIController extends Controller
             Cache::put($cacheKey, $allWords, now()->addDays(1)); // Cache selama 1 hari
         }
 
-        // Ambil 10 kata unik dari cache
+        // Ambil 1 kata dari cache
         $uniqueWords = array_splice($allWords, 0, 1);
         Cache::put($cacheKey, $allWords); // Perbarui cache dengan kata-kata yang tersisa
         return response()->json($uniqueWords);
@@ -110,7 +110,7 @@ class APIController extends Controller
         ]);
 
         $inputWord = (new SynthesisInput())
-            ->setText(urldecode($request->input('kata')));
+            ->setText($request->input('kata'));
 
         $voice = (new VoiceSelectionParams())
             ->setLanguageCode($bahasa->kode_tts)
@@ -174,8 +174,6 @@ class APIController extends Controller
             ->setSampleRateHertz(48000)
             ->setLanguageCode($bahasa->kode_stt)
             ->setSpeechContexts([$speechContext])
-            ->setEnableAutomaticPunctuation(true)
-            ->setEnableWordTimeOffsets(true)
             ->setMaxAlternatives(3);
 
         try {
@@ -196,8 +194,7 @@ class APIController extends Controller
             unlink($wavPath);
 
             return response()->json([
-                'transcription' => $transcription,
-                'speech_context' => $speechContextWords
+                'transcription' => $transcription
             ]);
         } catch (Exception $e) {
             error_log('Error during speech recognition: ' . $e->getMessage());

@@ -19,26 +19,26 @@ class LatihanController extends Controller
 
     public function beranda()
     {
-        // Ambil bahasa yang paling banyak dipelajari dan jumlah pengguna yang mempelajarinya
-        $bahasaPalingBanyakDipakai = Latihan::select('id_bahasa', DB::raw('count(distinct id_user) as user_count'))
+        // Ambil bahasa yang paling banyak dilatih dan jumlah total latihannya
+        $bahasaPalingBanyakDilatih = Latihan::select('id_bahasa', DB::raw('count(*) as latihan_count'))
             ->groupBy('id_bahasa')
-            ->orderBy('user_count', 'desc')
+            ->orderBy('latihan_count', 'desc')
             ->first();
 
-        // Nama bahasa dan jumlah pengguna
-        if ($bahasaPalingBanyakDipakai) {
-            $bahasa = Bahasa::find($bahasaPalingBanyakDipakai->id_bahasa);
+        // Nama bahasa dan jumlah latihan
+        if ($bahasaPalingBanyakDilatih) {
+            $bahasa = Bahasa::find($bahasaPalingBanyakDilatih->id_bahasa);
             $bahasaPalingBanyak = $bahasa ? $bahasa->indonesia : 'Tidak ada data';
-            $jumlahPenggunaBahasa = $bahasaPalingBanyakDipakai->user_count;
+            $jumlahLatihanBahasa = $bahasaPalingBanyakDilatih->latihan_count;
         } else {
             $bahasaPalingBanyak = 'Tidak ada data';
-            $jumlahPenggunaBahasa = 0;
+            $jumlahLatihanBahasa = 0;
         }
 
-        // Jumlah pengguna yang pernah latihan
+        // Jumlah pengguna yang pernah latihan (tetap sama)
         $jumlahPenggunaKosakataku = Latihan::distinct('id_user')->count('id_user');
 
-        return view('beranda', compact('jumlahPenggunaKosakataku', 'bahasaPalingBanyak', 'jumlahPenggunaBahasa'));
+        return view('beranda', compact('jumlahPenggunaKosakataku', 'bahasaPalingBanyak', 'jumlahLatihanBahasa'));
     }
 
     public function panduan()
