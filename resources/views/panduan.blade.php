@@ -7,10 +7,10 @@
     <nav id="navbarPanduan" class="navbar bg-body-tertiary fixed-bottom px-3 mb-3 d-flex justify-content-evenly">
         <h2 class="navbar-brand my-auto">Panduan</h2>
         <ul class="nav nav-pills">
-            <li class="nav-item">
+            <li class="nav-item nav-panduan">
                 <a class="nav-link" href="#pengantar">Awal</a>
             </li>
-            <li class="nav-item dropup-center dropup">
+            <li class="nav-item dropup-center dropup nav-panduan">
                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                     aria-expanded="false">Daftar Panduan</a>
                 <ul class="dropdown-menu">
@@ -22,7 +22,7 @@
                     <li><a class="dropdown-item" href="#kontak">Kontak Dukungan</a></li>
                 </ul>
             </li>
-            <li class="nav-item">
+            <li class="nav-item nav-panduan">
                 <a class="nav-link" href="#kontak">Akhir</a>
             </li>
         </ul>

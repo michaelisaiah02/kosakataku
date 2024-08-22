@@ -94,7 +94,12 @@ $(document).ready(function () {
         $("#trueSection").hide();
         $("#exampleSentenceSection").hide();
         $("#correctSpellingAudio").hide();
-        $("#skipSection").addClass("d-flex justify-content-center");
+        totalWords === 0
+            ? $("#skipSection").hide()
+            : $("#skipSection")
+                  .addClass("d-flex justify-content-center")
+                  .show();
+        console.log(`${window.location.origin}/word/${bahasa}/${kategori}`);
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "post",

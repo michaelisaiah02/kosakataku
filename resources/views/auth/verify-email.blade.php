@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold text-dark py-3">
+        <h2 class="fw-semibold text-dark py-3 mt-header">
             Verifikasi Email <span class="fs-3 text-warning">({{ auth()->user()->email }})</span>
         </h2>
     </x-slot>

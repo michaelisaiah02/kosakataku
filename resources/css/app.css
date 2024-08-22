@@ -160,6 +160,11 @@ header {
         width: 13%;
     }
 
+    .nav-panduan {
+        margin: 0 10px;
+        width: auto;
+    }
+
     .nav-link {
         margin: 5px 0;
     }

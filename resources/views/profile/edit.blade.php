@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="fw-semibold text-dark py-3">
+        <h2 class="fw-semibold text-dark py-3 mt-header">
             Profilku
         </h2>
     </x-slot>
