@@ -7,13 +7,6 @@
                 </h2>
             </div>
             <div class="col col-md-auto d-flex gap-3" id="skipSection">
-                <button class="btn btn-sm btn-danger d-flex justify-content-center finishBtnFalse" x-data
-                    @click="window.saveResults(false)">
-                    <p class="my-auto">Selesai Latihan</p>
-                    <div class="icon my-auto">
-                        <i class="bi bi-door-open"></i>
-                    </div>
-                </button>
                 <button class="btn btn-sm btn-danger d-flex justify-content-center" id="skipBtn">
                     <p class="my-auto">Lewati Kata Ini</p>
                     <div class="icon my-auto">
@@ -89,17 +82,16 @@
                 </div>
             </div>
             <div class="row justify-content-center" id="trueSection">
-                <div class="col d-flex justify-content-center">
-                    <button class="btn btn-info d-flex justify-content-center" x-data @click="window.saveResults(true)"
-                        id="finishBtn">
+                <div class="col d-flex justify-content-center" id="finishBtn">
+                    <button class="btn btn-info" x-data @click="window.saveResults(true)">
                         <p class="my-auto me-2">Selesai</p>
                         <div class="icon my-auto">
                             <i class="bi bi-check2-circle"></i>
                         </div>
                     </button>
                 </div>
-                <div class="col d-flex justify-content-center">
-                    <button class="btn btn-info d-flex justify-content-center" id="nextBtn">
+                <div class="col d-flex justify-content-center" id="nextBtn">
+                    <button class="btn btn-info">
                         <p class="my-auto me-2">Lanjut</p>
                         <div class="icon my-auto">
                             <i class="bi bi-arrow-right"></i>
@@ -109,19 +101,16 @@
             </div>
         </div>
     </div>
-    <form id="latihanForm" action="{{ route('latihan.update', $latihan->id) }}" method="POST">
+    <form id="latihanForm"
+        action="{{ route('latihan.update', ['latihan' => $latihan->id, 'jenisLatihan' => 'kosakata']) }}"
+        method="POST">
         @csrf
         @method('PATCH')
-        <input type="hidden" name="jumlah_kata" id="jumlah_kata" value="">
         <input type="hidden" name="jumlah_benar" id="jumlah_benar" value="">
         <input type="hidden" name="list" id="list" value="">
     </form>
-    {{-- @dd($latihan, $bahasa, $kategori, $tingkat_kesulitan) --}}
     <div id="data" data-id-latihan="{{ $latihan->id }}" data-id-bahasa="{{ $bahasa->id }}"
         data-bahasa="{{ $bahasa->inggris }}" data-kategori="{{ $kategori->inggris }}"
-        data-bantuan-suara="{{ $latihan->bantuan_suara }}"
-        data-bantuan-pengucapan="{{ $tingkat_kesulitan->bantuan_pengucapan }}"
-        data-delay-bantuan="{{ $tingkat_kesulitan->delay_bantuan }}"
-        data-maks-salah="{{ $tingkat_kesulitan->maks_salah }}"></div>
-    @vite(['resources/js/latihan.js'])
+        data-bantuan-suara="{{ $latihan->bantuan_suara }}"></div>
+    @vite(['resources/js/latihan-kosakata.js'])
 </x-app-layout>

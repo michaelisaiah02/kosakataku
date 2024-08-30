@@ -16,10 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user');
             $table->unsignedBigInteger('id_bahasa');
             $table->unsignedBigInteger('id_kategori');
-            $table->unsignedBigInteger('id_tingkat_kesulitan');
-            $table->integer('jumlah_kata')->default(0);
-            $table->integer('jumlah_benar')->default(0);
-            $table->json('list')->nullable()->default(null);
+            $table->integer('jumlah_pengucapan_benar')->default(0);
+            $table->integer('jumlah_artikata_benar')->default(0);
+            $table->json('list_latihan_kosakata')->nullable()->default(null);
+            $table->json('list_latihan_artikata')->nullable()->default(null);
             $table->enum('bantuan_suara', ['pria', 'wanita'])->default('wanita');
             $table->boolean('selesai')->default(false);
             $table->timestamps();
@@ -30,13 +30,10 @@ return new class extends Migration
                 ->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('id_kategori')->references('id')->on('kategori')
                 ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('id_tingkat_kesulitan')->references('id')->on('tingkat_kesulitan')
-                ->onDelete('cascade')->onUpdate('cascade');
 
             $table->index('id_user');
             $table->index('id_bahasa');
             $table->index('id_kategori');
-            $table->index('id_tingkat_kesulitan');
         });
     }
 

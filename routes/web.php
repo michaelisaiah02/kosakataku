@@ -20,9 +20,12 @@ Route::get('/captcha/refresh', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/panduan', [LatihanController::class, 'panduan'])->name('panduan');
     Route::middleware('verified')->group(function () {
-        Route::resource('latihan', LatihanController::class)->only(['index', 'store', 'show', 'edit', 'update']);
+        Route::resource('latihan', LatihanController::class)->only(['index', 'store', 'show']);
+        Route::get('/latihan/{latihan}/{jenisLatihan}', [LatihanController::class, 'latihan'])->name('latihan');
+        Route::patch('/latihan/{latihan}/{jenisLatihan}', [LatihanController::class, 'update'])->name('latihan.update');
         Route::get('/riwayat', [LatihanController::class, 'riwayat'])->name('riwayat');
         Route::get('/detail-riwayat/{id}', [LatihanController::class, 'detailRiwayat'])->name('detailRiwayat');
+        Route::get('/latihan/{latihan}/artikata/soal', [LatihanController::class, 'soalArtikata'])->name('soalArtikata');
 
         // API Route
         Route::post('/word/{language}/{category}', [APIController::class, 'getWord'])->name('getWord');

@@ -47,24 +47,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-3 justify-content-center">
-                        <div class="col-12 d-flex justify-content-center">
-                            <div class="row w-75">
-                                <label for="tingkat_kesulitan" class="form-label text-center fs-3">Tingkat
-                                    Kesulitan</label>
-                                <select id="tingkat_kesulitan" name="id_tingkat_kesulitan"
-                                    class="form-select form-select-lg text-capitalize" aria-label="tingkat_kesulitan">
-                                    <option value="">Pilih Tingkat Kesulitan</option>
-                                    @foreach ($difficulties as $difficulty)
-                                        <option value="{{ $difficulty->id }}"
-                                            @if (old('id_tingkat_kesulitan') == $difficulty->id) selected @endif class="text-capitalize">
-                                            {{ $difficulty->tingkat_kesulitan }}</option>
-                                    @endforeach
-                                </select>
-                                <x-input-error :messages="$errors->get('id_tingkat_kesulitan')" class="mt-2 ms-3"></x-input-error>
-                            </div>
-                        </div>
-                    </div>
+
                     <div class="row mb-3 justify-content-center" x-show="selectedLanguage">
                         <div class="col-12 d-flex justify-content-center">
                             <div class="row justify-content-center mb-md-3 mb-1" id="bantuanSuara">

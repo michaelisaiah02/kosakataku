@@ -100,7 +100,8 @@ header {
 }
 
 /* CSS for Desktop */
-.nav-link {
+#navbarPanduan .nav-link,
+#navbarKosakataku .nav-link {
     position: relative;
     margin: 0 15px;
     text-decoration: none;
@@ -112,7 +113,8 @@ header {
     -o-transition: color 0.3s ease;
 }
 
-.nav-link::after {
+#navbarPanduan .nav-link::after,
+#navbarKosakataku .nav-link::after {
     content: "";
     position: absolute;
     width: 0;
@@ -135,8 +137,10 @@ header {
     left: 13%;
 }
 
-.nav-link.active,
-.nav-link:hover {
+#navbarPanduan .nav-link.active,
+#navbarKosakataku .nav-link.active,
+#navbarPanduan .nav-link:hover,
+#navbarKosakataku .nav-link:hover {
     color: #087ca7;
 }
 
@@ -156,7 +160,8 @@ header {
         height: auto;
     }
 
-    .nav-item {
+    #navbarPanduan .nav-item,
+    #navbarKosakataku .nav-item {
         width: 13%;
     }
 
@@ -165,11 +170,13 @@ header {
         width: auto;
     }
 
-    .nav-link {
+    #navbarPanduan .nav-link,
+    #navbarKosakataku .nav-link {
         margin: 5px 0;
     }
 
-    .nav-link::after {
+    #navbarPanduan .nav-link::after,
+    #navbarKosakataku .nav-link::after {
         content: "";
         position: absolute;
         width: 0;

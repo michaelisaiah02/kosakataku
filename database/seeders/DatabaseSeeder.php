@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             BahasaSeeder::class,
             KategoriSeeder::class,
-            TingkatKesulitanSeeder::class,
+            // TingkatKesulitanSeeder::class,
         ]);
+        User::create(['name' => 'Michael Isaiah', 'email' => 'michael.isaiah.02@gmail.com', 'password' => bcrypt('11111111')]);
     }
 }

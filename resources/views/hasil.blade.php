@@ -15,7 +15,7 @@
                         </div>
                         <div class="card-body">
                             <div class="row mb-3 justify-content-center">
-                                <div class="ps-5 col-8 col-md-5">
+                                <div class="col-8 col-md-5">
                                     <strong>Bahasa yang Dipelajari</strong>
                                 </div>
                                 <div class="col col-md-3">
@@ -23,7 +23,7 @@
                                 </div>
                             </div>
                             <div class="row mb-3 justify-content-center">
-                                <div class="ps-5 col-8 col-md-5">
+                                <div class="col-8 col-md-5">
                                     <strong>Kategori</strong>
                                 </div>
                                 <div class="col col-md-3">
@@ -31,32 +31,43 @@
                                 </div>
                             </div>
                             <div class="row mb-3 justify-content-center">
-                                <div class="ps-5 col-8 col-md-5">
-                                    <strong>Tingkat Kesulitan</strong>
-                                </div>
-                                <div class="col col-md-3 text-capitalize">
-                                    : {{ $latihan->tingkatKesulitan->tingkat_kesulitan }}
-                                </div>
-                            </div>
-                            <div class="row mb-3 justify-content-center">
-                                <div class="ps-5 col-8 col-md-5">
-                                    <strong>Jumlah Kata yang Dilatih</strong>
+                                <div class="col-8 col-md-5">
+                                    <strong>Jumlah Pengucapan yang Benar</strong>
                                 </div>
                                 <div class="col col-md-3">
-                                    : {{ $latihan->jumlah_kata }}
+                                    : {{ $latihan->jumlah_pengucapan_benar }}
                                 </div>
                             </div>
-                            <div class="row mb-3 justify-content-center">
-                                <div class="ps-5 col-8 col-md-5">
-                                    <strong>Jumlah Pengejaan yang Benar</strong>
+                            <div class="row mb-4 justify-content-center">
+                                <div class="col-8 col-md-5">
+                                    <strong>Jumlah Arti Kata yang Benar</strong>
                                 </div>
                                 <div class="col col-md-3">
-                                    : {{ $latihan->jumlah_benar }}
+                                    : {{ $latihan->jumlah_artikata_benar }}
                                 </div>
                             </div>
-                            <div class="row justify-content-center mb-4">
+                            <div class="row justify-content-center mb-2">
+                                <hr class="border border-primary border-3 opacity-50 m-0">
+                                <h3 class="text-center my-2">Nilai Latihanmu</h3>
+                                <hr class="border border-primary border-3">
+                                <div class="col text-center">
+                                    <h4>Pengucapan</h4>
+                                </div>
+                                <div class="col text-center">
+                                    <h4>Arti Kata</h4>
+                                </div>
+                            </div>
+                            <div class="row justify-content-evenly mb-4">
                                 <div class="col-auto" x-data="{
-                                    nilai: {{ round(($latihan->jumlah_benar / $latihan->jumlah_kata) * 100) }}
+                                    nilai: {{ round(($latihan->jumlah_pengucapan_benar / 5) * 100) }}
+                                }">
+                                    <button disabled class="btn btn-lg rounded-circle text-center fs-1" id="nilai"
+                                        x-bind:class="nilai >= 80 ? 'btn-success' : nilai >= 50 ? 'btn-warning' : 'btn-danger'">
+                                        <span x-text="nilai"></span>
+                                    </button>
+                                </div>
+                                <div class="col-auto" x-data="{
+                                    nilai: {{ round(($latihan->jumlah_artikata_benar / 5) * 100) }}
                                 }">
                                     <button disabled class="btn btn-lg rounded-circle text-center fs-1" id="nilai"
                                         x-bind:class="nilai >= 80 ? 'btn-success' : nilai >= 50 ? 'btn-warning' : 'btn-danger'">
@@ -76,6 +87,5 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </x-app-layout>

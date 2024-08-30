@@ -16,9 +16,10 @@ class Latihan extends Model
         'id_bahasa',
         'id_kategori',
         'id_tingkat_kesulitan',
-        'jumlah_kata',
-        'jumlah_benar',
-        'list',
+        'jumlah_pengucapan_benar',
+        'jumlah_artikata_benar',
+        'list_latihan_kosakata',
+        'list_latihan_artikata',
         'bantuan_suara',
         'selesai'
     ];

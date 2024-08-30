@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tingkat_kesulitan', function (Blueprint $table) {
-            $table->id();
-            $table->string('tingkat_kesulitan');
-            $table->boolean('bantuan_pengucapan')->default(true);
-            $table->integer('delay_bantuan')->default(0);
-            $table->integer('maks_salah')->default(5);
-            $table->timestamps();
-        });
+        // Schema::create('tingkat_kesulitan', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('tingkat_kesulitan');
+        //     $table->boolean('bantuan_pengucapan')->default(true);
+        //     $table->integer('delay_bantuan')->default(0);
+        //     $table->integer('maks_salah')->default(5);
+        //     $table->timestamps();
+        // });
     }
 
     /**
