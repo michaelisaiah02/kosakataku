@@ -69,13 +69,7 @@ $(document).ready(function () {
 
     function showQuestion() {
         if (currentQuestionIndex >= soalArtiKata.length) {
-            console.log(currentQuestionIndex, soalArtiKata.length);
-            Swal.fire({
-                title: "Selamat, Kamu Telah Menyelesaikan Latihan!",
-                text: `Jumlah jawaban benar: ${totalCorrect} dari ${soalArtiKata.length} soal.`,
-                icon: "success",
-            });
-            // finishLatihan();
+            finishLatihan();
             return;
         }
 
